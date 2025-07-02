@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import WeatherCard from "@/components/WeatherCard";
+import RecomendationCard from "@/components/RecomendationCard";
+import WardobeCard from "@/components/WardobeCard";
+
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -19,8 +23,10 @@ export default async function ProtectedPage() {
       className="w-screen h-full"
     >
       <ResizablePanel defaultSize={75}>
-        <div className="flex h-full items-center justify-center p-6">
-          <span className="font-semibold">Software/Dashboard</span>
+        <div className="flex flex-col h-full items-center ">
+          <WeatherCard />
+          <RecomendationCard />
+          <WardobeCard />
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />
