@@ -17,10 +17,7 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="w-screen h-full"
-    >
+    <ResizablePanelGroup direction="horizontal" className="w-screen h-full">
       <ResizablePanel defaultSize={75}>
         <div className="flex flex-col h-full items-center ">
           <WeatherCard />
