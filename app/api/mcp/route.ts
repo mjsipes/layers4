@@ -20,6 +20,8 @@ const handler = createMcpHandler(
         content: [{ type: "text", text: "🔐 Secret: abc123" }],
       };
     });
+
+    
     server.tool(
       "get_weather",
       "Gets weather data for a given location and date",
@@ -52,6 +54,7 @@ const handler = createMcpHandler(
           }
 
           const weatherData = await response.json();
+          console.log("Weather data:", weatherData);
           return {
             content: [
               {
@@ -74,6 +77,8 @@ const handler = createMcpHandler(
         }
       }
     );
+
+
   },
   {},
   { basePath: "/api" }
