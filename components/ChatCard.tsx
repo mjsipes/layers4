@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowUp } from "lucide-react";
 
 export default function ChatCard() {
-  const { isLoading, data, sendMessage, clearData } = useChatStream();
+  const { isLoading, data, sendMessage } = useChatStream();
   
   const [messages, setMessages] = useState([
     {
