@@ -5,6 +5,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import WeatherCard from "@/components/WeatherCard";
 import RecomendationCard from "@/components/RecomendationCard";
 import WardobeCard from "@/components/WardobeCard";
+import ChatCard from "@/components/ChatCard";
 
 
 export default async function ProtectedPage() {
@@ -29,9 +30,7 @@ export default async function ProtectedPage() {
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={25}>
-        <div className="flex h-full items-center justify-center p-6">
-          <span className="font-semibold">AI Chat</span>
-        </div>
+          <ChatCard/>
       </ResizablePanel>
     </ResizablePanelGroup>
   );
