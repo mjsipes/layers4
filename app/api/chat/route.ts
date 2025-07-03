@@ -1,6 +1,5 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText, experimental_createMCPClient } from 'ai';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp';
 
 export const maxDuration = 30;
 
@@ -9,27 +8,14 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   try {
-    const transport = new StreamableHTTPClientTransport(
-      new URL('https://layers2.vercel.app/api/mcp')
-    );
-    
-    const mcpClient = await experimental_createMCPClient({
-      transport,
-    });
-
-    const tools = await mcpClient.tools();
+    // Manually call your MCP API route to get the tools
+    const toolsRes = await fetch('https://layers2.vercel.app/api/mcp/tools');
+    const tools = await toolsRes.json();
 
     const result = streamText({
       model: openai('gpt-4.5-preview'),
       messages,
       tools,
-      onFinish: async () => {
-        await mcpClient.close();
-      },
-      onError: async (error) => {
-        console.error('Error in MCP client:', error);
-        await mcpClient.close();
-      },
     });
 
     return result.toDataStreamResponse();
