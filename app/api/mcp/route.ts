@@ -62,12 +62,12 @@ const handler = createMcpHandler(
               },
             ],
           };
-        } catch (error: any) {
+        } catch (error: unknown) {
           return {
             content: [
               {
                 type: "text",
-                text: `⚠️ Failed to fetch weather: ${error.message}`,
+                text: `⚠️ Failed to fetch weather: ${error instanceof Error ? error.message : String(error)}`,
               },
             ],
           };

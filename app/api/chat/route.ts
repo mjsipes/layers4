@@ -27,6 +27,7 @@ export async function POST(req: Request) {
         await mcpClient.close();
       },
       onError: async (error) => {
+        console.error('Error in MCP client:', error);
         await mcpClient.close();
       },
     });
