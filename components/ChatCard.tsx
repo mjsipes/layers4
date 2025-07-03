@@ -104,18 +104,18 @@ export default function ChatCard() {
     }
   };
 
-  const handleNewChat = () => {
-    setMessages([
-      {
-        id: 1,
-        sender: "AI Assistant",
-        content: "Hi, how can I help you today?",
-        isUser: false,
-      },
-    ]);
-    clearData();
-    currentResponseId.current = null;
-  };
+  // const handleNewChat = () => {
+  //   setMessages([
+  //     {
+  //       id: 1,
+  //       sender: "AI Assistant",
+  //       content: "Hi, how can I help you today?",
+  //       isUser: false,
+  //     },
+  //   ]);
+  //   clearData();
+  //   currentResponseId.current = null;
+  // };
 
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden">
