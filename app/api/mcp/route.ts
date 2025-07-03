@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createMcpHandler } from '@vercel/mcp-adapter';
- 
+
 const handler = createMcpHandler(
   (server) => {
     server.tool(
@@ -14,9 +14,20 @@ const handler = createMcpHandler(
         };
       },
     );
+
+    server.tool(
+      'get_secret',
+      'Returns a secret value',
+      {},
+      async () => {
+        return {
+          content: [{ type: 'text', text: '🔐 Secret: abc123' }],
+        };
+      },
+    );
   },
   {},
   { basePath: '/api' },
 );
- 
+
 export { handler as GET, handler as POST, handler as DELETE };
