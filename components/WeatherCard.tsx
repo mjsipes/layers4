@@ -1,54 +1,31 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useBearStore, useTimeStore } from "@/stores/store";
+import { useBearStore, useTimeStore, useLocationStore, useWeatherStore } from "@/stores/store";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { useLocationStore } from "@/stores/store";
+import { useWeather } from "@/hooks/useWeather";
 
 const WeatherCard = () => {
   const bears = useBearStore((state) => state.bears);
   const date = useTimeStore((state) => state.date);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  useGeolocation(); // Set location on mount
+  useGeolocation();
+  useWeather();
 
   const lat = useLocationStore((state) => state.lat);
   const lon = useLocationStore((state) => state.lon);
+  const { data: weatherData } = useWeatherStore();
+  
+  useEffect(()=>{
+    console.log("Weather Data:",weatherData)
+  },[weatherData])
 
-  // Update clock every second
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  // Call API when lat/lon/date are ready
-  useEffect(() => {
-    const fetchWeather = async () => {
-      if (!lat || !lon || !date) return;
-
-      try {
-        const res = await fetch("/api/weather", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            latitude: lat,
-            longitude: lon,
-            date: date.toISOString().split("T")[0], // Format: YYYY-MM-DD
-          }),
-        });
-
-        const data = await res.json();
-        console.log("Weather API result:", data);
-      } catch (err) {
-        console.error("Error fetching weather:", err);
-      }
-    };
-
-    fetchWeather();
-  }, [lat, lon, date]);
 
   return (
     <div className="text-center space-y-2 border-b w-full p-4">
@@ -65,6 +42,13 @@ const WeatherCard = () => {
         )}
       </div>
       <h1>{bears} bears around here ...</h1>
+      
+      {weatherData && (
+        <div>
+          <p>Weather data loaded!</p>
+          <pre>{JSON.stringify(weatherData, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 };

@@ -18,6 +18,12 @@ type LocationState = {
   setLocation: (lat: number, lon: number) => void;
 };
 
+type WeatherState = {
+  data: any;
+  setWeatherData: (data: any) => void;
+  clearWeather: () => void;
+};
+
 export const useBearStore = create<BearState>((set) => ({
   bears: 0,
   increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
@@ -33,4 +39,10 @@ export const useLocationStore = create<LocationState>((set) => ({
   lat: null,
   lon: null,
   setLocation: (lat, lon) => set({ lat, lon }),
+}));
+
+export const useWeatherStore = create<WeatherState>((set) => ({
+  data: null,
+  setWeatherData: (data) => set({ data }),
+  clearWeather: () => set({ data: null }),
 }));
