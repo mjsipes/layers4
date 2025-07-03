@@ -31,7 +31,14 @@ export async function POST(req: NextRequest) {
 
     const weatherData = await response.json();
     return NextResponse.json(weatherData);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+} catch (error: unknown) {
+  let message = "An unknown error occurred";
+
+  if (error instanceof Error) {
+    message = error.message;
   }
+
+  return NextResponse.json({ error: message }, { status: 500 });
+}
+
 }
