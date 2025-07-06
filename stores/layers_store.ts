@@ -16,55 +16,34 @@ export type Layer = {
 
 type LayerState = {
   layers: Layer[];
-  isSubscribed: boolean;
-  
-  // State operations
-  setLayers: (layers: Layer[]) => void;
-  addLayer: (layer: Layer) => void;
-  updateLayer: (id: string, updates: Partial<Layer>) => void;
-  deleteLayer: (id: string) => void;
-  
-  // Data management
-  fetchLayers: () => Promise<void>;
-  subscribeToLayers: (setFocused?: (item: Layer) => void) => () => void;
 };
 
-export const useLayerStore = create<LayerState>((set, get) => ({
+// Global state to track subscription
+let isSubscribed = false;
+let channel: any = null;
+
+export const useLayerStore = create<LayerState>((set) => ({
   layers: [],
-  isSubscribed: false,
+}));
+
+// Auto-initialize the store when first imported
+const initializeStore = async () => {
+  if (isSubscribed) return;
   
-  setLayers: (layers) => set({ layers }),
-  
-  addLayer: (layer) => set((state) => ({ 
-    layers: [...state.layers, layer] 
-  })),
-  
-  updateLayer: (id, updates) => set((state) => ({
-    layers: state.layers.map((layer) => 
-      layer.id === id ? { ...layer, ...updates } : layer
-    )
-  })),
-  
-  deleteLayer: (id) => set((state) => ({
-    layers: state.layers.filter((layer) => layer.id !== id)
-  })),
-  
-  fetchLayers: async () => {
+  try {
+    // Fetch initial data
     const { data, error } = await supabase.from("layer").select("*");
+    
     if (error) {
-      console.log("error fetching layers: ", error);
-      set({ layers: [] });
+      console.error("Error fetching layers:", error);
+      useLayerStore.setState({ layers: [] });
       return;
     }
-    set({ layers: data || [] });
-  },
-  
-  subscribeToLayers: (setFocused?: (item: Layer) => void) => {
-    if (get().isSubscribed) {
-      return () => {}; // Already subscribed
-    }
     
-    const channel = supabase
+    useLayerStore.setState({ layers: data || [] });
+    
+    // Set up real-time subscription
+    channel = supabase
       .channel("layers-channel")
       .on(
         "postgres_changes",
@@ -75,27 +54,42 @@ export const useLayerStore = create<LayerState>((set, get) => ({
         },
         (payload) => {
           const { eventType, new: newRow, old: oldRow } = payload;
-          const { addLayer, updateLayer, deleteLayer } = get();
           
           if (eventType === "INSERT") {
-            setFocused?.(newRow as Layer);
-            addLayer(newRow as Layer);
+            useLayerStore.setState((state) => ({ 
+              layers: [...state.layers, newRow as Layer] 
+            }));
           } else if (eventType === "UPDATE") {
-            setFocused?.(newRow as Layer);
-            updateLayer((newRow as Layer).id, newRow as Layer);
+            useLayerStore.setState((state) => ({
+              layers: state.layers.map((layer) => 
+                layer.id === (newRow as Layer).id ? newRow as Layer : layer
+              )
+            }));
           } else if (eventType === "DELETE") {
-            deleteLayer((oldRow as Layer).id);
+            useLayerStore.setState((state) => ({
+              layers: state.layers.filter((layer) => layer.id !== (oldRow as Layer).id)
+            }));
           }
         }
       )
       .subscribe();
     
-    set({ isSubscribed: true });
+    isSubscribed = true;
     
-    // Return cleanup function
-    return () => {
-      supabase.removeChannel(channel);
-      set({ isSubscribed: false });
-    };
+  } catch (error) {
+    console.error("Error initializing layers store:", error);
+    useLayerStore.setState({ layers: [] });
   }
-}));
+};
+
+// Initialize automatically
+initializeStore();
+
+// Cleanup function for when the app unmounts (optional)
+export const cleanupLayersStore = () => {
+  if (channel) {
+    supabase.removeChannel(channel);
+    channel = null;
+    isSubscribed = false;
+  }
+};

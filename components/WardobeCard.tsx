@@ -1,18 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useLayerStore } from "@/stores/layers_store";
+import React, { useState } from "react";
 import { Grid, List } from "lucide-react";
 import Layers from "./Layers";
 
 const WardobeCard = () => {
-  const { layers, fetchLayers, subscribeToLayers } = useLayerStore();
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
-
-  useEffect(() => {
-    fetchLayers();
-    const unsubscribe = subscribeToLayers();
-    return unsubscribe;
-  }, [fetchLayers, subscribeToLayers]);
 
   const toggleViewMode = () => {
     setViewMode((prev) => (prev === "table" ? "grid" : "table"));
@@ -30,7 +22,7 @@ const WardobeCard = () => {
         </button>
       </div>
 
-      <Layers layers={layers} viewMode={viewMode} />
+      <Layers viewMode={viewMode} />
     </div>
   );
 };

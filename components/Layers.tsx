@@ -9,18 +9,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Layer } from '@/stores/store'
+import { Layer, useLayerStore } from '@/stores/layers_store'
 
 interface LayersProps {
-  layers: Layer[];
   viewMode: 'table' | 'grid';
 }
 
-const Layers = ({ layers, viewMode }: LayersProps) => {
+const Layers = ({ viewMode }: LayersProps) => {
+  const { layers } = useLayerStore();
+
   if (layers.length === 0) {
     return (
       <div className="w-full h-[200px] border rounded-lg flex items-center justify-center bg-secondary/30">
-        <p className="text-muted-foreground">No layers found</p>
+        <p className="text-muted-foreground">Loading layers...</p>
       </div>
     );
   }
