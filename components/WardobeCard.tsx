@@ -37,12 +37,10 @@ const WardobeCard = () => {
           {viewMode === 'table' ? (
             <>
               <Grid size={16} />
-              Grid View
             </>
           ) : (
             <>
               <List size={16} />
-              Table View
             </>
           )}
         </button>
@@ -105,7 +103,7 @@ const WardobeCard = () => {
                   
                   <div className="mt-auto">
                     <p className="text-sm text-foreground line-clamp-3">
-                      {layer.description || 'No description available'}
+                      {layer.description || '-'}
                     </p>
                   </div>
 
