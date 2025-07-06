@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useLayerStore } from "@/stores/store";
+import { useLayerStore } from "@/stores/layers_store";
 import { Grid, List } from "lucide-react";
 import Layers from "./Layers";
 

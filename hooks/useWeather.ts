@@ -1,6 +1,6 @@
 // /hooks/useWeather.ts
 import { useEffect } from 'react';
-import { useWeatherStore, useLocationStore, useTimeStore } from '@/stores/store';
+import { useWeatherStore, useLocationStore, useTimeStore } from '@/stores/weather_store';
 
 export const useWeather = () => {
   const { setWeatherData } = useWeatherStore();

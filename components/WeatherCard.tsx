@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  useBearStore,
+  useBearStore
+} from "@/stores/bear_store";
+import {
   useTimeStore,
   useLocationStore,
   useWeatherStore,
-} from "@/stores/store";
+} from "@/stores/weather_store";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useWeather } from "@/hooks/useWeather";
 

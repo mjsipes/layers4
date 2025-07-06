@@ -1,6 +1,6 @@
 // /hooks/useGeolocation.ts
 import { useEffect } from 'react';
-import { useLocationStore } from '@/stores/store';
+import { useLocationStore } from '@/stores/weather_store';
 
 export function useGeolocation() {
   const setLocation = useLocationStore((state) => state.setLocation);

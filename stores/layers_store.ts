@@ -1,31 +1,8 @@
-// /stores/store.ts
+// /stores/layers_store.ts
 import { create } from 'zustand';
-import {createClient} from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 
 const supabase = createClient();
-
-type BearState = {
-  bears: number;
-  increasePopulation: () => void;
-  removeAllBears: () => void;
-};
-
-type TimeState = {
-  date: Date;
-  setDate: (date: Date) => void;
-};
-
-type LocationState = {
-  lat: number | null;
-  lon: number | null;
-  setLocation: (lat: number, lon: number) => void;
-};
-
-type WeatherState = {
-  data: any;
-  setWeatherData: (data: any) => void;
-  clearWeather: () => void;
-};
 
 // Layer type - adjust based on your actual database.types
 export type Layer = {
@@ -51,29 +28,6 @@ type LayerState = {
   fetchLayers: () => Promise<void>;
   subscribeToLayers: (setFocused?: (item: Layer) => void) => () => void;
 };
-
-export const useBearStore = create<BearState>((set) => ({
-  bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  removeAllBears: () => set({ bears: 0 }),
-}));
-
-export const useTimeStore = create<TimeState>((set) => ({
-  date: new Date(),
-  setDate: (date) => set({ date }),
-}));
-
-export const useLocationStore = create<LocationState>((set) => ({
-  lat: null,
-  lon: null,
-  setLocation: (lat, lon) => set({ lat, lon }),
-}));
-
-export const useWeatherStore = create<WeatherState>((set) => ({
-  data: null,
-  setWeatherData: (data) => set({ data }),
-  clearWeather: () => set({ data: null }),
-}));
 
 export const useLayerStore = create<LayerState>((set, get) => ({
   layers: [],
