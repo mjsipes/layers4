@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Layer, useLayerStore } from '@/stores/layers_store'
+import { useLayerStore } from '@/stores/layers_store'
 
 interface LayersProps {
   viewMode: 'table' | 'grid';

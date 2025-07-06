@@ -1,10 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import { Grid, List } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layers from "./Layers";
+import OutfitsContent from "./OutfitsContent";
+import LogsContent from "./LogsContent";
 
 const WardobeCard = () => {
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [activeTab, setActiveTab] = useState("layers");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [focusedItem, setFocusedItem] = useState<unknown>(null);
 
   const toggleViewMode = () => {
     setViewMode((prev) => (prev === "table" ? "grid" : "table"));
@@ -12,17 +18,43 @@ const WardobeCard = () => {
 
   return (
     <div className="w-full p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">Layers</h2>
-        <button
-          onClick={toggleViewMode}
-          className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors"
-        >
-          {viewMode === "table" ? <Grid size={16} /> : <List size={16} />}
-        </button>
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold">Wardrobe</h2>
+          <div className="flex items-center gap-4">
+            <TabsList>
+              <TabsTrigger value="layers">Layers</TabsTrigger>
+              <TabsTrigger value="outfits">Outfits</TabsTrigger>
+              <TabsTrigger value="logs">Logs</TabsTrigger>
+            </TabsList>
+            <button
+              onClick={toggleViewMode}
+              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors"
+            >
+              {viewMode === "table" ? <Grid size={16} /> : <List size={16} />}
+            </button>
+          </div>
+        </div>
 
-      <Layers viewMode={viewMode} />
+        <TabsContent value="layers">
+          <Layers viewMode={viewMode} />
+        </TabsContent>
+        
+        <TabsContent value="outfits">
+          <OutfitsContent 
+            viewMode={viewMode} 
+            setFocused={setFocusedItem}
+            setTab={setActiveTab}
+          />
+        </TabsContent>
+        
+        <TabsContent value="logs">
+          <LogsContent 
+            viewMode={viewMode} 
+            setFocused={setFocusedItem}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

@@ -1,9 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  useBearStore
-} from "@/stores/bear_store";
-import {
   useTimeStore,
   useLocationStore,
   useWeatherStore,
@@ -12,7 +9,6 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useWeather } from "@/hooks/useWeather";
 
 const WeatherCard = () => {
-  const bears = useBearStore((state) => state.bears);
   const date = useTimeStore((state) => state.date);
   const [currentTime, setCurrentTime] = useState(new Date());
 

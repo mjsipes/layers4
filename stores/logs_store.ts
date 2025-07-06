@@ -1,22 +1,22 @@
-// /stores/layers_store.ts
+// /stores/logs_store.ts
 import { create } from 'zustand';
 import { createClient } from '@/lib/supabase/client';
 import { Tables } from '@/lib/supabase/database.types';
 
 const supabase = createClient();
 
-type Layer = Tables<'layer'>;
+type Log = Tables<'log'>;
 
-type LayerState = {
-  layers: Layer[];
+type LogState = {
+  logs: Log[];
 };
 
 // Global state to track subscription
 let isSubscribed = false;
 let channel: any = null;
 
-export const useLayerStore = create<LayerState>((set) => ({
-  layers: [],
+export const useLogStore = create<LogState>((set) => ({
+  logs: [],
 }));
 
 // Auto-initialize the store when first imported
@@ -25,42 +25,42 @@ const initializeStore = async () => {
   
   try {
     // Fetch initial data
-    const { data, error } = await supabase.from("layer").select("*");
+    const { data, error } = await supabase.from("log").select("*").order('created_at', { ascending: false });
     
     if (error) {
-      console.error("Error fetching layers:", error);
-      useLayerStore.setState({ layers: [] });
+      console.error("Error fetching logs:", error);
+      useLogStore.setState({ logs: [] });
       return;
     }
     
-    useLayerStore.setState({ layers: data || [] });
+    useLogStore.setState({ logs: data || [] });
     
     // Set up real-time subscription
     channel = supabase
-      .channel("layers-channel")
+      .channel("logs-channel")
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
-          table: "layer",
+          table: "log",
         },
         (payload) => {
           const { eventType, new: newRow, old: oldRow } = payload;
           
           if (eventType === "INSERT") {
-            useLayerStore.setState((state) => ({ 
-              layers: [...state.layers, newRow as Layer] 
+            useLogStore.setState((state) => ({ 
+              logs: [newRow as Log, ...state.logs] 
             }));
           } else if (eventType === "UPDATE") {
-            useLayerStore.setState((state) => ({
-              layers: state.layers.map((layer) => 
-                layer.id === (newRow as Layer).id ? newRow as Layer : layer
+            useLogStore.setState((state) => ({
+              logs: state.logs.map((log) => 
+                log.id === (newRow as Log).id ? newRow as Log : log
               )
             }));
           } else if (eventType === "DELETE") {
-            useLayerStore.setState((state) => ({
-              layers: state.layers.filter((layer) => layer.id !== (oldRow as Layer).id)
+            useLogStore.setState((state) => ({
+              logs: state.logs.filter((log) => log.id !== (oldRow as Log).id)
             }));
           }
         }
@@ -70,8 +70,8 @@ const initializeStore = async () => {
     isSubscribed = true;
     
   } catch (error) {
-    console.error("Error initializing layers store:", error);
-    useLayerStore.setState({ layers: [] });
+    console.error("Error initializing logs store:", error);
+    useLogStore.setState({ logs: [] });
   }
 };
 
@@ -79,7 +79,7 @@ const initializeStore = async () => {
 initializeStore();
 
 // Cleanup function for when the app unmounts (optional)
-export const cleanupLayersStore = () => {
+export const cleanupLogsStore = () => {
   if (channel) {
     supabase.removeChannel(channel);
     channel = null;
@@ -87,4 +87,4 @@ export const cleanupLayersStore = () => {
   }
 };
 
-export type { Layer };
+export type { Log };
