@@ -1,18 +1,11 @@
 // /stores/layers_store.ts
 import { create } from 'zustand';
 import { createClient } from '@/lib/supabase/client';
+import { Tables } from '@/lib/supabase/database.types';
 
 const supabase = createClient();
 
-// Layer type - adjust based on your actual database.types
-export type Layer = {
-  id: string;
-  created_at: string;
-  name: string | null;
-  description: string | null;
-  warmth: number | null;
-  user_id: string | null;
-};
+type Layer = Tables<'layer'>;
 
 type LayerState = {
   layers: Layer[];
