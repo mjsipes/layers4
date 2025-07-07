@@ -104,22 +104,9 @@ export default function ChatCard() {
     }
   };
 
-  // const handleNewChat = () => {
-  //   setMessages([
-  //     {
-  //       id: 1,
-  //       sender: "AI Assistant",
-  //       content: "Hi, how can I help you today?",
-  //       isUser: false,
-  //     },
-  //   ]);
-  //   clearData();
-  //   currentResponseId.current = null;
-  // };
-
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden">
-      <ScrollArea className="flex-1 w-full px-4 py-2" ref={scrollAreaRef}>
+      <ScrollArea className="h-[860px] px-4 py-2" ref={scrollAreaRef}>
         <div className="space-y-2 w-full">
           {messages.map((message) => (
             <div

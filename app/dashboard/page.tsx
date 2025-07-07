@@ -18,16 +18,16 @@ export default async function ProtectedPage() {
 
   return (
     <ResizablePanelGroup direction="horizontal" className="w-screen h-full">
+      <ResizablePanel defaultSize={25}>
+          <ChatCard/>
+      </ResizablePanel>
+      <ResizableHandle withHandle />
       <ResizablePanel defaultSize={75}>
         <div className="flex flex-col h-full items-center ">
           <WeatherCard />
-          <RecomendationCard />
+          {/* <RecomendationCard /> */}
           <WardobeCard />
         </div>
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={25}>
-          <ChatCard/>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

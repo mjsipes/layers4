@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layers from "./Layers";
 import Outfits from "./Outfits";
 import Logs from "./Logs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const WardobeCard = () => {
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
@@ -35,25 +36,21 @@ const WardobeCard = () => {
             </button>
           </div>
         </div>
-
-        <TabsContent value="layers">
-          <Layers viewMode={viewMode} />
-        </TabsContent>
-        
-        <TabsContent value="outfits">
-          <Outfits 
-            viewMode={viewMode} 
-            setFocused={setFocusedItem}
-            setTab={setActiveTab}
-          />
-        </TabsContent>
-        
-        <TabsContent value="logs">
-          <Logs 
-            viewMode={viewMode} 
-            setFocused={setFocusedItem}
-          />
-        </TabsContent>
+        <ScrollArea className="h-[510px]">
+          <TabsContent value="layers">
+            <Layers viewMode={viewMode} />
+          </TabsContent>
+          <TabsContent value="outfits">
+            <Outfits
+              viewMode={viewMode}
+              setFocused={setFocusedItem}
+              setTab={setActiveTab}
+            />
+          </TabsContent>
+          <TabsContent value="logs">
+            <Logs viewMode={viewMode} setFocused={setFocusedItem} />
+          </TabsContent>
+        </ScrollArea>
       </Tabs>
     </div>
   );
