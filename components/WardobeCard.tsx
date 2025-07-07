@@ -20,8 +20,8 @@ const WardobeCard = () => {
   return (
     <div className="w-full p-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Wardrobe</h2>
+        <div className="flex items-center justify-around mb-4">
+          {/* <h2 className="text-2xl font-bold">Wardrobe</h2> */}
           <div className="flex items-center gap-4">
             <TabsList>
               <TabsTrigger value="layers">Layers</TabsTrigger>
