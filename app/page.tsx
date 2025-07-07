@@ -1,5 +1,5 @@
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
+import { EnvVarWarning } from "@/components/auth/env-var-warning";
+import { AuthButton } from "@/components/auth/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
 import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
