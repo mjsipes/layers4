@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import WeatherCard from "@/components/WeatherCard";
-import RecomendationCard from "@/components/RecomendationCard";
 import WardobeCard from "@/components/WardobeCard";
 import ChatCard from "@/components/ChatCard";
 
