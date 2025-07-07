@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { Grid, List } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layers from "./Layers";
-import OutfitsContent from "./OutfitsContent";
-import LogsContent from "./LogsContent";
+import Outfits from "./Outfits";
+import Logs from "./Logs";
 
 const WardobeCard = () => {
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
@@ -41,7 +41,7 @@ const WardobeCard = () => {
         </TabsContent>
         
         <TabsContent value="outfits">
-          <OutfitsContent 
+          <Outfits 
             viewMode={viewMode} 
             setFocused={setFocusedItem}
             setTab={setActiveTab}
@@ -49,7 +49,7 @@ const WardobeCard = () => {
         </TabsContent>
         
         <TabsContent value="logs">
-          <LogsContent 
+          <Logs 
             viewMode={viewMode} 
             setFocused={setFocusedItem}
           />
