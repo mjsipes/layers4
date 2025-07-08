@@ -103,7 +103,7 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
           </div>
           
           <div className="mb-3 pr-12">
-            <h3 className="text-lg font-semibold text-primary leading-tight">
+            <h3 className="text-sm font-semibold text-primary leading-tight">
               {outfit.name || 'Unnamed Outfit'}
             </h3>
           </div>
@@ -113,7 +113,7 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
               {outfit.layers.map((layer) => (
                 <span
                   key={layer.id}
-                  className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                  className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
                   onClick={e => {
                     e.stopPropagation();
                     if (setFocused) setFocused(layer);

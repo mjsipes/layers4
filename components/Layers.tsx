@@ -73,7 +73,7 @@ const Layers = ({ viewMode }: LayersProps) => {
           </div>
           
           <div className="mb-3 pr-12">
-            <h3 className="text-lg font-semibold text-primary leading-tight">
+            <h3 className="text-sm font-semibold text-primary leading-tight">
               {layer.name || 'Unnamed Layer'}
             </h3>
           </div>
