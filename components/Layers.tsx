@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React from "react";
 import {
   Table,
   TableBody,
@@ -7,12 +7,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { useLayerStore } from '@/stores/layers_store'
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { useLayerStore } from "@/stores/layers_store";
 
 interface LayersProps {
-  viewMode: 'table' | 'grid';
+  viewMode: "table" | "grid";
 }
 
 const Layers = ({ viewMode }: LayersProps) => {
@@ -26,15 +26,16 @@ const Layers = ({ viewMode }: LayersProps) => {
     );
   }
 
-  if (viewMode === 'table') {
-    return (        <Table className="table-fixed w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4">Name</TableHead>
-              <TableHead className="w-2/3">Description</TableHead>
-              <TableHead className="w-1/12 text-center">Warmth</TableHead>
-            </TableRow>
-          </TableHeader>
+  if (viewMode === "table") {
+    return (
+      <Table className="table-fixed w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-1/4">Name</TableHead>
+            <TableHead className="w-2/3">Description</TableHead>
+            <TableHead className="w-1/12 text-center">Warmth</TableHead>
+          </TableRow>
+        </TableHeader>
         <TableBody>
           {layers.map((layer) => (
             <TableRow
@@ -42,15 +43,13 @@ const Layers = ({ viewMode }: LayersProps) => {
               className="hover:bg-muted/50 cursor-pointer"
             >
               <TableCell className="font-medium truncate">
-                {layer.name || 'Unnamed Layer'}
+                {layer.name || "Unnamed Layer"}
               </TableCell>
               <TableCell className="font-medium truncate">
-                {layer.description || '-'}
+                {layer.description || "-"}
               </TableCell>
               <TableCell className="font-medium truncate text-center">
-                <Badge variant="destructive">
-                  {layer.warmth || '-'}
-                </Badge>
+                <Badge variant="destructive">{layer.warmth || "-"}</Badge>
               </TableCell>
             </TableRow>
           ))}
@@ -67,26 +66,24 @@ const Layers = ({ viewMode }: LayersProps) => {
           className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
         >
           <div className="absolute top-3 right-3">
-            <Badge variant="destructive">
-              {layer.warmth || '-'}
-            </Badge>
+            <Badge variant="destructive">{layer.warmth || "-"}</Badge>
           </div>
-          
+
           <div className="mb-3 pr-12">
             <h3 className="text-sm font-semibold text-primary leading-tight">
-              {layer.name || 'Unnamed Layer'}
+              {layer.name || "Unnamed Layer"}
             </h3>
           </div>
-          
+
           <div className="mt-auto">
             <p className="text-sm text-foreground line-clamp-3">
-              {layer.description || '-'}
+              {layer.description || "-"}
             </p>
           </div>
         </div>
       ))}
     </div>
   );
-}
+};
 
-export default Layers
+export default Layers;

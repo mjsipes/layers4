@@ -14,54 +14,91 @@ type Log = Tables<'log'> & {
 
 type LogState = {
   logs: Log[];
+  addLog: (log: { 
+    feedback?: string; 
+    comfort_level?: number; 
+    date?: string;
+    outfit_id?: string;
+    weather_id?: string;
+  }) => Promise<void>;
 };
 
 // Global state to track subscription
 let isSubscribed = false;
 let channel: any = null;
 
-export const useLogStore = create<LogState>((set) => ({
+export const useLogStore = create<LogState>((set, get) => ({
   logs: [],
+  addLog: async (logData) => {
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) {
+        console.error("🔴 [LOGS] Error getting user:", userError);
+      } else {
+        console.log("🟢 [LOGS] User data received:", { id: user?.id });
+      }
+      const insertData = {
+        feedback: logData.feedback || null,
+        comfort_level: logData.comfort_level || null,
+        date: logData.date || null,
+        outfit_id: logData.outfit_id || null,
+        weather_id: logData.weather_id || null,
+        user_id: user?.id || null,
+      };
+      console.log("🔵 [LOGS] Inserting log data:", insertData);
+      const { error } = await supabase
+        .from("log")
+        .insert(insertData);
+      if (error) {
+        console.error("🔴 [LOGS] Error adding log:", error);
+        throw error;
+      } else {
+        console.log("🟢 [LOGS] Log inserted successfully");
+      }
+    } catch (error) {
+      console.error("🔴 [LOGS] Failed to add log:", error);
+      throw error;
+    }
+  },
 }));
 
-// Auto-initialize the store when first imported
-const initializeStore = async () => {
-  if (isSubscribed) return;
-  
-  try {
-    // Fetch initial data with outfit and weather joins
-    const { data, error } = await supabase
-      .from("log")
-      .select(`
+export const fetchLogs = async () => {
+  const { data, error } = await supabase
+    .from("log")
+    .select(`
+      *,
+      outfit:outfit_id (
         *,
-        outfit:outfit_id (
-          *,
-          outfit_layer(
-            layer(*)
-          )
-        ),
-        weather:weather_id (*)
-      `)
-      .order('created_at', { ascending: false });
-    
-    if (error) {
-      console.error("Error fetching logs:", error);
-      useLogStore.setState({ logs: [] });
-      return;
-    }
-    
-    // Transform the data to include layers properly
-    const logsWithRelations = data?.map(log => ({
-      ...log,
-      outfit: log.outfit ? {
-        ...log.outfit,
-        layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) || []
-      } : undefined
-    })) || [];
-    
-    useLogStore.setState({ logs: logsWithRelations });
-    
-    // Set up real-time subscription
+        outfit_layer(
+          layer(*)
+        )
+      ),
+      weather:weather_id (*)
+    `)
+    .order('created_at', { ascending: false });
+  if (error) {
+    console.error("🔴 [LOGS] Error fetching logs:", error);
+    useLogStore.setState({ logs: [] });
+    return [];
+  }
+  console.log("🟢 [LOGS] Raw data received:", data);
+  const logsWithRelations = data?.map(log => ({
+    ...log,
+    outfit: log.outfit ? {
+      ...log.outfit,
+      layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) || []
+    } : undefined
+  })) || [];
+  useLogStore.setState({ logs: logsWithRelations });
+  return logsWithRelations;
+};
+
+const initializeStore = async () => {
+  if (isSubscribed) {
+    return;
+  }
+  try {
+    await fetchLogs();
     channel = supabase
       .channel("logs-channel")
       .on(
@@ -72,47 +109,20 @@ const initializeStore = async () => {
           table: "log",
         },
         async (payload) => {
-          // Refetch all logs when there's any change to maintain consistency
-          const { data, error } = await supabase
-            .from("log")
-            .select(`
-              *,
-              outfit:outfit_id (
-                *,
-                outfit_layer(
-                  layer(*)
-                )
-              ),
-              weather:weather_id (*)
-            `)
-            .order('created_at', { ascending: false });
-          
-          if (!error && data) {
-            const logsWithRelations = data.map(log => ({
-              ...log,
-              outfit: log.outfit ? {
-                ...log.outfit,
-                layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) || []
-              } : undefined
-            }));
-            useLogStore.setState({ logs: logsWithRelations });
-          }
+          console.log("🔵 [LOGS] Subscription triggered:", payload);
+          await fetchLogs();
         }
       )
       .subscribe();
-    
     isSubscribed = true;
-    
   } catch (error) {
-    console.error("Error initializing logs store:", error);
+    console.error("🔴 [LOGS] Error initializing logs store:", error);
     useLogStore.setState({ logs: [] });
   }
 };
 
-// Initialize automatically
 initializeStore();
 
-// Cleanup function for when the app unmounts (optional)
 export const cleanupLogsStore = () => {
   if (channel) {
     supabase.removeChannel(channel);

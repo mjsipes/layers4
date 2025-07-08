@@ -164,7 +164,7 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
             </div>
             
             <div className="mt-auto">
-              <p className="text-sm text-foreground line-clamp-3 mb-2">
+              <p className="text-sm text-foreground line-clamp-3">
                 {log.feedback || 'No feedback provided'}
               </p>
             </div>
