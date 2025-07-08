@@ -31,17 +31,70 @@ const SelectLogCard = () => {
     return 'destructive';
   };
 
+  const getWeatherInfo = () => {
+    // Debug: Log the weather data to console
+    console.log('Log weather data:', log.weather);
+    console.log('Log weather_data:', log.weather?.weather_data);
+    
+    if (!log.weather?.weather_data) return null;
+    
+    try {
+      const weatherData = typeof log.weather.weather_data === 'string' 
+        ? JSON.parse(log.weather.weather_data) 
+        : log.weather.weather_data;
+      
+      console.log('Parsed weather data:', weatherData);
+      
+      // Handle Visual Crossing weather data structure
+      const dayData = weatherData?.days?.[0];
+      if (dayData) {
+        return {
+          temperature: Math.round(dayData.temp || dayData.temperature || 0),
+          condition: dayData.conditions || dayData.condition
+        };
+      }
+      
+      // Fallback to other possible structures
+      const temp = weatherData?.main?.temp || weatherData?.temperature || weatherData?.temp;
+      const condition = weatherData?.weather?.[0]?.main || weatherData?.condition || weatherData?.weather_condition;
+      
+      if (temp) {
+        return {
+          temperature: Math.round(temp),
+          condition: condition
+        };
+      }
+    } catch (e) {
+      console.error('Error parsing weather data:', e);
+    }
+    
+    return null;
+  };
+
+  const weatherInfo = getWeatherInfo();
+
   return (
     <div className="p-4">
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold">
-              Log Entry
-            </h3>
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <h3 className="text-2xl font-bold text-blue-600">
               {log.date ? formatDate(log.date) : formatDate(log.created_at)}
-            </p>
+            </h3>
+            <Badge variant={getComfortColor(log.comfort_level)} className="text-sm">
+              {log.comfort_level || "-"}
+            </Badge>
+            {weatherInfo && (
+              <Badge variant="secondary" className="text-sm">
+                {weatherInfo.temperature}°F
+                {weatherInfo.condition && ` • ${weatherInfo.condition}`}
+              </Badge>
+            )}
+            {!weatherInfo && log.weather === undefined && (
+              <Badge variant="outline" className="text-xs opacity-60">
+                No weather data
+              </Badge>
+            )}
           </div>
           <Button
             variant="destructive"
@@ -53,31 +106,20 @@ const SelectLogCard = () => {
             Delete
           </Button>
         </div>
-        
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Comfort Level:</span>
-          <Badge variant={getComfortColor(log.comfort_level)}>
-            {log.comfort_level || "-"}
-          </Badge>
-        </div>
 
         {log.outfit?.name && (
-          <div>
-            <span className="text-sm text-muted-foreground">Outfit:</span>
-            <p className="text-sm mt-1">{log.outfit.name}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-base text-muted-foreground font-medium">Outfit:</span>
+            <span className="text-base">{log.outfit.name}</span>
           </div>
         )}
 
         {log.feedback && (
-          <div>
-            <span className="text-sm text-muted-foreground">Feedback:</span>
-            <p className="text-sm mt-1">{log.feedback}</p>
+          <div className="flex items-start gap-2">
+            <span className="text-base text-muted-foreground font-medium">Feedback:</span>
+            <span className="text-base leading-relaxed">{log.feedback}</span>
           </div>
         )}
-
-        <div className="text-xs text-muted-foreground">
-          ID: {log.id}
-        </div>
       </div>
     </div>
   );

@@ -20,9 +20,14 @@ const SelectOutfitCard = () => {
     <div className="p-4">
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">
-            {outfit.name || "Unnamed Outfit"}
-          </h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-2xl font-bold text-blue-600">
+              {outfit.name || "Unnamed Outfit"}
+            </h3>
+            <Badge variant="destructive" className="text-sm">
+              {outfit.total_warmth || "-"}
+            </Badge>
+          </div>
           <Button
             variant="destructive"
             size="sm"
@@ -33,20 +38,15 @@ const SelectOutfitCard = () => {
             Delete
           </Button>
         </div>
-        
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Total Warmth:</span>
-          <Badge variant="destructive">{outfit.total_warmth || "-"}</Badge>
-        </div>
 
         {outfit.layers && outfit.layers.length > 0 && (
           <div>
-            <span className="text-sm text-muted-foreground">Layers:</span>
-            <div className="flex gap-1 flex-wrap mt-1">
+            <span className="text-base text-muted-foreground font-medium">Layers:</span>
+            <div className="flex gap-1 flex-wrap mt-2">
               {outfit.layers.map((layer: any) => (
                 <span
                   key={layer.id}
-                  className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-secondary text-secondary-foreground"
+                  className="inline-flex items-center rounded-md px-2 py-1 text-sm font-medium bg-secondary text-secondary-foreground"
                 >
                   {layer.name || "Unnamed Layer"}
                 </span>
@@ -54,10 +54,6 @@ const SelectOutfitCard = () => {
             </div>
           </div>
         )}
-
-        <div className="text-xs text-muted-foreground">
-          ID: {outfit.id}
-        </div>
       </div>
     </div>
   );
