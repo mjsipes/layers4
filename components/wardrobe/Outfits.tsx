@@ -11,15 +11,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useOutfitStore } from "@/stores/outfits_store";
+import { useGlobalStore } from "@/stores/global_state";
 
 interface OutfitsProps {
   viewMode: "table" | "grid";
-  setFocused?: (item: unknown) => void;
-  setTab?: (tab: string) => void;
 }
 
-const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
+const Outfits = ({ viewMode }: OutfitsProps) => {
   const { outfits } = useOutfitStore();
+  const { setSelectedItem } = useGlobalStore();
+
+  const handleOutfitClick = (outfit: any) => {
+    console.log("Outfit clicked:", outfit.id);
+    setSelectedItem(outfit.id, "selectoutfit");
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFocused = (_item: unknown) => {
@@ -52,7 +57,9 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
                 key={item.id}
                 data-state={isFocused(item) ? "selected" : undefined}
                 className="hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
-                onClick={() => setFocused && setFocused(item)}
+                onClick={() => {
+                  handleOutfitClick(item);
+                }}
               >
                 <TableCell className={"font-medium truncate"}>
                   {item.name || "Unnamed Outfit"}
@@ -65,8 +72,7 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
                         className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (setFocused) setFocused(layer);
-                          if (setTab) setTab("layers");
+                          // Could potentially navigate to layers tab and select layer here if needed
                         }}
                         style={{ cursor: "pointer" }}
                       >
@@ -95,7 +101,9 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
           <div
             key={outfit.id}
             className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
-            onClick={() => setFocused && setFocused(outfit)}
+            onClick={() => {
+              handleOutfitClick(outfit);
+            }}
           >
             <div className="absolute top-3 right-3">
               <Badge variant="destructive">{outfit.total_warmth || "-"}</Badge>
@@ -115,8 +123,7 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
                     className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (setFocused) setFocused(layer);
-                      if (setTab) setTab("layers");
+                      // Could potentially navigate to layers tab and select layer here if needed
                     }}
                     style={{ cursor: "pointer" }}
                   >

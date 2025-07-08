@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
@@ -11,18 +11,28 @@ import { Plus, Star } from "lucide-react";
 import AddLayerCard from "@/components/add/AddLayerCard";
 import AddLogCard from "@/components/add/AddLogCard";
 import AddOutfitCard from "@/components/add/AddOutfitCard";
+import SelectLayerCard from "@/components/select/SelectLayerCard";
+import SelectOutfitCard from "@/components/select/SelectOutfitCard";
+import SelectLogCard from "@/components/select/SelectLogCard";
+import { useGlobalStore } from "@/stores/global_state";
 
 const DynamicCard = () => {
-  const [activeTab, setActiveTab] = useState("layers");
+  const { selectedType, setSelectedItem } = useGlobalStore();
 
   const renderActiveCard = () => {
-    switch (activeTab) {
-      case "layers":
+    switch (selectedType) {
+      case "addlayer":
         return <AddLayerCard />;
-      case "outfits":
+      case "addoutfit":
         return <AddOutfitCard />;
-      case "logs":
+      case "addlog":
         return <AddLogCard />;
+      case "selectlayer":
+        return <SelectLayerCard />;
+      case "selectoutfit":
+        return <SelectOutfitCard />;
+      case "selectlog":
+        return <SelectLogCard />;
       case "recommendations":
         return (
           <div className="p-4 text-center text-muted-foreground">
@@ -40,7 +50,7 @@ const DynamicCard = () => {
       <div className="flex flex-col gap-2 p-2 border-r">
         {/* Recommendations button */}
 
-        <button className="inline-flex items-center justify-center rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" onClick={() => setActiveTab("recommendations")}>
+        <button className="inline-flex items-center justify-center rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" onClick={() => setSelectedItem(null, "recommendations")}>
           <Star size={16} />
         </button>
         {/* Plus button with dropdown */}
@@ -51,13 +61,13 @@ const DynamicCard = () => {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setActiveTab("layers")}>
+            <DropdownMenuItem onClick={() => setSelectedItem(null, "addlayer")}>
               Layer
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setActiveTab("outfits")}>
+            <DropdownMenuItem onClick={() => setSelectedItem(null, "addoutfit")}>
               Outfit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setActiveTab("logs")}>
+            <DropdownMenuItem onClick={() => setSelectedItem(null, "addlog")}>
               Log
             </DropdownMenuItem>
           </DropdownMenuContent>

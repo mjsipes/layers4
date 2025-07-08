@@ -14,6 +14,7 @@ type LayerState = {
     description?: string;
     warmth?: number;
   }) => Promise<void>;
+  deleteLayer: (layerId: string) => Promise<void>;
 };
 
 let isSubscribed = false;
@@ -52,6 +53,29 @@ export const useLayerStore = create<LayerState>((set, get) => ({
       }
     } catch (error) {
       console.error("🔴 [LAYERS] Failed to add layer:", error);
+      throw error;
+    }
+  },
+  deleteLayer: async (layerId) => {
+    try {
+      console.log("🔵 [LAYERS] Deleting layer with ID:", layerId);
+      const { data, error } = await supabase
+        .from("layer")
+        .delete()
+        .eq("id", layerId)
+        .select();
+      
+      console.log("🟢 [LAYERS] Delete result data:", data);
+      console.log("🟢 [LAYERS] Delete result error:", error);
+      
+      if (error) {
+        console.error("🔴 [LAYERS] Error deleting layer:", error);
+        throw error;
+      } else {
+        console.log("🟢 [LAYERS] Layer deleted successfully:", data);
+      }
+    } catch (error) {
+      console.error("🔴 [LAYERS] Failed to delete layer:", error);
       throw error;
     }
   },

@@ -15,6 +15,7 @@ type OutfitState = {
     name: string; 
     layer_ids?: string[]; 
   }) => Promise<void>;
+  deleteOutfit: (outfitId: string) => Promise<void>;
 };
 
 let isSubscribed = false;
@@ -64,6 +65,29 @@ export const useOutfitStore = create<OutfitState>((set) => ({
       }
     } catch (error) {
       console.error("🔴 [OUTFITS] Failed to add outfit:", error);
+      throw error;
+    }
+  },
+  deleteOutfit: async (outfitId) => {
+    try {
+      console.log("🔵 [OUTFITS] Deleting outfit with ID:", outfitId);
+      const { data, error } = await supabase
+        .from("outfit")
+        .delete()
+        .eq("id", outfitId)
+        .select();
+      
+      console.log("🟢 [OUTFITS] Delete result data:", data);
+      console.log("🟢 [OUTFITS] Delete result error:", error);
+      
+      if (error) {
+        console.error("🔴 [OUTFITS] Error deleting outfit:", error);
+        throw error;
+      } else {
+        console.log("🟢 [OUTFITS] Outfit deleted successfully:", data);
+      }
+    } catch (error) {
+      console.error("🔴 [OUTFITS] Failed to delete outfit:", error);
       throw error;
     }
   },

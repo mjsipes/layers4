@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useLayerStore } from "@/stores/layers_store";
+import { useGlobalStore } from "@/stores/global_state";
 
 interface LayersProps {
   viewMode: "table" | "grid";
@@ -17,6 +18,12 @@ interface LayersProps {
 
 const Layers = ({ viewMode }: LayersProps) => {
   const { layers } = useLayerStore();
+  const { setSelectedItem } = useGlobalStore();
+
+  const handleLayerClick = (layer: any) => {
+    console.log("Layer clicked:", layer.id);
+    setSelectedItem(layer.id, "selectlayer");
+  };
 
   if (layers.length === 0) {
     return (
@@ -41,6 +48,7 @@ const Layers = ({ viewMode }: LayersProps) => {
             <TableRow
               key={layer.id}
               className="hover:bg-muted/50 cursor-pointer"
+              onClick={() => handleLayerClick(layer)}
             >
               <TableCell className="font-medium truncate">
                 {layer.name || "Unnamed Layer"}
@@ -64,6 +72,7 @@ const Layers = ({ viewMode }: LayersProps) => {
         <div
           key={layer.id}
           className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
+          onClick={() => handleLayerClick(layer)}
         >
           <div className="absolute top-3 right-3">
             <Badge variant="destructive">{layer.warmth || "-"}</Badge>

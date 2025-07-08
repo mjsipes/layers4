@@ -11,14 +11,20 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useLogStore } from '@/stores/logs_store'
+import { useGlobalStore } from "@/stores/global_state";
 
 interface LogsProps {
   viewMode: 'table' | 'grid';
-  setFocused?: (item: unknown) => void;
 }
 
-const Logs = ({ viewMode, setFocused }: LogsProps) => {
+const Logs = ({ viewMode }: LogsProps) => {
   const { logs } = useLogStore();
+  const { setSelectedItem } = useGlobalStore();
+
+  const handleLogClick = (log: any) => {
+    console.log("Log clicked:", log.id);
+    setSelectedItem(log.id, "selectlog");
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFocused = (_item: unknown) => {
@@ -76,7 +82,9 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
                   key={log.id}
                   data-state={isFocused(log) ? "selected" : undefined}
                   className="hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
-                  onClick={() => setFocused && setFocused(log)}
+                  onClick={() => {
+                    handleLogClick(log);
+                  }}
                 >
                   <TableCell className="font-medium truncate">
                     {log.date ? formatDate(log.date) : formatDate(log.created_at)}
@@ -131,7 +139,9 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
           <div
             key={log.id}
             className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
-            onClick={() => setFocused && setFocused(log)}
+            onClick={() => {
+              handleLogClick(log);
+            }}
           >
             <div className="absolute top-3 right-3">
               <Badge variant={getComfortColor(log.comfort_level)}>

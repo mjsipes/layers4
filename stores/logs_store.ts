@@ -21,6 +21,7 @@ type LogState = {
     outfit_id?: string;
     weather_id?: string;
   }) => Promise<void>;
+  deleteLog: (logId: string) => Promise<void>;
 };
 
 // Global state to track subscription
@@ -57,6 +58,29 @@ export const useLogStore = create<LogState>((set, get) => ({
       }
     } catch (error) {
       console.error("🔴 [LOGS] Failed to add log:", error);
+      throw error;
+    }
+  },
+  deleteLog: async (logId) => {
+    try {
+      console.log("🔵 [LOGS] Deleting log with ID:", logId);
+      const { data, error } = await supabase
+        .from("log")
+        .delete()
+        .eq("id", logId)
+        .select();
+      
+      console.log("🟢 [LOGS] Delete result data:", data);
+      console.log("🟢 [LOGS] Delete result error:", error);
+      
+      if (error) {
+        console.error("🔴 [LOGS] Error deleting log:", error);
+        throw error;
+      } else {
+        console.log("🟢 [LOGS] Log deleted successfully:", data);
+      }
+    } catch (error) {
+      console.error("🔴 [LOGS] Failed to delete log:", error);
       throw error;
     }
   },
