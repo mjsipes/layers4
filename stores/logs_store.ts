@@ -5,7 +5,12 @@ import { Tables } from '@/lib/supabase/database.types';
 
 const supabase = createClient();
 
-type Log = Tables<'log'>;
+type Log = Tables<'log'> & {
+  outfit?: Tables<'outfit'> & {
+    layers: Tables<'layer'>[];
+  };
+  weather?: Tables<'weather'>;
+};
 
 type LogState = {
   logs: Log[];
@@ -24,8 +29,20 @@ const initializeStore = async () => {
   if (isSubscribed) return;
   
   try {
-    // Fetch initial data
-    const { data, error } = await supabase.from("log").select("*").order('created_at', { ascending: false });
+    // Fetch initial data with outfit and weather joins
+    const { data, error } = await supabase
+      .from("log")
+      .select(`
+        *,
+        outfit:outfit_id (
+          *,
+          outfit_layer(
+            layer(*)
+          )
+        ),
+        weather:weather_id (*)
+      `)
+      .order('created_at', { ascending: false });
     
     if (error) {
       console.error("Error fetching logs:", error);
@@ -33,7 +50,16 @@ const initializeStore = async () => {
       return;
     }
     
-    useLogStore.setState({ logs: data || [] });
+    // Transform the data to include layers properly
+    const logsWithRelations = data?.map(log => ({
+      ...log,
+      outfit: log.outfit ? {
+        ...log.outfit,
+        layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) || []
+      } : undefined
+    })) || [];
+    
+    useLogStore.setState({ logs: logsWithRelations });
     
     // Set up real-time subscription
     channel = supabase
@@ -45,23 +71,31 @@ const initializeStore = async () => {
           schema: "public",
           table: "log",
         },
-        (payload) => {
-          const { eventType, new: newRow, old: oldRow } = payload;
+        async (payload) => {
+          // Refetch all logs when there's any change to maintain consistency
+          const { data, error } = await supabase
+            .from("log")
+            .select(`
+              *,
+              outfit:outfit_id (
+                *,
+                outfit_layer(
+                  layer(*)
+                )
+              ),
+              weather:weather_id (*)
+            `)
+            .order('created_at', { ascending: false });
           
-          if (eventType === "INSERT") {
-            useLogStore.setState((state) => ({ 
-              logs: [newRow as Log, ...state.logs] 
+          if (!error && data) {
+            const logsWithRelations = data.map(log => ({
+              ...log,
+              outfit: log.outfit ? {
+                ...log.outfit,
+                layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) || []
+              } : undefined
             }));
-          } else if (eventType === "UPDATE") {
-            useLogStore.setState((state) => ({
-              logs: state.logs.map((log) => 
-                log.id === (newRow as Log).id ? newRow as Log : log
-              )
-            }));
-          } else if (eventType === "DELETE") {
-            useLogStore.setState((state) => ({
-              logs: state.logs.filter((log) => log.id !== (oldRow as Log).id)
-            }));
+            useLogStore.setState({ logs: logsWithRelations });
           }
         }
       )

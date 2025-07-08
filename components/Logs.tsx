@@ -55,36 +55,62 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-1/4">Date</TableHead>
-              <TableHead className="w-1/2">Feedback</TableHead>
-              <TableHead className="w-1/6">Outfit</TableHead>
+              <TableHead className="w-1/12">Date</TableHead>
+              <TableHead className="w-1/12">Weather</TableHead>
+              <TableHead className="w-2/12">Outfit</TableHead>
+              <TableHead className="w-7/12">Feedback</TableHead>
               <TableHead className="w-1/12 text-center">Comfort</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {logs.map((log) => (
-              <TableRow
-                key={log.id}
-                data-state={isFocused(log) ? "selected" : undefined}
-                className="hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
-                onClick={() => setFocused && setFocused(log)}
-              >
-                <TableCell className="font-medium truncate">
-                  {log.date ? formatDate(log.date) : formatDate(log.created_at)}
-                </TableCell>
-                <TableCell className="truncate">
-                  {log.feedback || '-'}
-                </TableCell>
-                <TableCell className="truncate">
-                  {log.outfit_id ? 'Yes' : '-'}
-                </TableCell>
-                <TableCell className="text-center">
-                  <Badge variant={getComfortColor(log.comfort_level)}>
-                    {log.comfort_level || '-'}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
+            {logs.map((log) => {
+              const weatherData = log.weather?.weather_data 
+                ? (typeof log.weather.weather_data === 'string' 
+                    ? JSON.parse(log.weather.weather_data) 
+                    : log.weather.weather_data)
+                : null;
+              const currentWeather = weatherData?.days?.[0];
+              
+              return (
+                <TableRow
+                  key={log.id}
+                  data-state={isFocused(log) ? "selected" : undefined}
+                  className="hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
+                  onClick={() => setFocused && setFocused(log)}
+                >
+                  <TableCell className="font-medium truncate">
+                    {log.date ? formatDate(log.date) : formatDate(log.created_at)}
+                  </TableCell>
+                  <TableCell className="truncate">
+                    <div className="flex gap-1 flex-wrap">
+                      {(currentWeather?.temp || currentWeather?.description) && (
+                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground">
+                          {currentWeather?.temp && `${currentWeather.temp}°`}
+                          {currentWeather?.temp && currentWeather?.description && ' & '}
+                          {currentWeather?.description && currentWeather.description.split(' ')[0]}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="truncate">
+                    {log.outfit?.name && (
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground">
+                        {log.outfit.name}
+                      </span>
+                    )}
+                    {!log.outfit?.name && '-'}
+                  </TableCell>
+                  <TableCell className="truncate">
+                    {log.feedback || '-'}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant={getComfortColor(log.comfort_level)}>
+                      {log.comfort_level || '-'}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </ScrollArea>
@@ -93,41 +119,58 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {logs.map((log) => (
-        <div
-          key={log.id}
-          className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
-          onClick={() => setFocused && setFocused(log)}
-        >
-          <div className="absolute top-3 right-3">
-            <Badge variant={getComfortColor(log.comfort_level)}>
-              {log.comfort_level || '-'}
-            </Badge>
-          </div>
-          
-          <div className="mb-3 pr-12">
-            <h3 className="text-sm font-semibold text-primary leading-tight">
-              {log.date ? formatDate(log.date) : formatDate(log.created_at)}
-            </h3>
-          </div>
-          
-          <div className="mt-auto">
-            <p className="text-sm text-foreground line-clamp-3 mb-2">
-              {log.feedback || 'No feedback provided'}
-            </p>
-            {log.outfit_id && (
-              <div className="text-xs text-muted-foreground">
-                Outfit linked
+      {logs.map((log) => {
+        const weatherData = log.weather?.weather_data 
+          ? (typeof log.weather.weather_data === 'string' 
+              ? JSON.parse(log.weather.weather_data) 
+              : log.weather.weather_data)
+          : null;
+        const currentWeather = weatherData?.days?.[0];
+        
+        return (
+          <div
+            key={log.id}
+            className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
+            onClick={() => setFocused && setFocused(log)}
+          >
+            <div className="absolute top-3 right-3">
+              <Badge variant={getComfortColor(log.comfort_level)}>
+                {log.comfort_level || '-'}
+              </Badge>
+            </div>
+            
+            <div className="mb-3 pr-12">
+              <h3 className="text-sm font-semibold text-primary leading-tight">
+                {log.date ? formatDate(log.date) : formatDate(log.created_at)}
+              </h3>
+            </div>
+
+            {/* Weather and Outfit Info */}
+            <div className="mt-2 mb-4">
+              <div className="flex gap-1 flex-wrap">
+                {(currentWeather?.temp || currentWeather?.description) && (
+                  <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground">
+                    {currentWeather?.temp && `${currentWeather.temp}°`}
+                    {currentWeather?.temp && currentWeather?.description && ' & '}
+                    {currentWeather?.description && currentWeather.description.split(' ')[0]}
+                  </span>
+                )}
+                {log.outfit?.name && (
+                  <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground">
+                    {log.outfit.name}
+                  </span>
+                )}
               </div>
-            )}
-            {log.weather_id && (
-              <div className="text-xs text-muted-foreground">
-                Weather data available
-              </div>
-            )}
+            </div>
+            
+            <div className="mt-auto">
+              <p className="text-sm text-foreground line-clamp-3 mb-2">
+                {log.feedback || 'No feedback provided'}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

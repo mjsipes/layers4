@@ -45,6 +45,33 @@ const fetchOutfits = async () => {
   return outfitsWithLayers as Outfit[];
 };
 
+// Helper function to fetch specific outfits by IDs
+const _fetchOutfitsById = async (ids: string[]) => {
+  if (!ids || ids.length === 0) return [];
+  
+  const { data, error } = await supabase
+    .from("outfit")
+    .select(`
+      *,
+      outfit_layer(
+        layer(*)
+      )
+    `)
+    .in('id', ids);
+  
+  if (error) {
+    console.error("Error fetching outfits by ID:", error);
+    return [];
+  }
+
+  const outfitsWithLayers = data?.map(outfit => ({
+    ...outfit,
+    layers: outfit.outfit_layer?.map((ol: any) => ol.layer) || []
+  })) || [];
+
+  return outfitsWithLayers as Outfit[];
+};
+
 // Auto-initialize the store when first imported
 const initializeStore = async () => {
   if (isSubscribed) return;
@@ -104,5 +131,8 @@ export const cleanupOutfitsStore = () => {
     isSubscribed = false;
   }
 };
+
+// Export the fetch function for external use
+export const fetchOutfitsById = _fetchOutfitsById;
 
 export type { Outfit };
