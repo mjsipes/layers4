@@ -1,6 +1,7 @@
 // app/api/chat/route.ts
 import OpenAI from "openai";
 import { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -59,6 +60,13 @@ function logEvent(event: any) {
 export async function POST(req: NextRequest) {
   const { prompt } = await req.json();
 
+  // Get the user's session
+  const supabase = await createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Log the access token for debugging
+  console.log("Access token for MCP:", session?.access_token ? `${session.access_token.substring(0, 20)}...` : "No access token");
+
   const systemPrompt = `You are a helpful assistant that specializes in outfit recommendations and weather analysis. 
 
 You have access to an MCP server with outfit logging tools. Always think about whether you would benefit from using one of the tools before responding.
@@ -96,6 +104,12 @@ User: `;
         server_label: "layers-mcp",
         server_url: serverUrl,
         require_approval: "never",
+        // Pass user's access token for authentication
+        ...(session?.access_token && {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }),
       },
     ],
   });
