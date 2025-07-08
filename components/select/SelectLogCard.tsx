@@ -32,10 +32,6 @@ const SelectLogCard = () => {
   };
 
   const getWeatherInfo = () => {
-    // Debug: Log the weather data to console
-    console.log('Log weather data:', log.weather);
-    console.log('Log weather_data:', log.weather?.weather_data);
-    
     if (!log.weather?.weather_data) return null;
     
     try {
@@ -43,18 +39,7 @@ const SelectLogCard = () => {
         ? JSON.parse(log.weather.weather_data) 
         : log.weather.weather_data;
       
-      console.log('Parsed weather data:', weatherData);
-      
-      // Handle Visual Crossing weather data structure
-      const dayData = weatherData?.days?.[0];
-      if (dayData) {
-        return {
-          temperature: Math.round(dayData.temp || dayData.temperature || 0),
-          condition: dayData.conditions || dayData.condition
-        };
-      }
-      
-      // Fallback to other possible structures
+      // Handle different possible weather data structures
       const temp = weatherData?.main?.temp || weatherData?.temperature || weatherData?.temp;
       const condition = weatherData?.weather?.[0]?.main || weatherData?.condition || weatherData?.weather_condition;
       
@@ -88,11 +73,6 @@ const SelectLogCard = () => {
               <Badge variant="secondary" className="text-sm">
                 {weatherInfo.temperature}°F
                 {weatherInfo.condition && ` • ${weatherInfo.condition}`}
-              </Badge>
-            )}
-            {!weatherInfo && log.weather === undefined && (
-              <Badge variant="outline" className="text-xs opacity-60">
-                No weather data
               </Badge>
             )}
           </div>

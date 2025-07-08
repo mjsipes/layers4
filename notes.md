@@ -14,4 +14,5 @@ add user_id to necessary tables and implement rls
 happy for today. lets study for test, come back tomorrow. implement what i need to do, then go back and help with nates implementaiton
 
 ---
-add delete functionality and appropriate null handling, style all the add and select cards. p-4 all around. style weather card. mcp connecting?
+style all the add and select cards. p-4 all around. style weather card. 
+get mcp server connected up
