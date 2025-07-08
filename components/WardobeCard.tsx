@@ -32,7 +32,7 @@ const WardobeCard = () => {
             </TabsList>
             <button
               onClick={toggleViewMode}
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors"
+              className="inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors"
             >
               {viewMode === "table" ? <Grid size={16} /> : <List size={16} />}
             </button>
