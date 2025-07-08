@@ -1,11 +1,30 @@
 // app/api/chat/route.ts
 import OpenAI from "openai";
 import { NextRequest } from "next/server";
-import { rollDiceTool, executeRollDice } from "./tools/roll-dice";
-import { getSecretTool, executeGetSecret } from "./tools/get-secret";
-import { getWeatherTool, executeGetWeather } from "./tools/get-weather";
+import { rollDiceTool} from "./tools/roll-dice";
+import { getSecretTool} from "./tools/get-secret";
+import { getWeatherTool } from "./tools/get-weather";
 
-const tools = [rollDiceTool, getSecretTool, getWeatherTool];
+// const tools = [rollDiceTool, getSecretTool, getWeatherTool];
+
+const tools = [{
+    "type": "function",
+    "name": "get_weather",
+    "description": "Get current temperature for a given location.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "location": {
+                "type": "string",
+                "description": "City and country e.g. Bogotá, Colombia"
+            }
+        },
+        "required": [
+            "location"
+        ],
+        "additionalProperties": false
+    }
+}];
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -18,7 +37,6 @@ export async function POST(req: NextRequest) {
   const response = await openai.responses.create({
     model: model,
     input: systemPrompt + prompt,
-    tools,
     stream: true,
   });
 
