@@ -55,10 +55,10 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-3/10">Date</TableHead>
-              <TableHead className="w-4/10">Feedback</TableHead>
-              <TableHead className="w-2/10 text-center">Comfort</TableHead>
-              <TableHead className="w-1/10">Outfit</TableHead>
+              <TableHead className="w-1/4">Date</TableHead>
+              <TableHead className="w-1/2">Feedback</TableHead>
+              <TableHead className="w-1/6">Outfit</TableHead>
+              <TableHead className="w-1/12 text-center">Comfort</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -75,13 +75,13 @@ const Logs = ({ viewMode, setFocused }: LogsProps) => {
                 <TableCell className="truncate">
                   {log.feedback || '-'}
                 </TableCell>
+                <TableCell className="truncate">
+                  {log.outfit_id ? 'Yes' : '-'}
+                </TableCell>
                 <TableCell className="text-center">
                   <Badge variant={getComfortColor(log.comfort_level)}>
                     {log.comfort_level || '-'}
                   </Badge>
-                </TableCell>
-                <TableCell className="truncate">
-                  {log.outfit_id ? 'Yes' : '-'}
                 </TableCell>
               </TableRow>
             ))}

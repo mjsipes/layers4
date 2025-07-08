@@ -41,9 +41,9 @@ const Outfits = ({ viewMode, setFocused, setTab }: OutfitsProps) => {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-3/10">Name</TableHead>
-              <TableHead className="w-6/10">Layers</TableHead>
-              <TableHead className="w-1/10 text-center">Warmth</TableHead>
+              <TableHead className="w-1/4">Name</TableHead>
+              <TableHead className="w-2/3">Layers</TableHead>
+              <TableHead className="w-1/12 text-center">Warmth</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

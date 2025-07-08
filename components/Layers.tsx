@@ -27,15 +27,14 @@ const Layers = ({ viewMode }: LayersProps) => {
   }
 
   if (viewMode === 'table') {
-    return (
-      <Table className="table-fixed w-full">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-6/20">Name</TableHead>
-            <TableHead className="w-1/2">Description</TableHead>
-            <TableHead className="w-2/20 text-center">Warmth</TableHead>
-          </TableRow>
-        </TableHeader>
+    return (        <Table className="table-fixed w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/4">Name</TableHead>
+              <TableHead className="w-2/3">Description</TableHead>
+              <TableHead className="w-1/12 text-center">Warmth</TableHead>
+            </TableRow>
+          </TableHeader>
         <TableBody>
           {layers.map((layer) => (
             <TableRow
