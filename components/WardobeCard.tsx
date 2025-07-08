@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layers from "./Layers";
 import Outfits from "./Outfits";
 import Logs from "./Logs";
-import AddItemDialog from "./AddItemDialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const WardobeCard = () => {
@@ -13,28 +12,19 @@ const WardobeCard = () => {
   const [activeTab, setActiveTab] = useState("layers");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [focusedItem, setFocusedItem] = useState<unknown>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const toggleViewMode = () => {
     setViewMode((prev) => (prev === "table" ? "grid" : "table"));
   };
 
-  const handleAddItem = () => {
-    setDialogOpen(true);
-  };
+
 
   return (
-    <div className="w-full p-6 pb-0">
+    <div className="w-full p-4 pb-0">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex items-center justify-center mb-4">
+        <div className="flex items-center justify-center mb-2">
           {/* <h2 className="text-2xl font-bold">Wardrobe</h2> */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={handleAddItem}
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors"
-            >
-              <Plus size={16} />
-            </button>
             <TabsList>
               <TabsTrigger value="layers">Layers</TabsTrigger>
               <TabsTrigger value="outfits">Outfits</TabsTrigger>
@@ -48,7 +38,7 @@ const WardobeCard = () => {
             </button>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-25rem)]">
+        <ScrollArea className="h-[calc(100vh-31rem)]">
           <TabsContent value="layers">
             <Layers viewMode={viewMode} />
           </TabsContent>
@@ -64,11 +54,6 @@ const WardobeCard = () => {
           </TabsContent>
         </ScrollArea>
       </Tabs>
-      <AddItemDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        activeTab={activeTab}
-      />
     </div>
   );
 };
