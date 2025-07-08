@@ -18,7 +18,7 @@ const WardobeCard = () => {
   };
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full p-6 pb-0">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex items-center justify-around mb-4">
           {/* <h2 className="text-2xl font-bold">Wardrobe</h2> */}
@@ -36,7 +36,7 @@ const WardobeCard = () => {
             </button>
           </div>
         </div>
-        <ScrollArea className="h-[510px]">
+        <ScrollArea className="h-[calc(100vh-25rem)]">
           <TabsContent value="layers">
             <Layers viewMode={viewMode} />
           </TabsContent>

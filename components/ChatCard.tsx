@@ -106,7 +106,7 @@ export default function ChatCard() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden">
-      <ScrollArea className="h-[860px] px-4 py-2" ref={scrollAreaRef}>
+      <ScrollArea className="h-[calc(100vh-8rem)] px-4 py-2" ref={scrollAreaRef}>
         <div className="space-y-2 w-full">
           {messages.map((message) => (
             <div
