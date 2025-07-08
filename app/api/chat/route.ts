@@ -1,6 +1,11 @@
 // app/api/chat/route.ts
 import OpenAI from "openai";
 import { NextRequest } from "next/server";
+import { rollDiceTool, executeRollDice } from "./tools/roll-dice";
+import { getSecretTool, executeGetSecret } from "./tools/get-secret";
+import { getWeatherTool, executeGetWeather } from "./tools/get-weather";
+
+const tools = [rollDiceTool, getSecretTool, getWeatherTool];
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -13,6 +18,7 @@ export async function POST(req: NextRequest) {
   const response = await openai.responses.create({
     model: model,
     input: systemPrompt + prompt,
+    tools,
     stream: true,
   });
 
