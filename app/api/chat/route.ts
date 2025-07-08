@@ -87,6 +87,7 @@ User: `;
     console.log("╚══════════════════════════════════════════════════════════════════════════════╝");
     console.log("Model:", model);
     console.log("Server URL:", serverUrl);
+    console.log("Access token for MCP:", session?.access_token ? `${session.access_token.substring(0, 20)}...` : "No access token");
     console.log("User prompt:", prompt);
     if (LOGGING === "all") {
       console.log("Full input:", systemPrompt + prompt);
