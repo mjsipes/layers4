@@ -5,6 +5,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import WeatherCard from "@/components/WeatherCard";
 import WardobeCard from "@/components/WardobeCard";
 import ChatCard from "@/components/ChatCard";
+import DynamicCard from "@/components/DynamicCard";
 
 
 export default async function ProtectedPage() {
@@ -23,8 +24,10 @@ export default async function ProtectedPage() {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={75}>
         <div className="flex flex-col h-full items-center ">
+          <div className="grid grid-cols-2">
           <WeatherCard />
-          {/* <RecomendationCard /> */}
+          <DynamicCard/>
+          </div>
           <WardobeCard />
         </div>
       </ResizablePanel>
