@@ -8,9 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Plus, Star } from "lucide-react";
-import AddLayerCard from "@/components/AddLayerCard";
-import AddLogCard from "@/components/AddLogCard";
-import AddOutfitCard from "@/components/AddOutfitCard";
+import AddLayerCard from "@/components/add/AddLayerCard";
+import AddLogCard from "@/components/add/AddLogCard";
+import AddOutfitCard from "@/components/add/AddOutfitCard";
 
 const DynamicCard = () => {
   const [activeTab, setActiveTab] = useState("layers");
