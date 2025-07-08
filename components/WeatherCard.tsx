@@ -41,7 +41,7 @@ const WeatherCard = () => {
   const currentWeather = weatherData.days?.[0];
 
   return (
-    <div className="w-full h-[250px] border-b flex flex-col p-6 gap-4">
+    <div className="w-full h-[180px] border-b flex flex-col p-6 gap-4">
       {/* Top Weather Info Section */}
       <div className="flex-1 flex flex-row justify-between gap-6">
         {/* Temperature Column */}
@@ -97,13 +97,13 @@ const WeatherCard = () => {
       </div>
 
       {/* Weather Description */}
-      {currentWeather?.description && (
+      {/* {currentWeather?.description && (
         <div className="w-full overflow-hidden whitespace-nowrap border rounded-md bg-secondary text-secondary-foreground border-secondary">
           <p className="inline-block animate-marquee px-3 py-2 text-sm font-medium">
             {currentWeather.description}
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

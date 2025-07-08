@@ -24,10 +24,8 @@ export default async function ProtectedPage() {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={75}>
         <div className="flex flex-col h-full items-center ">
-          <div className="grid grid-cols-2">
           <WeatherCard />
           <DynamicCard/>
-          </div>
           <WardobeCard />
         </div>
       </ResizablePanel>
