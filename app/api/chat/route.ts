@@ -8,23 +8,23 @@ import { getWeatherTool } from "./tools/get-weather";
 // const tools = [rollDiceTool, getSecretTool, getWeatherTool];
 
 const tools = [{
-    "type": "function",
-    "name": "get_weather",
-    "description": "Get current temperature for a given location.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "location": {
-                "type": "string",
-                "description": "City and country e.g. Bogotá, Colombia"
-            }
-        },
-        "required": [
-            "location"
-        ],
-        "additionalProperties": false
-    }
+  type: "function" as const,
+  name: "get_weather",
+  description: "Get current temperature for a given location.",
+  parameters: {
+    type: "object",
+    properties: {
+      location: {
+        type: "string",
+        description: "City and country e.g. Bogotá, Colombia"
+      }
+    },
+    required: ["location"],
+    additionalProperties: false
+  },
+  strict: true
 }];
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
     model: model,
     input: systemPrompt + prompt,
     stream: true,
+    tools,
   });
 
   const encoder = new TextEncoder();
