@@ -2,6 +2,8 @@
 import { create } from "zustand";
 import { createClient } from "@/lib/supabase/client";
 import { Tables } from "@/lib/supabase/database.types";
+import { devtools } from "zustand/middleware";
+
 
 const supabase = createClient();
 
@@ -20,7 +22,8 @@ type LayerState = {
 let isSubscribed = false;
 let channel: any = null;
 
-export const useLayerStore = create<LayerState>((set, get) => ({
+export const useLayerStore = create<LayerState>()(
+  devtools((set, get) => ({
   layers: [],
   addLayer: async (layerData) => {
     try {
@@ -79,7 +82,9 @@ export const useLayerStore = create<LayerState>((set, get) => ({
       throw error;
     }
   },
-}));
+  }), { name: '🧩 Layer Store' })
+);
+
 
 export const fetchLayers = async () => {
   const { data, error } = await supabase.from("layer").select("*");

@@ -33,5 +33,5 @@ export const useGlobalStore = create<GlobalState>()(
       set((state) => ({
         wardrobeViewMode: state.wardrobeViewMode === "table" ? "grid" : "table",
       })),
-  }))
+  }), { name: '🌐 Global Store' })
 );

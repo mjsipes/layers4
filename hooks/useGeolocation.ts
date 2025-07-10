@@ -1,9 +1,9 @@
 // /hooks/useGeolocation.ts
 import { useEffect } from 'react';
-import { useLocationStore } from '@/stores/weather_store';
+import { useWeatherStore } from '@/stores/weather_store';
 
 export function useGeolocation() {
-  const setLocation = useLocationStore((state) => state.setLocation);
+  const setLocation = useWeatherStore((state) => state.setLocation);
 
   useEffect(() => {
     if (!navigator.geolocation) {
