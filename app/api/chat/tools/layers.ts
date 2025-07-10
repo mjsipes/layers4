@@ -110,3 +110,35 @@ export const insertLayerTool = tool({
     }
   },
 });
+
+export const deleteLayerTool = tool({
+  description: "Delete a layer from the database by its ID",
+  parameters: z.object({
+    id: z.string().describe("ID of the layer to delete"),
+  }),
+  execute: async ({ id }) => {
+    try {
+      const supabase = await createClient();
+
+      console.log("🔵 [LAYERS] Attempting to delete layer with ID:", id);
+
+      const { error: deleteError } = await supabase
+        .from("layer")
+        .delete()
+        .eq("id", id);
+
+      if (deleteError) {
+        console.error("🔴 [LAYERS] Error deleting layer:", deleteError);
+        return `❌ Failed to delete layer: ${deleteError.message}`;
+      }
+
+      console.log("🟢 [LAYERS] Layer deleted successfully:", id);
+      return `✅ Successfully deleted layer with ID: ${id}`;
+    } catch (error: unknown) {
+      console.error("🔴 [LAYERS] Failed to delete layer:", error);
+      return `⚠️ Failed to delete layer: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});

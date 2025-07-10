@@ -2,7 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { rollDiceTool } from "./tools/roll-dice";
 import { getWeatherTool } from "./tools/get-weather";
-import { selectLayersTool, insertLayerTool } from "./tools/layers";
+import { selectLayersTool, insertLayerTool, deleteLayerTool } from "./tools/layers";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
       get_weather: getWeatherTool,
       select_layers: selectLayersTool,
       insert_layer: insertLayerTool,
+      delete_layer: deleteLayerTool,
     },
   });
 
