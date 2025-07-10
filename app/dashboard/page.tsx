@@ -8,7 +8,7 @@ import ChatCard from "@/components/ChatCard";
 import DynamicCard from "@/components/DynamicCard";
 
 
-export default async function ProtectedPage() {
+export default async function DashboardPage() {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getUser();
