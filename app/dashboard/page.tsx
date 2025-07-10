@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import WeatherCard from "@/components/WeatherCard";
 import WardobeCard from "@/components/wardrobe/WardobeCard";
-import ChatCard from "@/components/ChatCard";
+import Chat from "@/components/Chat";
 import DynamicCard from "@/components/DynamicCard";
 
 
@@ -19,7 +19,7 @@ export default async function DashboardPage() {
   return (
     <ResizablePanelGroup direction="horizontal" className="w-screen h-full">
       <ResizablePanel defaultSize={25}>
-          <ChatCard/>
+          <Chat/>
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={75}>

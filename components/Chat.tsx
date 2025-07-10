@@ -5,7 +5,6 @@ import ReactMarkdown from "react-markdown";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useRef } from "react";
 
