@@ -28,7 +28,7 @@ const WeatherCard = () => {
 
   if (!weatherData) {
     return (
-      <div className="w-full h-[250px] border-b flex items-center justify-center">
+      <div className="w-full h-[180px] border-b flex items-center justify-center">
         <p className="text-muted-foreground">Loading weather data...</p>
       </div>
     );

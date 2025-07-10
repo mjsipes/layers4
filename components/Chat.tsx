@@ -13,17 +13,6 @@ export default function Chat() {
     maxSteps: 5,
   });
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    // Use setTimeout to ensure DOM has updated
-    const timer = setTimeout(scrollToBottom, 0);
-    return () => clearTimeout(timer);
-  }, [messages]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -66,7 +55,6 @@ export default function Chat() {
               </div>
             </div>
           ))}
-          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
