@@ -1,6 +1,7 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
+import ReactMarkdown from "react-markdown";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -14,7 +15,7 @@ export default function Chat() {
           {message.parts.map((part, i) => {
             switch (part.type) {
               case 'text':
-                return <div key={`${message.id}-${i}`}>{part.text}</div>;
+                return <div key={`${message.id}-${i}`}><ReactMarkdown>{part.text}</ReactMarkdown></div>;
               case 'tool-invocation':
                 return (
                   <pre key={`${message.id}-${i}`}>
@@ -28,7 +29,7 @@ export default function Chat() {
 
       <form onSubmit={handleSubmit}>
         <input
-          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
+          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded"
           value={input}
           placeholder="Say something..."
           onChange={handleInputChange}
