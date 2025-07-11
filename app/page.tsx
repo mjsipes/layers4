@@ -30,14 +30,12 @@ export default function Home() {
           </nav>
           
           <div className="pointer-events-none">
-            <div className="bg-background/50 backdrop-blur-sm border border-border px-12 py-8 shadow-lg">
               <h1 className="text-9xl font-extrabold tracking-tight text-primary text-center mb-6">
                 Layers
               </h1>
               <h1 className="text-5xl font-bold tracking-tight text-foreground text-center">
                 Not too hot, not too cold.
               </h1>
-            </div>
           </div>
         </div>
       </div>
