@@ -18,7 +18,7 @@ export default function Home() {
                 Layers
               </h1>
             </div>
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-row gap-3 items-center">
               {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
               <ThemeSwitcher />
             </div>
