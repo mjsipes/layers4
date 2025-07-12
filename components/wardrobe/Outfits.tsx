@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useOutfitStore } from "@/stores/outfits_store";
 import { useGlobalStore } from "@/stores/global_state";
+import type { Outfit } from "@/stores/outfits_store";
 
 interface OutfitsProps {
   viewMode: "table" | "grid";
@@ -21,7 +22,7 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
   const { outfits } = useOutfitStore();
   const { setSelectedItem } = useGlobalStore();
 
-  const handleOutfitClick = (outfit: any) => {
+  const handleOutfitClick = (outfit: Outfit) => {
     console.log("Outfit clicked:", outfit.id);
     setSelectedItem(outfit.id, "selectoutfit");
   };

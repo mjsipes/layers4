@@ -30,7 +30,7 @@ const AddLayerCard = () => {
         event.currentTarget.reset();
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving layer:", error);
     } finally {
       setIsLoading(false);

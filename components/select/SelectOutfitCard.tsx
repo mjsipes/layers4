@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useGlobalStore } from "@/stores/global_state";
 import { useOutfitStore } from "@/stores/outfits_store";
+import type { Layer } from "@/stores/layers_store";
 
 const SelectOutfitCard = () => {
   const { selectedItemId } = useGlobalStore();
@@ -43,7 +44,7 @@ const SelectOutfitCard = () => {
           <div>
             <span className="text-base text-muted-foreground font-medium">Layers:</span>
             <div className="flex gap-1 flex-wrap mt-2">
-              {outfit.layers.map((layer: any) => (
+              {outfit.layers.map((layer: Layer) => (
                 <span
                   key={layer.id}
                   className="inline-flex items-center rounded-md px-2 py-1 text-sm font-medium bg-secondary text-secondary-foreground"

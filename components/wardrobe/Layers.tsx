@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useLayerStore } from "@/stores/layers_store";
 import { useGlobalStore } from "@/stores/global_state";
+import type { Layer } from "@/stores/layers_store";
 
 interface LayersProps {
   viewMode: "table" | "grid";
@@ -20,7 +21,7 @@ const Layers = ({ viewMode }: LayersProps) => {
   const { layers } = useLayerStore();
   const { setSelectedItem } = useGlobalStore();
 
-  const handleLayerClick = (layer: any) => {
+  const handleLayerClick = (layer: Layer) => {
     console.log("Layer clicked:", layer.id);
     setSelectedItem(layer.id, "selectlayer");
   };

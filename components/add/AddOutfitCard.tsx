@@ -26,7 +26,7 @@ const AddOutfitCard = () => {
         event.currentTarget.reset();
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving outfit:", error);
     } finally {
       setIsLoading(false);

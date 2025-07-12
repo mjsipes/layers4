@@ -35,7 +35,7 @@ const AddLogCard = () => {
         }
       }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving log:", error);
     } finally {
       setIsLoading(false);
