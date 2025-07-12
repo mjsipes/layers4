@@ -77,7 +77,7 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
                         }}
                         style={{ cursor: "pointer" }}
                       >
-                        {layer.name || "Unnamed Layer"}
+                        {layer?.name || "Unnamed Layer"}
                       </span>
                     ))}
                   </div>
