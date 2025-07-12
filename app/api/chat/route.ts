@@ -3,6 +3,7 @@ import { streamText } from "ai";
 import { rollDiceTool } from "./tools/roll-dice";
 import { getWeatherTool } from "./tools/get-weather";
 import { selectLayersTool, insertLayerTool, deleteLayerTool } from "./tools/layers";
+import { getUserInfoTool } from "./tools/get-user-info";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -16,6 +17,7 @@ export async function POST(req: Request) {
     tools: {
       roll_dice: rollDiceTool,
       get_weather: getWeatherTool,
+      get_user_info: getUserInfoTool,
       select_layers: selectLayersTool,
       insert_layer: insertLayerTool,
       delete_layer: deleteLayerTool,
