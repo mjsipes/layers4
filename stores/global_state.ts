@@ -2,6 +2,11 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
+
+
 type SelectedItemType = "selectlayer" | "selectoutfit" | "selectlog" | "addlayer" | "addoutfit" | "addlog" | "recommendations";
 type ViewMode = "table" | "grid";
 type WardrobeTab = "layers" | "outfits" | "logs";
@@ -16,6 +21,11 @@ type GlobalState = {
   setWardrobeActiveTab: (tab: WardrobeTab) => void;
   toggleWardrobeViewMode: () => void;
 };
+
+/* ------------------------------------------------------------------ */
+/* Store                                                               */
+/* ------------------------------------------------------------------ */
+
 
 export const useGlobalStore = create<GlobalState>()(
   devtools((set, get) => ({

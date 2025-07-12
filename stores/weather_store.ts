@@ -1,6 +1,10 @@
-
+// /stores/weather_store.ts
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+
+/* ------------------------------------------------------------------ */
+/* Types                                                               */
+/* ------------------------------------------------------------------ */
 
 type WeatherState = {
   date: Date;
@@ -12,6 +16,10 @@ type WeatherState = {
   setWeatherData: (data: any) => void;
   clearWeather: () => void;
 };
+
+/* ------------------------------------------------------------------ */
+/* Store                                                               */
+/* ------------------------------------------------------------------ */
 
 export const useWeatherStore = create<WeatherState>()(
   devtools(
