@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useOutfitStore } from "@/stores/outfits_store";
+import { useGlobalStore } from "@/stores/global_state";
 
 const AddOutfitCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addOutfit } = useOutfitStore();
+  const { setWardrobeActiveTab } = useGlobalStore();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,6 +22,9 @@ const AddOutfitCard = () => {
       await addOutfit({
         name: name.trim(),
       });
+      
+      // Switch to outfits tab after successful addition
+      setWardrobeActiveTab("outfits");
       
       // Reset form
       if (event.currentTarget) {

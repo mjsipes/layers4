@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogStore } from "@/stores/logs_store";
+import { useGlobalStore } from "@/stores/global_state";
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addLog } = useLogStore();
+  const { setWardrobeActiveTab } = useGlobalStore();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,6 +26,9 @@ const AddLogCard = () => {
         comfort_level: comfortLevel ? parseInt(comfortLevel) : undefined,
         date: date || undefined,
       });
+      
+      // Switch to logs tab after successful addition
+      setWardrobeActiveTab("logs");
       
       // Reset form
       if (event.currentTarget) {

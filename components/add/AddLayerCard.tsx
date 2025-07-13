@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLayerStore } from "@/stores/layers_store";
+import { useGlobalStore } from "@/stores/global_state";
 
 const AddLayerCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addLayer } = useLayerStore();
+  const { setWardrobeActiveTab } = useGlobalStore();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,6 +26,9 @@ const AddLayerCard = () => {
         description: description.trim() || undefined,
         warmth: warmth ? parseInt(warmth) : undefined,
       });
+      
+      // Switch to layers tab after successful addition
+      setWardrobeActiveTab("layers");
       
       // Reset form
       if (event.currentTarget) {
