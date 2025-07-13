@@ -2,7 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
-export const setuiTool = tool({
+export const displayUITool = tool({
   description: "Display or select a specific item in the UI. Use this when the user asks to 'show me', 'pull up', 'display', or 'select' a particular outfit, layer, or log. This will update the UI to show the selected item in the main display area.",
   parameters: z.object({
     selectedItemId: z.string().nullable().describe("ID of the item to display (can be null to clear selection)"),
