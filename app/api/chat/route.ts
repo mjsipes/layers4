@@ -6,6 +6,7 @@ import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} f
 import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool, selectOutfitByIdTool } from "./tools/outfits";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool } from "./tools/logs";
 import { getUserInfoTool } from "./tools/get-user-info";
+import { setuiTool } from "./tools/global";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
       insert_log: insertLogTool,
       delete_log: deleteLogTool,
       update_log: updateLogTool,
+      setui: setuiTool,
     },
   });
 

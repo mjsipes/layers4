@@ -201,6 +201,6 @@ const Logs = ({ viewMode }: LogsProps) => {
       })}
     </div>
   );
-}
+};
 
-export default Logs
+export default Logs;
