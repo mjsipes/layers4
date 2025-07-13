@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { useLogStore } from "@/stores/logs_store";
 import { useGlobalStore } from "@/stores/global_state";
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [comfortLevel, setComfortLevel] = useState([5]);
   const { addLog } = useLogStore();
   const { setWardrobeActiveTab } = useGlobalStore();
 
@@ -18,12 +20,11 @@ const AddLogCard = () => {
     try {
       const formData = new FormData(event.currentTarget);
       const feedback = formData.get("feedback") as string;
-      const comfortLevel = formData.get("comfort_level") as string;
       const date = formData.get("date") as string;
       
       await addLog({
         feedback: feedback.trim() || undefined,
-        comfort_level: comfortLevel ? parseInt(comfortLevel) : undefined,
+        comfort_level: comfortLevel[0],
         date: date || undefined,
       });
       
@@ -33,6 +34,7 @@ const AddLogCard = () => {
       // Reset form
       if (event.currentTarget) {
         event.currentTarget.reset();
+        setComfortLevel([5]);
         // Reset date to today
         const dateInput = event.currentTarget.querySelector('input[name="date"]') as HTMLInputElement;
         if (dateInput) {
@@ -60,6 +62,15 @@ const AddLogCard = () => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
+            <Label htmlFor="log-date">Date</Label>
+            <Input 
+              id="log-date" 
+              name="date" 
+              type="date" 
+              defaultValue={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="log-feedback">Feedback</Label>
             <Input 
               id="log-feedback" 
@@ -68,23 +79,14 @@ const AddLogCard = () => {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="log-comfort">Comfort (1-10)</Label>
-            <Input 
-              id="log-comfort" 
-              name="comfort_level" 
-              type="number" 
-              min="1" 
-              max="10" 
-              placeholder="1-10" 
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="log-date">Date</Label>
-            <Input 
-              id="log-date" 
-              name="date" 
-              type="date" 
-              defaultValue={new Date().toISOString().split('T')[0]}
+            <Label>Comfort: {comfortLevel[0]}/10</Label>
+            <Slider
+              value={comfortLevel}
+              onValueChange={setComfortLevel}
+              max={10}
+              min={1}
+              step={1}
+              className="w-full"
             />
           </div>
           <Button 

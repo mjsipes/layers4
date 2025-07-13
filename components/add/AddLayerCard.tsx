@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { useLayerStore } from "@/stores/layers_store";
 import { useGlobalStore } from "@/stores/global_state";
 
 const AddLayerCard = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [warmth, setWarmth] = useState([5]);
   const { addLayer } = useLayerStore();
   const { setWardrobeActiveTab } = useGlobalStore();
 
@@ -19,12 +21,11 @@ const AddLayerCard = () => {
       const formData = new FormData(event.currentTarget);
       const name = formData.get("name") as string;
       const description = formData.get("description") as string;
-      const warmth = formData.get("warmth") as string;
       
       await addLayer({
         name: name.trim(),
         description: description.trim() || undefined,
-        warmth: warmth ? parseInt(warmth) : undefined,
+        warmth: warmth[0],
       });
       
       // Switch to layers tab after successful addition
@@ -33,6 +34,7 @@ const AddLayerCard = () => {
       // Reset form
       if (event.currentTarget) {
         event.currentTarget.reset();
+        setWarmth([5]);
       }
       
     } catch (error: unknown) {
@@ -72,14 +74,14 @@ const AddLayerCard = () => {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="layer-warmth">Warmth (1-10)</Label>
-            <Input 
-              id="layer-warmth" 
-              name="warmth" 
-              type="number" 
-              min="1" 
-              max="10" 
-              placeholder="1-10" 
+            <Label>Warmth: {warmth[0]}/10</Label>
+            <Slider
+              value={warmth}
+              onValueChange={setWarmth}
+              max={10}
+              min={1}
+              step={1}
+              className="w-full"
             />
           </div>
           <Button 
