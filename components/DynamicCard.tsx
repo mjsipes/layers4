@@ -38,7 +38,7 @@ const DynamicCard = () => {
   };
 
   return (
-    <div className="h-[180px] w-full border-b">
+    <div className="h-[300px] w-full">
       <ScrollArea className="h-full">{renderActiveCard()}</ScrollArea>
     </div>
   );

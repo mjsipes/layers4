@@ -1,12 +1,16 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import WeatherCard from "@/components/WeatherCard";
 import WardobeCard from "@/components/wardrobe/WardobeCard";
 import Chat from "@/components/Chat";
 import DynamicCard from "@/components/DynamicCard";
-
+import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -18,14 +22,17 @@ export default async function DashboardPage() {
 
   return (
     <ResizablePanelGroup direction="horizontal" className="w-screen h-full">
-      <ResizablePanel defaultSize={25}>
-          <Chat/>
+      <ResizablePanel defaultSize={30}>
+        <Chat />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={75}>
+      <ResizablePanel defaultSize={70}>
         <div className="flex flex-col h-full items-center ">
-          <WeatherCard />
-          <DynamicCard/>
+          <div className="grid grid-cols-2 w-full h-[300px]">
+            <WeatherCard />
+            <DynamicCard />
+          </div>
+          <Separator orientation="horizontal" />
           <WardobeCard />
         </div>
       </ResizablePanel>
