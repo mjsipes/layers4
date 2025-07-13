@@ -42,11 +42,11 @@ const WeatherCard = () => {
       <div className="flex-1 flex flex-row justify-between gap-6">
         {/* Temperature Column */}
         <div className="flex flex-col justify-start">
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-start gap-2">
             <h1 className="text-8xl font-extrabold tracking-tight text-primary leading-none">
               {currentWeather?.temp || "--"}
             </h1>
-            <span className="text-3xl font-bold text-primary/70">°</span>
+            <span className="text-3xl font-bold text-primary">°</span>
           </div>
           <div className="flex gap-2 mt-2">
             <span className="badge text-xs">L: {currentWeather?.tempmin || "--"}°</span>
