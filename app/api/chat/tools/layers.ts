@@ -1,6 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { TablesUpdate } from "@/lib/supabase/database.types";
 
 export const selectLayersTool = tool({
   description: "Get all layers from the database for the authenticated user",
@@ -141,7 +142,7 @@ export const updateLayerTool = tool({
       console.log("🟢 [LAYERS] User data received:", { id: user.id });
 
       // Build update data object with only provided fields
-      const updateData: any = {};
+      const updateData: TablesUpdate<"layer"> = {};
       if (name !== undefined) updateData.name = name;
       if (description !== undefined) updateData.description = description;
       if (warmth !== undefined) updateData.warmth = warmth;

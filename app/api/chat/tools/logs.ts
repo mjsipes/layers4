@@ -1,6 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { TablesUpdate } from "@/lib/supabase/database.types";
 
 export const selectLogsTool = tool({
   description: "Get all logs from the database for the authenticated user",
@@ -151,7 +152,7 @@ export const updateLogTool = tool({
       console.log("🟢 [LOGS] User data received:", { id: user.id });
 
       // Build update data object with only provided fields
-      const updateData: any = {};
+      const updateData: TablesUpdate<"log"> = {};
       if (feedback !== undefined) updateData.feedback = feedback;
       if (comfort_level !== undefined) updateData.comfort_level = comfort_level;
       if (date !== undefined) updateData.date = date;

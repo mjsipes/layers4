@@ -35,7 +35,6 @@ export default function Chat() {
               <div
                 className={`rounded-lg px-3 py-2 text-sm shadow-sm transition-all duration-200
                   ${message.role === 'user' ? "bg-primary text-primary-foreground ml-auto" : "bg-muted mr-auto"}
-                  max-w-[80%]
                 `}
               >
                 {message.parts.map((part, i) => {

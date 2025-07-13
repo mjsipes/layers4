@@ -1,17 +1,16 @@
-figure out if i am subscribing to the database through zustand in the best way.
-style all the add and select cards. p-4 all around. style weather card. 
-
-google lense for the camera ability.
-chat needs to be able to get logs and outfits,
-chat needs to be able to give weather recomendations
-maybe add google lense image upload/binding to url
-fix nav bar by abstracting correctly. right now go to dashboard is always there.
-implement kibu ui elements for ai chat.
-style insert cards
-
 npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema public > lib/supabase/database.types.ts
 
-figure out kibu. 
-make it so in select card you can update. make it so log also displays outfit info, make it so outfit also displays log info.
-make the bubbles correctly clickable and correctly color blue. 
-make it so heat is always blue. also add description for it somewhere
+
+**TODO:**
+figure out if i am subscribing to the database through zustand in the best way.
+style insert cards
+google lense/ image upload for app
+chat scroll area should scroll down while generating
+updatable select card
+make it so log also displays outfit layer info.
+make it so outfit also displays log info.
+
+what did you wear today?
+what should i wear today?
+
+verify email button

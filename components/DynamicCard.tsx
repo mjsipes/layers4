@@ -47,7 +47,7 @@ const DynamicCard = () => {
           onClick={() => setSelectedItem(null, "recommendations")}
         >
           <Star size={14} className="mr-1" />
-          Daily Rec's
+          Daily Rec&apos;s
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 

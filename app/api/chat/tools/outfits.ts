@@ -1,6 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { TablesUpdate } from "@/lib/supabase/database.types";
 
 export const selectOutfitsTool = tool({
   description: "Get all outfits from the database for the authenticated user",
@@ -138,7 +139,7 @@ export const updateOutfitTool = tool({
       console.log("🟢 [OUTFITS] User data received:", { id: user.id });
 
       // Build update data object with only provided fields
-      const updateData: any = {};
+      const updateData: TablesUpdate<"outfit"> = {};
       if (name !== undefined) updateData.name = name;
       if (total_warmth !== undefined) updateData.total_warmth = total_warmth;
 
