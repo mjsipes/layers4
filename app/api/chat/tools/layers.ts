@@ -1,4 +1,3 @@
-
 import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
@@ -106,6 +105,75 @@ export const insertLayerTool = tool({
     } catch (error: unknown) {
       console.error("🔴 [LAYERS] Failed to create layer:", error);
       return `⚠️ Failed to create layer: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});
+
+export const updateLayerTool = tool({
+  description: "Update an existing layer in the database",
+  parameters: z.object({
+    id: z.string().describe("ID of the layer to update"),
+    name: z.string().optional().describe("New name of the layer"),
+    description: z.string().optional().describe("New description of the layer"),
+    warmth: z.number().min(1).max(10).optional().describe("New warmth level of the layer from 1-10"),
+  }),
+  execute: async ({ id, name, description, warmth }) => {
+    try {
+      const supabase = await createClient();
+
+      // Get the authenticated user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("🔴 [LAYERS] Error getting user:", userError);
+        return `❌ Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        return `❌ No authenticated user found. Please log in first.`;
+      }
+
+      console.log("🟢 [LAYERS] User data received:", { id: user.id });
+
+      // Build update data object with only provided fields
+      const updateData: any = {};
+      if (name !== undefined) updateData.name = name;
+      if (description !== undefined) updateData.description = description;
+      if (warmth !== undefined) updateData.warmth = warmth;
+
+      if (Object.keys(updateData).length === 0) {
+        return `❌ No fields provided to update. Please provide at least one field (name, description, or warmth).`;
+      }
+
+      console.log("🔵 [LAYERS] Updating layer data:", { id, updateData });
+
+      const { data: updatedLayer, error: updateError } = await supabase
+        .from("layer")
+        .update(updateData)
+        .eq("id", id)
+        .eq("user_id", user.id) // Ensure user can only update their own layers
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error("🔴 [LAYERS] Error updating layer:", updateError);
+        return `❌ Failed to update layer: ${updateError.message}`;
+      }
+
+      if (!updatedLayer) {
+        return `❌ Layer with ID ${id} not found or you don't have permission to update it.`;
+      }
+
+      console.log("🟢 [LAYERS] Layer updated successfully:", updatedLayer);
+      return `✅ Successfully updated layer: ${JSON.stringify(updatedLayer, null, 2)}`;
+    } catch (error: unknown) {
+      console.error("🔴 [LAYERS] Failed to update layer:", error);
+      return `⚠️ Failed to update layer: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }

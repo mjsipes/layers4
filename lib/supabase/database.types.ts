@@ -7,147 +7,41 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
-      base_scores: {
-        Row: {
-          breathability: Json
-          factor_weights: Json
-          id: string
-          ideal_temperature: number
-          inserted_at: string | null
-          insulation: Json
-          style: Json
-          waterproof: Json
-          wind_resistance: Json
-        }
-        Insert: {
-          breathability: Json
-          factor_weights: Json
-          id?: string
-          ideal_temperature: number
-          inserted_at?: string | null
-          insulation: Json
-          style: Json
-          waterproof: Json
-          wind_resistance: Json
-        }
-        Update: {
-          breathability?: Json
-          factor_weights?: Json
-          id?: string
-          ideal_temperature?: number
-          inserted_at?: string | null
-          insulation?: Json
-          style?: Json
-          waterproof?: Json
-          wind_resistance?: Json
-        }
-        Relationships: []
-      }
-      clothing_items: {
-        Row: {
-          ai_evaluation_notes: string | null
-          category: string
-          cold_score: number
-          comfort_features: string[]
-          created_at: string | null
-          heat_score: number
-          humidity_score: number
-          id: string
-          insulation_type: string
-          material: string
-          name: string
-          quick_dry: boolean
-          rain_score: number
-          style: string
-          style_keywords: string[]
-          sun_protection: string
-          sun_score: number
-          thickness: number
-          updated_at: string | null
-          user_id: string | null
-          water_resistance: string
-          weather_adaptability: string[]
-          wind_protection: string
-          wind_score: number
-        }
-        Insert: {
-          ai_evaluation_notes?: string | null
-          category: string
-          cold_score: number
-          comfort_features?: string[]
-          created_at?: string | null
-          heat_score: number
-          humidity_score: number
-          id: string
-          insulation_type: string
-          material: string
-          name: string
-          quick_dry?: boolean
-          rain_score: number
-          style: string
-          style_keywords?: string[]
-          sun_protection: string
-          sun_score: number
-          thickness: number
-          updated_at?: string | null
-          user_id?: string | null
-          water_resistance: string
-          weather_adaptability?: string[]
-          wind_protection: string
-          wind_score: number
-        }
-        Update: {
-          ai_evaluation_notes?: string | null
-          category?: string
-          cold_score?: number
-          comfort_features?: string[]
-          created_at?: string | null
-          heat_score?: number
-          humidity_score?: number
-          id?: string
-          insulation_type?: string
-          material?: string
-          name?: string
-          quick_dry?: boolean
-          rain_score?: number
-          style?: string
-          style_keywords?: string[]
-          sun_protection?: string
-          sun_score?: number
-          thickness?: number
-          updated_at?: string | null
-          user_id?: string | null
-          water_resistance?: string
-          weather_adaptability?: string[]
-          wind_protection?: string
-          wind_score?: number
-        }
-        Relationships: []
-      }
       layer: {
         Row: {
+          bottom: boolean | null
           created_at: string
           description: string | null
           id: string
           name: string | null
+          top: boolean | null
           user_id: string | null
           warmth: number | null
         }
         Insert: {
+          bottom?: boolean | null
           created_at?: string
           description?: string | null
           id?: string
           name?: string | null
+          top?: boolean | null
           user_id?: string | null
           warmth?: number | null
         }
         Update: {
+          bottom?: boolean | null
           created_at?: string
           description?: string | null
           id?: string
           name?: string | null
+          top?: boolean | null
           user_id?: string | null
           warmth?: number | null
         }
@@ -161,6 +55,7 @@ export type Database = {
           feedback: string | null
           id: string
           outfit_id: string | null
+          user_id: string | null
           weather_id: string | null
         }
         Insert: {
@@ -170,6 +65,7 @@ export type Database = {
           feedback?: string | null
           id?: string
           outfit_id?: string | null
+          user_id?: string | null
           weather_id?: string | null
         }
         Update: {
@@ -179,6 +75,7 @@ export type Database = {
           feedback?: string | null
           id?: string
           outfit_id?: string | null
+          user_id?: string | null
           weather_id?: string | null
         }
         Relationships: [
@@ -204,18 +101,21 @@ export type Database = {
           id: string
           name: string | null
           total_warmth: number | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           name?: string | null
           total_warmth?: number | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           name?: string | null
           total_warmth?: number | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -255,54 +155,33 @@ export type Database = {
           },
         ]
       }
-      user_style_preferences: {
+      profiles: {
         Row: {
-          color_preferences: string[] | null
-          comfort_priority: number
-          created_at: string | null
-          fit_preferences: string[] | null
-          functionality_priority: number
+          avatar_url: string | null
+          full_name: string | null
           id: string
-          material_preferences: string[] | null
-          preference_name: string
-          preferred_styles: string[]
-          style_inspiration: string | null
-          style_priority: number
+          latitude: number | null
+          longitude: number | null
           updated_at: string | null
-          user_id: string | null
-          weather_condition: string
+          username: string | null
         }
         Insert: {
-          color_preferences?: string[] | null
-          comfort_priority: number
-          created_at?: string | null
-          fit_preferences?: string[] | null
-          functionality_priority: number
-          id?: string
-          material_preferences?: string[] | null
-          preference_name: string
-          preferred_styles?: string[]
-          style_inspiration?: string | null
-          style_priority: number
+          avatar_url?: string | null
+          full_name?: string | null
+          id: string
+          latitude?: number | null
+          longitude?: number | null
           updated_at?: string | null
-          user_id?: string | null
-          weather_condition: string
+          username?: string | null
         }
         Update: {
-          color_preferences?: string[] | null
-          comfort_priority?: number
-          created_at?: string | null
-          fit_preferences?: string[] | null
-          functionality_priority?: number
+          avatar_url?: string | null
+          full_name?: string | null
           id?: string
-          material_preferences?: string[] | null
-          preference_name?: string
-          preferred_styles?: string[]
-          style_inspiration?: string | null
-          style_priority?: number
+          latitude?: number | null
+          longitude?: number | null
           updated_at?: string | null
-          user_id?: string | null
-          weather_condition?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -338,7 +217,77 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_outfit_warmth: {
+        Args: { outfit_uuid: string }
+        Returns: number
+      }
+      get_logs_by_date: {
+        Args: { log_date: string }
+        Returns: {
+          log_id: string
+          date: string
+          comfort_level: number
+          feedback: string
+          was_too_hot: boolean
+          was_too_cold: boolean
+          outfit_name: string
+          total_warmth: number
+          layer_names: string
+          weather_data: Json
+        }[]
+      }
+      get_logs_by_outfit: {
+        Args: { outfit_uuid: string }
+        Returns: {
+          log_id: string
+          date: string
+          comfort_level: number
+          feedback: string
+          was_too_hot: boolean
+          was_too_cold: boolean
+          outfit_name: string
+          total_warmth: number
+          layer_names: string
+          weather_data: Json
+        }[]
+      }
+      get_logs_date_range: {
+        Args: { start_date: string; end_date: string }
+        Returns: {
+          log_id: string
+          date: string
+          comfort_level: number
+          feedback: string
+          was_too_hot: boolean
+          was_too_cold: boolean
+          outfit_name: string
+          total_warmth: number
+          layer_names: string
+          weather_data: Json
+        }[]
+      }
+      get_outfit_details: {
+        Args: { outfit_uuid: string }
+        Returns: {
+          outfit_name: string
+          total_warmth: number
+          layer_name: string
+          layer_warmth: number
+          is_top: boolean
+          is_bottom: boolean
+        }[]
+      }
+      get_outfit_stats: {
+        Args: { outfit_uuid: string }
+        Returns: {
+          times_worn: number
+          avg_comfort: number
+          too_hot_count: number
+          too_cold_count: number
+          temp_range_low: number
+          temp_range_high: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
@@ -349,21 +298,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -381,14 +334,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -404,14 +359,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -427,14 +384,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -442,14 +401,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
