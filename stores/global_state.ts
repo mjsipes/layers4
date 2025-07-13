@@ -1,6 +1,6 @@
 // /stores/global_state.ts
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -28,20 +28,33 @@ type GlobalState = {
 
 
 export const useGlobalStore = create<GlobalState>()(
-  devtools((set, get) => ({
-    selectedItemId: null,
-    selectedType: "addlayer",
-    wardrobeViewMode: "table",
-    wardrobeActiveTab: "layers",
-    setSelectedItem: (itemId, type) =>
-      set({ selectedItemId: itemId, selectedType: type }),
-    setWardrobeViewMode: (mode) =>
-      set({ wardrobeViewMode: mode }),
-    setWardrobeActiveTab: (tab) =>
-      set({ wardrobeActiveTab: tab }),
-    toggleWardrobeViewMode: () =>
-      set((state) => ({
-        wardrobeViewMode: state.wardrobeViewMode === "table" ? "grid" : "table",
-      })),
-  }), { name: '🌐 Global Store' })
+  devtools(
+    persist(
+      (set, get) => ({
+        selectedItemId: null,
+        selectedType: "addlayer",
+        wardrobeViewMode: "grid",
+        wardrobeActiveTab: "layers",
+        setSelectedItem: (itemId, type) =>
+          set({ selectedItemId: itemId, selectedType: type }),
+        setWardrobeViewMode: (mode) =>
+          set({ wardrobeViewMode: mode }),
+        setWardrobeActiveTab: (tab) =>
+          set({ wardrobeActiveTab: tab }),
+        toggleWardrobeViewMode: () =>
+          set((state) => ({
+            wardrobeViewMode: state.wardrobeViewMode === "table" ? "grid" : "table",
+          })),
+      }),
+      {
+        name: 'layers-global-state', // localStorage key
+        partialize: (state) => ({
+          // Only persist these specific fields
+          wardrobeViewMode: state.wardrobeViewMode,
+          wardrobeActiveTab: state.wardrobeActiveTab,
+        }),
+      }
+    ),
+    { name: '🌐 Global Store' }
+  )
 );
