@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Grid, List, Plus, Star } from "lucide-react";
+import { Grid, List } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layers from "@/components/wardrobe/Layers";
 import Outfits from "@/components/wardrobe/Outfits";
@@ -9,36 +9,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGlobalStore } from "@/stores/global_state";
 
 const WardobeCard = () => {
-  const { wardrobeViewMode, wardrobeActiveTab, setWardrobeActiveTab, toggleWardrobeViewMode, setSelectedItem } = useGlobalStore();
-
-
+  const { wardrobeViewMode, wardrobeActiveTab, setWardrobeActiveTab, toggleWardrobeViewMode } = useGlobalStore();
 
   return (
     <div className="w-full p-4 pb-0">
       <Tabs value={wardrobeActiveTab} onValueChange={(value) => setWardrobeActiveTab(value as "layers" | "outfits" | "logs")} className="w-full">
         <div className="flex items-center justify-center mb-2">
-          {/* <h2 className="text-2xl font-bold">Wardrobe</h2> */}
           <div className="flex items-center gap-4">
-            {/* Plus and Star buttons */}
-            <div className="flex items-center gap-2">
-              <button 
-                className="inline-flex items-center justify-center rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-                onClick={() => {
-                  const addType = wardrobeActiveTab === "layers" ? "addlayer" : 
-                                 wardrobeActiveTab === "outfits" ? "addoutfit" : "addlog";
-                  setSelectedItem(null, addType);
-                }}
-              >
-                <Plus size={16} />
-              </button>
-              <button 
-                className="inline-flex items-center justify-center rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-                onClick={() => setSelectedItem(null, "recommendations")}
-              >
-                <Star size={16} />
-              </button>
-            </div>
-            
             <TabsList>
               <TabsTrigger value="layers">Layers</TabsTrigger>
               <TabsTrigger value="outfits">Outfits</TabsTrigger>
