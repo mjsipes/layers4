@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, CheckCircleIcon } from "lucide-react";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
@@ -44,11 +44,11 @@ export default function Chat() {
                         </div>
                       );
                     case 'tool-invocation':
-                      return (
-                        <div key={`${message.id}-${i}`} className="text-xs text-muted-foreground font-mono">
-                          {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')})
-                        </div>
-                      );
+                                              return (
+                          <div key={`${message.id}-${i}`} className="text-xs text-muted-foreground font-mono">
+                            {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')}){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />}
+                          </div>
+                        );
                   }
                 })}
               </div>
