@@ -43,7 +43,7 @@ const WeatherCard = () => {
         <span className="badge">Lat: {lat?.toFixed(2) || "--"}</span>
         <span className="badge">Lon: {lon?.toFixed(2) || "--"}</span>
         <span className="badge">{date.toDateString()}</span>
-        <span className="badge font-mono">
+        <span className="badge ">
           {currentTime.toLocaleTimeString()}
         </span>
       </div>
