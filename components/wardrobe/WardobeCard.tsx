@@ -53,7 +53,7 @@ const WardobeCard = () => {
             </button>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-31rem)]">
+        <ScrollArea className="h-[calc(100vh-9rem)]">
           <TabsContent value="layers">
             <Layers viewMode={wardrobeViewMode} />
           </TabsContent>

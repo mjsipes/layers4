@@ -28,7 +28,7 @@ const WeatherCard = () => {
 
   if (!weatherData) {
     return (
-      <div className="w-full flex items-center justify-center border-r">
+      <div className="w-full h-[300px] flex items-center justify-center">
         <p className="text-muted-foreground">Loading weather data...</p>
       </div>
     );
@@ -37,7 +37,7 @@ const WeatherCard = () => {
   const currentWeather = weatherData.days?.[0];
 
   return (
-    <div className="w-full flex flex-col p-6 gap-2 border-r justify-around">
+    <div className="w-full flex flex-col p-4 gap-4 justify-between">
       {/* Location & Time row */}
       <div className="grid grid-cols-4 gap-2">
         <span className="badge">Lat: {lat?.toFixed(2) || "--"}</span>

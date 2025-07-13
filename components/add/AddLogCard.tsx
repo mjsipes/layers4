@@ -43,48 +43,55 @@ const AddLogCard = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <div className="flex flex-wrap gap-4 items-end">
-        <div className="flex-1 min-w-[200px]">
-          <Label htmlFor="log-feedback" className="text-xs">Feedback</Label>
-          <Input 
-            id="log-feedback" 
-            name="feedback" 
-            placeholder="How did the outfit feel?..." 
-            className="h-8 text-sm"
-          />
-        </div>
-        <div className="w-32">
-          <Label htmlFor="log-comfort" className="text-xs">Comfort (1-10)</Label>
-          <Input 
-            id="log-comfort" 
-            name="comfort_level" 
-            type="number" 
-            min="1" 
-            max="10" 
-            placeholder="1-10" 
-            className="h-8 text-sm"
-          />
-        </div>
-        <div className="w-40">
-          <Label htmlFor="log-date" className="text-xs">Date</Label>
-          <Input 
-            id="log-date" 
-            name="date" 
-            type="date" 
-            defaultValue={new Date().toISOString().split('T')[0]}
-            className="h-8 text-sm"
-          />
-        </div>
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="h-8 px-4 text-sm"
-        >
-          {isLoading ? "Saving..." : "Add Log"}
-        </Button>
+    <div className="p-4">
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold">Add Log</h2>
+        <p className="text-sm text-muted-foreground">
+          Record your experience with an outfit
+        </p>
       </div>
-    </form>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="log-feedback">Feedback</Label>
+            <Input 
+              id="log-feedback" 
+              name="feedback" 
+              placeholder="How did the outfit feel?..." 
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="log-comfort">Comfort (1-10)</Label>
+            <Input 
+              id="log-comfort" 
+              name="comfort_level" 
+              type="number" 
+              min="1" 
+              max="10" 
+              placeholder="1-10" 
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="log-date">Date</Label>
+            <Input 
+              id="log-date" 
+              name="date" 
+              type="date" 
+              defaultValue={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? "Saving..." : "Add Log"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 

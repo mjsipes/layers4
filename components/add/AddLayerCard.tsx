@@ -38,48 +38,55 @@ const AddLayerCard = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <div className="flex flex-wrap gap-4 items-end">
-        <div className="flex-1 min-w-[200px]">
-          <Label htmlFor="layer-name" className="text-xs">Layer Name *</Label>
-          <Input 
-            id="layer-name" 
-            name="name" 
-            placeholder="Enter layer name..." 
-            required 
-            className="h-8 text-sm"
-          />
-        </div>
-        <div className="flex-1 min-w-[200px]">
-          <Label htmlFor="layer-description" className="text-xs">Description</Label>
-          <Input 
-            id="layer-description" 
-            name="description" 
-            placeholder="Enter description..." 
-            className="h-8 text-sm"
-          />
-        </div>
-        <div className="w-32">
-          <Label htmlFor="layer-warmth" className="text-xs">Warmth (1-10)</Label>
-          <Input 
-            id="layer-warmth" 
-            name="warmth" 
-            type="number" 
-            min="1" 
-            max="10" 
-            placeholder="1-10" 
-            className="h-8 text-sm"
-          />
-        </div>
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="h-8 px-4 text-sm"
-        >
-          {isLoading ? "Saving..." : "Add Layer"}
-        </Button>
+    <div className="p-4">
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold">Add Layer</h2>
+        <p className="text-sm text-muted-foreground">
+          Create a new clothing layer to build your outfits
+        </p>
       </div>
-    </form>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="layer-name">Layer Name *</Label>
+            <Input 
+              id="layer-name" 
+              name="name" 
+              placeholder="Enter layer name..." 
+              required 
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="layer-description">Description</Label>
+            <Input 
+              id="layer-description" 
+              name="description" 
+              placeholder="Enter description..." 
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="layer-warmth">Warmth (1-10)</Label>
+            <Input 
+              id="layer-warmth" 
+              name="warmth" 
+              type="number" 
+              min="1" 
+              max="10" 
+              placeholder="1-10" 
+            />
+          </div>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? "Saving..." : "Add Layer"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 

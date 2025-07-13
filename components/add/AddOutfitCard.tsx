@@ -34,36 +34,44 @@ const AddOutfitCard = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <div className="flex flex-wrap gap-4 items-end">
-        <div className="flex-1 min-w-[200px]">
-          <Label htmlFor="outfit-name" className="text-xs">Outfit Name *</Label>
-          <Input 
-            id="outfit-name" 
-            name="name" 
-            placeholder="Enter outfit name..." 
-            required 
-            className="h-8 text-sm"
-          />
-        </div>
-        <div className="flex-1 min-w-[300px]">
-          <Label htmlFor="outfit-description" className="text-xs">Description</Label>
-          <Input 
-            id="outfit-description" 
-            name="description" 
-            placeholder="Describe this outfit..." 
-            className="h-8 text-sm"
-          />
-        </div>
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="h-8 px-4 text-sm"
-        >
-          {isLoading ? "Saving..." : "Add Outfit"}
-        </Button>
+    <div className="p-4">
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold">Add Outfit</h2>
+        <p className="text-sm text-muted-foreground">
+          Create a new outfit to track your clothing combinations
+        </p>
       </div>
-    </form>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="outfit-name">Outfit Name *</Label>
+            <Input 
+              id="outfit-name" 
+              name="name" 
+              placeholder="Enter outfit name..." 
+              required 
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="outfit-description">Description</Label>
+            <Input 
+              id="outfit-description" 
+              name="description" 
+              placeholder="Describe this outfit..." 
+            />
+          </div>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? "Saving..." : "Add Outfit"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 

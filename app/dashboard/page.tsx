@@ -27,12 +27,12 @@ export default async function DashboardPage() {
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={70}>
-        <div className="flex flex-col h-full items-center ">
-          <div className="grid grid-cols-2 w-full h-[300px]">
+        <div className="w-full h-full grid grid-cols-2">
+          <div className="flex flex-col h-full items-center border-r">
             <WeatherCard />
+            <Separator orientation="horizontal" />
             <DynamicCard />
           </div>
-          <Separator orientation="horizontal" />
           <WardobeCard />
         </div>
       </ResizablePanel>
