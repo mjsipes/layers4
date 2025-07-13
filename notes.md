@@ -10,3 +10,8 @@ implement kibu ui elements for ai chat.
 style insert cards
 
 npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema public > lib/supabase/database.types.ts
+
+figure out kibu. 
+make it so in select card you can update. make it so log also displays outfit info, make it so outfit also displays log info.
+make the bubbles correctly clickable and correctly color blue. 
+make it so heat is always blue. also add description for it somewhere
