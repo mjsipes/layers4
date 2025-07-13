@@ -52,9 +52,9 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-1/4">Name</TableHead>
-              <TableHead className="w-2/3">Layers</TableHead>
-              <TableHead className="w-1/12 text-center">Warmth</TableHead>
+              <TableHead className="w-4/12">Name</TableHead>
+              <TableHead className="w-6/12">Layers</TableHead>
+              <TableHead className="w-2/12 text-center">Warmth</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

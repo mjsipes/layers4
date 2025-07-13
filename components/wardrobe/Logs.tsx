@@ -67,11 +67,11 @@ const Logs = ({ viewMode }: LogsProps) => {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-1/12">Date</TableHead>
-              <TableHead className="w-1/12">Weather</TableHead>
+              <TableHead className="w-2/12">Date</TableHead>
+              <TableHead className="w-2/12">Weather</TableHead>
               <TableHead className="w-2/12">Outfit</TableHead>
-              <TableHead className="w-7/12">Feedback</TableHead>
-              <TableHead className="w-1/12 text-center">Comfort</TableHead>
+              <TableHead className="w-4/12">Feedback</TableHead>
+              <TableHead className="w-2/12 text-center">Comfort</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
