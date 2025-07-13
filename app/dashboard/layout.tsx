@@ -1,5 +1,4 @@
-import { AuthButton } from "@/components/auth/auth-button";
-import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { Navbar } from "@/components/ui/navbar";
 
 export default function ProtectedLayout({
   children,
@@ -9,17 +8,7 @@ export default function ProtectedLayout({
   return (
     <main className="h-screen w-screen flex flex-col items-center">
       <div className="flex-1 w-full flex flex-col items-center">
-        <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-          <div className="w-full flex justify-between items-center p-3 px-5 text-sm">
-            <h1 className="text-4xl font-extrabold tracking-tight text-primary">
-              Layers
-            </h1>
-            <div className="flex flex-row items-center gap-3">
-              <AuthButton />
-              <ThemeSwitcher />
-            </div>
-          </div>
-        </nav>
+        <Navbar showDashboardButton={false} />
         <div className="flex-1 w-full">{children}</div>
       </div>
     </main>
