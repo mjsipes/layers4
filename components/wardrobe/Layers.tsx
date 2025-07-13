@@ -28,7 +28,7 @@ const Layers = ({ viewMode }: LayersProps) => {
 
   if (layers.length === 0) {
     return (
-      <div className="w-full h-[200px] border rounded-lg flex items-center justify-center bg-secondary/30">
+      <div className="w-full h-[200px] flex items-center justify-center">
         <p className="text-muted-foreground">Loading layers...</p>
       </div>
     );

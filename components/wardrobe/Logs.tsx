@@ -50,7 +50,7 @@ const Logs = ({ viewMode }: LogsProps) => {
 
   if (logs.length === 0) {
     return (
-      <div className="w-full h-[200px] border rounded-lg flex items-center justify-center bg-secondary/30">
+      <div className="w-full h-[200px] flex items-center justify-center">
         <p className="text-muted-foreground">No logs found...</p>
       </div>
     );
