@@ -1,9 +1,8 @@
-"use client";
 import { AuthButton } from "@/components/auth/auth-button";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
-import { GoToDashboard } from "@/components/auth/GoToDashboard";
 import { hasEnvVars } from "@/lib/utils";
 import { EnvVarWarning } from "@/components/auth/env-var-warning";
+import { DashboardButton } from "@/components/ui/dashboard-button";
 
 interface NavbarProps {
   showDashboardButton?: boolean;
@@ -19,7 +18,7 @@ export function Navbar({ showDashboardButton = false }: NavbarProps) {
           </h1>
         </div>
         <div className="flex flex-row gap-3 items-center">
-          {showDashboardButton && <GoToDashboard />}
+          {showDashboardButton && <DashboardButton />}
           {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
           <ThemeSwitcher />
         </div>
