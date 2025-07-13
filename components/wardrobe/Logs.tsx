@@ -50,7 +50,7 @@ const Logs = ({ viewMode }: LogsProps) => {
     if (!comfort) return 'secondary';
     if (comfort >= 8) return 'default';
     if (comfort >= 6) return 'secondary';
-    return 'destructive';
+    return 'default';
   };
 
   if (logs.length === 0) {

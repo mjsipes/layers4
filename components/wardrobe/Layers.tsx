@@ -58,7 +58,7 @@ const Layers = ({ viewMode }: LayersProps) => {
                 {layer.description || "-"}
               </TableCell>
               <TableCell className="font-medium truncate text-center">
-                <Badge variant="destructive">{layer.warmth || "-"}</Badge>
+                <Badge variant="default">{layer.warmth || "-"}</Badge>
               </TableCell>
             </TableRow>
           ))}
@@ -76,7 +76,7 @@ const Layers = ({ viewMode }: LayersProps) => {
           onClick={() => handleLayerClick(layer)}
         >
           <div className="absolute top-3 right-3">
-            <Badge variant="destructive">{layer.warmth || "-"}</Badge>
+            <Badge variant="default">{layer.warmth || "-"}</Badge>
           </div>
 
           <div className="mb-3 pr-12">

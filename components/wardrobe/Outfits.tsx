@@ -88,7 +88,7 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
                   </div>
                 </TableCell>
                 <TableCell className={"text-center truncate"}>
-                  <Badge variant="destructive">
+                  <Badge variant="default">
                     {item.total_warmth || "-"}
                   </Badge>
                 </TableCell>
@@ -112,7 +112,7 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
             }}
           >
             <div className="absolute top-3 right-3">
-              <Badge variant="destructive">{outfit.total_warmth || "-"}</Badge>
+              <Badge variant="default">{outfit.total_warmth || "-"}</Badge>
             </div>
 
             <div className="mb-3 pr-12">

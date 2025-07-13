@@ -28,7 +28,7 @@ const SelectLogCard = () => {
     if (!comfort) return 'secondary';
     if (comfort >= 8) return 'default';
     if (comfort >= 6) return 'secondary';
-    return 'destructive';
+    return 'default';
   };
 
   const getWeatherInfo = () => {
