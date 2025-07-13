@@ -4,12 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
 import { useGlobalStore } from "@/stores/global_state";
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [comfortLevel, setComfortLevel] = useState([5]);
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const { addLog } = useLogStore();
   const { setWardrobeActiveTab } = useGlobalStore();
 
@@ -20,12 +25,11 @@ const AddLogCard = () => {
     try {
       const formData = new FormData(event.currentTarget);
       const feedback = formData.get("feedback") as string;
-      const date = formData.get("date") as string;
       
       await addLog({
         feedback: feedback.trim() || undefined,
         comfort_level: comfortLevel[0],
-        date: date || undefined,
+        date: date ? date.toISOString().split('T')[0] : undefined,
       });
       
       // Switch to logs tab after successful addition
@@ -35,11 +39,7 @@ const AddLogCard = () => {
       if (event.currentTarget) {
         event.currentTarget.reset();
         setComfortLevel([5]);
-        // Reset date to today
-        const dateInput = event.currentTarget.querySelector('input[name="date"]') as HTMLInputElement;
-        if (dateInput) {
-          dateInput.value = new Date().toISOString().split('T')[0];
-        }
+        setDate(new Date());
       }
       
     } catch (error: unknown) {
@@ -63,12 +63,29 @@ const AddLogCard = () => {
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label htmlFor="log-date">Date</Label>
-            <Input 
-              id="log-date" 
-              name="date" 
-              type="date" 
-              defaultValue={new Date().toISOString().split('T')[0]}
-            />
+            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="log-date"
+                  className="w-full justify-between font-normal"
+                >
+                  {date ? date.toLocaleDateString() : "Select date"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  captionLayout="dropdown"
+                  onSelect={(selectedDate) => {
+                    setDate(selectedDate);
+                    setDatePickerOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="log-feedback">Feedback</Label>
