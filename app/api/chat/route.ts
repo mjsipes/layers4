@@ -3,6 +3,8 @@ import { streamText } from "ai";
 import { rollDiceTool } from "./tools/roll-dice";
 import { getWeatherTool } from "./tools/get-weather";
 import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./tools/layers";
+import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool } from "./tools/outfits";
+import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool } from "./tools/logs";
 import { getUserInfoTool } from "./tools/get-user-info";
 
 // Allow streaming responses up to 30 seconds
@@ -22,6 +24,14 @@ export async function POST(req: Request) {
       insert_layer: insertLayerTool,
       delete_layer: deleteLayerTool,
       update_layer: updateLayerTool,
+      select_outfits: selectOutfitsTool,
+      insert_outfit: insertOutfitTool,
+      delete_outfit: deleteOutfitTool,
+      update_outfit: updateOutfitTool,
+      select_logs: selectLogsTool,
+      insert_log: insertLogTool,
+      delete_log: deleteLogTool,
+      update_log: updateLogTool,
     },
   });
 
