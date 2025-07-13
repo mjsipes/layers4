@@ -2,27 +2,30 @@
 
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from "react-markdown";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowUp, CheckCircleIcon } from "lucide-react";
+import { SendIcon, CheckCircleIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     maxSteps: 5,
   });
 
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e);
+      const form = e.currentTarget.form;
+      if (form) {
+        form.requestSubmit();
+      }
     }
   };
 
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden border-l">
-      <ScrollArea className="h-[calc(100vh-8rem)] px-4 py-2">
+      <ScrollArea className="h-[calc(100vh-10rem)] px-4 py-2">
         <div className="space-y-2 w-full">
           {messages.map(message => (
             <div
@@ -44,11 +47,11 @@ export default function Chat() {
                         </div>
                       );
                     case 'tool-invocation':
-                                              return (
-                          <div key={`${message.id}-${i}`} className="text-xs text-muted-foreground font-mono">
-                            {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')}){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />}
-                          </div>
-                        );
+                      return (
+                        <div key={`${message.id}-${i}`} className="text-xs text-muted-foreground font-mono">
+                          {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')}){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />}
+                        </div>
+                      );
                   }
                 })}
               </div>
@@ -59,28 +62,30 @@ export default function Chat() {
 
       <form
         onSubmit={handleSubmit}
-        className="px-4 py-3 border-t border-border bg-background w-full"
+        className="px-4 pb-2 bg-background w-full"
       >
-        <div className="flex gap-2 w-full">
-          <Input
-            className="w-full"
-            placeholder="Type your message..."
-            value={input}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            disabled={isLoading}
-          />
+        <div className="relative flex-1 border rounded-lg bg-background">
+          <ScrollArea className="h-20 w-full">
+            <Textarea
+              className="w-full resize-none border-none p-3 pr-12 shadow-none outline-none ring-0 bg-transparent focus-visible:ring-0 min-h-[80px] max-h-[80px]"
+              placeholder="Type your message..."
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+            />
+          </ScrollArea>
           <Button
             type="submit"
             size="icon"
             disabled={isLoading || !input.trim()}
-            className={`rounded-md transition-all duration-250 ${
+            className={cn(
+              "absolute bottom-2 right-2 gap-1.5 rounded-lg transition-all duration-250",
               input.trim() && !isLoading
                 ? "bg-primary"
                 : "bg-primary/50 hover:bg-primary/50"
-            }`}
+            )}
           >
-            <ArrowUp className="h-4 w-4" />
+            <SendIcon className="h-4 w-4" />
           </Button>
         </div>
       </form>
