@@ -17,34 +17,37 @@ const SelectLayerCard = () => {
   }
 
   return (
-    <div className="p-4">
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h3 className="text-2xl font-bold text-blue-600">
-              {layer.name || "Unnamed Layer"}
-            </h3>
-            <Badge variant="destructive" className="text-sm">
-              {layer.warmth || "-"}
-            </Badge>
-          </div>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => deleteLayer(layer.id)}
-            className="flex items-center gap-2"
-          >
-            <Trash2 size={16} />
-            Delete
-          </Button>
-        </div>
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
+      <div className="absolute top-3 right-3">
+        <Badge variant="destructive" className="text-sm">
+          {layer.warmth || "-"}
+        </Badge>
+      </div>
 
-        {layer.description && (
-          <div>
-            <span className="text-base text-muted-foreground font-medium">Description:</span>
-            <p className="text-base mt-2 leading-relaxed">{layer.description}</p>
-          </div>
-        )}
+      <div className="mb-3 pr-12">
+        <h3 className="text-2xl font-semibold text-primary leading-tight">
+          {layer.name || "Unnamed Layer"}
+        </h3>
+      </div>
+
+      {layer.description && (
+        <div className="mt-2 mb-4">
+          <p className="text-base text-foreground leading-relaxed">
+            {layer.description}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-auto">
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => deleteLayer(layer.id)}
+          className="flex items-center gap-2"
+        >
+          <Trash2 size={16} />
+          Delete
+        </Button>
       </div>
     </div>
   );

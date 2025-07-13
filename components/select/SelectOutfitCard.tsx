@@ -18,43 +18,44 @@ const SelectOutfitCard = () => {
   }
 
   return (
-    <div className="p-4">
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h3 className="text-2xl font-bold text-blue-600">
-              {outfit.name || "Unnamed Outfit"}
-            </h3>
-            <Badge variant="destructive" className="text-sm">
-              {outfit.total_warmth || "-"}
-            </Badge>
-          </div>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => deleteOutfit(outfit.id)}
-            className="flex items-center gap-2"
-          >
-            <Trash2 size={16} />
-            Delete
-          </Button>
-        </div>
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
+      <div className="absolute top-3 right-3">
+        <Badge variant="destructive" className="text-sm">
+          {outfit.total_warmth || "-"}
+        </Badge>
+      </div>
 
-        {outfit.layers && outfit.layers.length > 0 && (
-          <div>
-            <span className="text-base text-muted-foreground font-medium">Layers:</span>
-            <div className="flex gap-1 flex-wrap mt-2">
-              {outfit.layers.map((layer: Layer) => (
-                <span
-                  key={layer.id}
-                  className="inline-flex items-center rounded-md px-2 py-1 text-sm font-medium bg-secondary text-secondary-foreground"
-                >
-                  {layer.name || "Unnamed Layer"}
-                </span>
-              ))}
-            </div>
+      <div className="mb-3 pr-12">
+        <h3 className="text-2xl font-semibold text-primary leading-tight">
+          {outfit.name || "Unnamed Outfit"}
+        </h3>
+      </div>
+
+      {outfit.layers && outfit.layers.length > 0 && (
+        <div className="mt-2 mb-4">
+          <div className="flex gap-1 flex-wrap">
+            {outfit.layers.map((layer: Layer) => (
+              <span
+                key={layer.id}
+                className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
+              >
+                {layer.name || "Unnamed Layer"}
+              </span>
+            ))}
           </div>
-        )}
+        </div>
+      )}
+
+      <div className="mt-auto">
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => deleteOutfit(outfit.id)}
+          className="flex items-center gap-2"
+        >
+          <Trash2 size={16} />
+          Delete
+        </Button>
       </div>
     </div>
   );
