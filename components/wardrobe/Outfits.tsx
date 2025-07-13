@@ -27,6 +27,11 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
     setSelectedItem(outfit.id, "selectoutfit");
   };
 
+  const handleLayerClick = (layerId: string) => {
+    console.log("Layer clicked:", layerId);
+    setSelectedItem(layerId, "selectlayer");
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFocused = (_item: unknown) => {
     // You can implement focus logic here if needed
@@ -73,7 +78,7 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
                         className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Could potentially navigate to layers tab and select layer here if needed
+                          handleLayerClick(layer.id);
                         }}
                         style={{ cursor: "pointer" }}
                       >
@@ -124,7 +129,7 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
                     className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Could potentially navigate to layers tab and select layer here if needed
+                      handleLayerClick(layer.id);
                     }}
                     style={{ cursor: "pointer" }}
                   >

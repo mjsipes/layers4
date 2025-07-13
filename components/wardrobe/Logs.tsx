@@ -27,6 +27,11 @@ const Logs = ({ viewMode }: LogsProps) => {
     setSelectedItem(log.id, "selectlog");
   };
 
+  const handleOutfitClick = (outfitId: string) => {
+    console.log("Outfit clicked:", outfitId);
+    setSelectedItem(outfitId, "selectoutfit");
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFocused = (_item: unknown) => {
     // You can implement focus logic here if needed
@@ -93,7 +98,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                   <TableCell className="truncate">
                     <div className="flex gap-1 flex-wrap">
                       {(currentWeather?.temp || currentWeather?.description) && (
-                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground">
+                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground">
                           {currentWeather?.temp && `${currentWeather.temp}°`}
                           {currentWeather?.temp && currentWeather?.description && ' & '}
                           {currentWeather?.description && currentWeather.description.split(' ')[0]}
@@ -103,7 +108,13 @@ const Logs = ({ viewMode }: LogsProps) => {
                   </TableCell>
                   <TableCell className="truncate">
                     {log.outfit?.name && (
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground">
+                      <span 
+                        className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOutfitClick(log.outfit!.id);
+                        }}
+                      >
                         {log.outfit.name}
                       </span>
                     )}
@@ -160,14 +171,20 @@ const Logs = ({ viewMode }: LogsProps) => {
             <div className="mt-2 mb-4">
               <div className="flex gap-1 flex-wrap">
                 {(currentWeather?.temp || currentWeather?.description) && (
-                  <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground">
+                  <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground">
                     {currentWeather?.temp && `${currentWeather.temp}°`}
                     {currentWeather?.temp && currentWeather?.description && ' & '}
                     {currentWeather?.description && currentWeather.description.split(' ')[0]}
                   </span>
                 )}
                 {log.outfit?.name && (
-                  <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground">
+                  <span 
+                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOutfitClick(log.outfit!.id);
+                    }}
+                  >
                     {log.outfit.name}
                   </span>
                 )}
