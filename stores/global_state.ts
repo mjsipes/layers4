@@ -32,7 +32,7 @@ export const useGlobalStore = create<GlobalState>()(
     persist(
       (set, get) => ({
         selectedItemId: null,
-        selectedType: "addlayer",
+        selectedType: "addlog",
         wardrobeViewMode: "grid",
         wardrobeActiveTab: "layers",
         setSelectedItem: (itemId, type) =>

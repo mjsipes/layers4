@@ -51,10 +51,10 @@ const DynamicCard = () => {
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={() => setSelectedItem(null, "addlayer")}
+          onClick={() => setSelectedItem(null, "addlog")}
         >
           <Plus size={14} className="mr-1" />
-          Layer
+          Log
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
@@ -65,10 +65,10 @@ const DynamicCard = () => {
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={() => setSelectedItem(null, "addlog")}
+          onClick={() => setSelectedItem(null, "addlayer")}
         >
           <Plus size={14} className="mr-1" />
-          Log
+          Layer
         </button>
       </div>
       <ScrollArea className="flex-1">{renderActiveCard()}</ScrollArea>
