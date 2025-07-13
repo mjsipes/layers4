@@ -45,24 +45,25 @@ const AddLayerCard = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold">Add Layer</h2>
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Layer</h3>
         <p className="text-sm text-muted-foreground">
           Create a new clothing layer to build your outfits
         </p>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="layer-name">Layer Name *</Label>
+            <Label htmlFor="layer-name">Layer Name</Label>
             <Input 
               id="layer-name" 
               name="name" 
               placeholder="Enter layer name..." 
               required 
+              className="bg-background shadow-none"
             />
           </div>
           <div className="grid gap-2">
@@ -71,6 +72,7 @@ const AddLayerCard = () => {
               id="layer-description" 
               name="description" 
               placeholder="Enter description..." 
+              className="bg-background shadow-none"
             />
           </div>
           <div className="grid gap-2">

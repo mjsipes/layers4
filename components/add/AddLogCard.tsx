@@ -50,15 +50,15 @@ const AddLogCard = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold">Add Log</h2>
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Log</h3>
         <p className="text-sm text-muted-foreground">
           Record your experience with an outfit
         </p>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
@@ -68,7 +68,7 @@ const AddLogCard = () => {
                 <Button
                   variant="outline"
                   id="log-date"
-                  className="w-full justify-between font-normal"
+                  className="w-full justify-between font-normal bg-background shadow-none"
                 >
                   {date ? date.toLocaleDateString() : "Select date"}
                   <ChevronDownIcon />
@@ -93,6 +93,7 @@ const AddLogCard = () => {
               id="log-feedback" 
               name="feedback" 
               placeholder="How did the outfit feel?..." 
+              className="bg-background shadow-none"
             />
           </div>
           <div className="grid gap-2">

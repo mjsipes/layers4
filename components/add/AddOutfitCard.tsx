@@ -39,24 +39,25 @@ const AddOutfitCard = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold">Add Outfit</h2>
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Outfit</h3>
         <p className="text-sm text-muted-foreground">
           Create a new outfit to track your clothing combinations
         </p>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="outfit-name">Outfit Name *</Label>
+            <Label htmlFor="outfit-name">Outfit Name</Label>
             <Input 
               id="outfit-name" 
               name="name" 
               placeholder="Enter outfit name..." 
               required 
+              className="bg-background shadow-none"
             />
           </div>
           <div className="grid gap-2">
@@ -65,6 +66,7 @@ const AddOutfitCard = () => {
               id="outfit-description" 
               name="description" 
               placeholder="Describe this outfit..." 
+              className="bg-background shadow-none"
             />
           </div>
           <Button 
