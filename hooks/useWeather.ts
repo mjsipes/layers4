@@ -1,12 +1,12 @@
 // /hooks/useWeather.ts
 import { useEffect } from 'react';
-import { useWeatherStore } from '@/stores/weather_store';
+import { useGlobalStore } from '@/stores/global_store';
 
 export const useWeather = () => {
-  const { setWeatherData } = useWeatherStore();
-  const lat = useWeatherStore((state) => state.lat);
-  const lon = useWeatherStore((state) => state.lon);
-  const date = useWeatherStore((state) => state.date);
+  const { setWeatherData } = useGlobalStore();
+  const lat = useGlobalStore((state) => state.lat);
+  const lon = useGlobalStore((state) => state.lon);
+  const date = useGlobalStore((state) => state.date);
 
   useEffect(() => {
     const fetchWeather = async () => {

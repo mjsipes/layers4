@@ -8,7 +8,7 @@ import AddOutfitCard from "@/components/add/AddOutfitCard";
 import SelectLayerCard from "@/components/select/SelectLayerCard";
 import SelectOutfitCard from "@/components/select/SelectOutfitCard";
 import SelectLogCard from "@/components/select/SelectLogCard";
-import { useGlobalStore } from "@/stores/global_state";
+import { useGlobalStore } from "@/stores/global_store";
 
 const DynamicCard = () => {
   const { selectedType, setSelectedItem } = useGlobalStore();

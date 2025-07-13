@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useLayerStore } from "@/stores/layers_store";
-import { useGlobalStore } from "@/stores/global_state";
+import { useGlobalStore } from "@/stores/global_store";
 
 const AddLayerCard = () => {
   const [isLoading, setIsLoading] = useState(false);

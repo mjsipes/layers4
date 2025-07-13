@@ -8,7 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
-import { useGlobalStore } from "@/stores/global_state";
+import { useGlobalStore } from "@/stores/global_store";
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);

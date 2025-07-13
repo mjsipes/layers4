@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useOutfitStore } from "@/stores/outfits_store";
-import { useGlobalStore } from "@/stores/global_state";
+import { useGlobalStore } from "@/stores/global_store";
 
 const AddOutfitCard = () => {
   const [isLoading, setIsLoading] = useState(false);

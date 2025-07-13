@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useLogStore } from '@/stores/logs_store'
-import { useGlobalStore } from "@/stores/global_state";
+import { useGlobalStore } from "@/stores/global_store";
 import type { Log } from '@/stores/logs_store'
 
 interface LogsProps {

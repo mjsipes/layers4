@@ -14,3 +14,5 @@ what did you wear today?
 what should i wear today?
 
 verify email button
+
+chat should be able to add layer to outfit and add outfit to log

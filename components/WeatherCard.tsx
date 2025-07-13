@@ -1,19 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useWeatherStore } from "@/stores/weather_store";
+import { useGlobalStore } from "@/stores/global_store";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useWeather } from "@/hooks/useWeather";
 
 const WeatherCard = () => {
-  const date = useWeatherStore((state) => state.date);
+  const date = useGlobalStore((state) => state.date);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useGeolocation();
   useWeather();
 
-  const lat = useWeatherStore((state) => state.lat);
-  const lon = useWeatherStore((state) => state.lon);
-  const { data: weatherData } = useWeatherStore();
+  const lat = useGlobalStore((state) => state.lat);
+  const lon = useGlobalStore((state) => state.lon);
+  const { weatherData } = useGlobalStore();
 
   useEffect(() => {
     console.log("Weather Data:", weatherData);

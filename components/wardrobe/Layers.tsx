@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useLayerStore } from "@/stores/layers_store";
-import { useGlobalStore } from "@/stores/global_state";
+import { useGlobalStore } from "@/stores/global_store";
 import type { Layer } from "@/stores/layers_store";
 
 interface LayersProps {
