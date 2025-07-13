@@ -12,16 +12,15 @@ const WardobeCard = () => {
   const { wardrobeViewMode, wardrobeActiveTab, setWardrobeActiveTab, toggleWardrobeViewMode } = useGlobalStore();
 
   return (
-    <div className="w-full p-4 pb-0">
+    <div className="w-full">
       <Tabs value={wardrobeActiveTab} onValueChange={(value) => setWardrobeActiveTab(value as "layers" | "outfits" | "logs")} className="w-full">
-        <div className="flex items-center justify-center mb-2">
+        <div className="flex items-center justify-center mt-4 mb-2">
           <div className="flex items-center gap-4">
             <TabsList>
               <TabsTrigger value="layers">Layers</TabsTrigger>
               <TabsTrigger value="outfits">Outfits</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
             </TabsList>
-            
             <button
               onClick={toggleWardrobeViewMode}
               className="inline-flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors"
@@ -30,7 +29,7 @@ const WardobeCard = () => {
             </button>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-9rem)]">
+        <ScrollArea className="h-[calc(100vh-9rem)] px-4">
           <TabsContent value="layers">
             <Layers viewMode={wardrobeViewMode} />
           </TabsContent>
