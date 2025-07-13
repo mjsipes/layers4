@@ -4,7 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { GoToDashboard } from "./GoToDashboard";
 
-export async function AuthButton() {
+interface AuthButtonProps {
+  showDashboardButton?: boolean;
+}
+
+export async function AuthButton({ showDashboardButton = false }: AuthButtonProps) {
   const supabase = await createClient();
 
   const {
@@ -14,7 +18,7 @@ export async function AuthButton() {
   return user ? (
     <div className="flex items-center gap-4">
       Hey, {user.email}!
-      <GoToDashboard />
+      {showDashboardButton && <GoToDashboard />}
       <LogoutButton />
     </div>
   ) : (

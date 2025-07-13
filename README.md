@@ -1,84 +1,70 @@
+# Layers
 
-## Features
+**Dress for the moment.**
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+Layers is your intelligent wardrobe companion that helps you dress perfectly for any weather. No more guessing what to wear - get personalized outfit recommendations based on real-time weather data and your comfort preferences.
 
+## ✨ Features
 
-## Deploy to Vercel
+### 🌤️ Weather-Aware Dressing
+- Real-time weather integration
+- Personalized comfort recommendations
+- Smart layering suggestions
 
-Vercel deployment will guide you through creating a Supabase account and project.
+### 👕 Intelligent Wardrobe Management
+- Organize your clothes by layers
+- Track outfit combinations
+- Log your comfort experiences
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+### 🤖 AI-Powered Assistant
+- Chat with your wardrobe assistant
+- Get instant outfit recommendations
+- Learn from your preferences
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+### 📱 Beautiful, Responsive Design
+- Modern, intuitive interface
+- Works seamlessly across devices
+- Dark/light theme support
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+## 🚀 Getting Started
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+1. **Sign up** for your personalized wardrobe experience
+2. **Add your layers** - organize your clothes by type and warmth
+3. **Connect your location** for real-time weather data
+4. **Start chatting** with your AI wardrobe assistant
 
-## Clone and run locally
+## 💡 How It Works
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+Layers combines weather data, your personal comfort preferences, and AI to suggest the perfect outfit for any situation. The more you use it, the smarter it gets at understanding your style and comfort needs.
 
-2. Create a Next.js app using the Supabase Starter template npx command
+## 🎯 Perfect For
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+- **Weather-conscious dressers** who want to stay comfortable
+- **Minimalist wardrobes** looking to maximize outfit combinations
+- **Busy professionals** who want to dress efficiently
+- **Anyone** who's ever been too hot or too cold
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+## 🎨 Our Slogans
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+### Weather-Focused
+- "Dress for the moment"
+- "Layer smart, feel perfect"
+- "Weather-ready, always"
+- "Smart layers, perfect comfort"
+- "Dress the weather, not the calendar"
 
-3. Use `cd` to change into the app's directory
+### Comfort-Focused
+- "Comfort in every layer"
+- "Layer up, feel right"
+- "Perfect layers, perfect comfort"
+- "Dress for comfort, layer for weather"
 
-   ```bash
-   cd with-supabase-app
-   ```
+### Smart/Intelligent
+- "Smart layers, smarter you"
+- "Layer intelligently"
+- "Your weather wardrobe"
+- "Smart dressing, perfect layers"
 
-4. Rename `.env.example` to `.env.local` and update the following:
+---
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
-
-5. You can now run the Next.js local development server:
-
-   ```bash
-   npm run dev
-   ```
-
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
-
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
-
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
-
-## Feedback and issues
-
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+*Layer smart, feel perfect.*
