@@ -48,7 +48,8 @@ export default function Chat() {
                     case 'tool-invocation':
                       return (
                         <div key={`${message.id}-${i}`} className="text-xs text-muted-foreground font-mono">
-                          {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')}){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />}
+                          {/* {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')}){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />} */}
+                          {part.toolInvocation.toolName}(){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />}
                         </div>
                       );
                   }
