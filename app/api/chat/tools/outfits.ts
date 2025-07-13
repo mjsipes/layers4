@@ -224,3 +224,70 @@ export const deleteOutfitTool = tool({
     }
   },
 });
+
+export const selectOutfitByIdTool = tool({
+  description: "Get a specific outfit by ID with its layers from the database for the authenticated user",
+  parameters: z.object({
+    id: z.string().describe("ID of the outfit to fetch"),
+  }),
+  execute: async ({ id }) => {
+    try {
+      const supabase = await createClient();
+
+      // Get the authenticated user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("🔴 [OUTFITS] Error getting user:", userError);
+        return `❌ Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        return `❌ No authenticated user found. Please log in first.`;
+      }
+
+      console.log("🟢 [OUTFITS] User data received:", { id: user.id });
+
+      const { data: outfit, error: fetchError } = await supabase
+        .from("outfit")
+        .select(
+          `
+          *,
+          outfit_layer(
+            layer:layer(*)
+          )
+        `
+        )
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (fetchError) {
+        console.error("🔴 [OUTFITS] Error fetching outfit:", fetchError);
+        return `❌ Failed to fetch outfit: ${fetchError.message}`;
+      }
+
+      if (!outfit) {
+        return `❌ Outfit with ID ${id} not found or you don't have permission to access it.`;
+      }
+
+      console.log("🟢 [OUTFITS] Outfit fetched successfully:", outfit);
+
+      // Transform the data to match the store structure
+      const outfitWithLayers = {
+        ...outfit,
+        layers: outfit.outfit_layer?.map((ol: any) => ol.layer) ?? [],
+      };
+
+      return `👔 Outfit Details:\n${JSON.stringify(outfitWithLayers, null, 2)}`;
+    } catch (error: unknown) {
+      console.error("🔴 [OUTFITS] Failed to fetch outfit:", error);
+      return `⚠️ Failed to fetch outfit: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});

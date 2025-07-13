@@ -3,7 +3,7 @@ import { streamText } from "ai";
 import { rollDiceTool } from "./tools/roll-dice";
 import { getWeatherTool } from "./tools/get-weather";
 import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./tools/layers";
-import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool } from "./tools/outfits";
+import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool, selectOutfitByIdTool } from "./tools/outfits";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool } from "./tools/logs";
 import { getUserInfoTool } from "./tools/get-user-info";
 
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
       delete_layer: deleteLayerTool,
       update_layer: updateLayerTool,
       select_outfits: selectOutfitsTool,
+      select_outfit_by_id: selectOutfitByIdTool,
       insert_outfit: insertOutfitTool,
       delete_outfit: deleteOutfitTool,
       update_outfit: updateOutfitTool,
