@@ -71,6 +71,6 @@
 
 @layer components {
   .badge {
-    @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-medium border bg-secondary text-secondary-foreground border-secondary;
+    @apply inline-flex items-center rounded-md px-2 py-1 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary;
   }
 }

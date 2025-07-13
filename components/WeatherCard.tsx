@@ -49,8 +49,8 @@ const WeatherCard = () => {
             <span className="text-3xl font-bold text-primary/70">°</span>
           </div>
           <div className="flex gap-2 mt-2">
-            <span className="badge">L: {currentWeather?.tempmin || "--"}°</span>
-            <span className="badge">H: {currentWeather?.tempmax || "--"}°</span>
+            <span className="badge text-xs">L: {currentWeather?.tempmin || "--"}°</span>
+            <span className="badge text-xs">H: {currentWeather?.tempmax || "--"}°</span>
           </div>
         </div>
         {/* Right Group: Weather Stats + Location/Time */}
@@ -60,10 +60,7 @@ const WeatherCard = () => {
             <span className="badge">
               Wind: {currentWeather?.windspeed || "--"} mph
             </span>
-            <span className="badge">
-              UV Index: {currentWeather?.uvindex || "--"}
-            </span>
-            <span className="badge">
+            <span className="badge ">
               Precip: {currentWeather?.precip || "0"}%
             </span>
             <span className="badge">
@@ -73,9 +70,6 @@ const WeatherCard = () => {
 
           {/* Location & Time Column */}
           <div className="flex flex-col justify-start gap-2 flex-1 min-w-[180px]">
-            <span className="badge w-full">
-              {weatherData.timezone || "Unknown Location"}
-            </span>
             <div className="flex gap-2 w-full">
               <span className="badge w-full">
                 Lat: {lat?.toFixed(2) || "--"}
