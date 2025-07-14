@@ -291,3 +291,170 @@ export const selectOutfitByIdTool = tool({
     }
   },
 });
+
+export const linkOutfitLayerTool = tool({
+  description: "Link a layer to an outfit by creating a record in the outfit_layer join table. Use this when the user wants to add a layer to an outfit.",
+  parameters: z.object({
+    outfit_id: z.string().describe("ID of the outfit to link the layer to"),
+    layer_id: z.string().describe("ID of the layer to link to the outfit"),
+  }),
+  execute: async ({ outfit_id, layer_id }) => {
+    try {
+      const supabase = await createClient();
+
+      // Get the authenticated user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("🔴 [OUTFITS] Error getting user:", userError);
+        return `❌ Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        return `❌ No authenticated user found. Please log in first.`;
+      }
+
+      console.log("🟢 [OUTFITS] User data received:", { id: user.id });
+
+      // Verify that both the outfit and layer belong to the user
+      const { data: outfit, error: outfitError } = await supabase
+        .from("outfit")
+        .select("id")
+        .eq("id", outfit_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (outfitError || !outfit) {
+        console.error("🔴 [OUTFITS] Error verifying outfit:", outfitError);
+        return `❌ Outfit with ID ${outfit_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: layer, error: layerError } = await supabase
+        .from("layer")
+        .select("id")
+        .eq("id", layer_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (layerError || !layer) {
+        console.error("🔴 [OUTFITS] Error verifying layer:", layerError);
+        return `❌ Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+      }
+
+      // Check if the link already exists
+      const { data: existingLink, error: checkError } = await supabase
+        .from("outfit_layer")
+        .select("id")
+        .eq("outfit_id", outfit_id)
+        .eq("layer_id", layer_id)
+        .single();
+
+      if (existingLink) {
+        return `⚠️ Layer ${layer_id} is already linked to outfit ${outfit_id}.`;
+      }
+
+      console.log("🔵 [OUTFITS] Linking layer to outfit:", { outfit_id, layer_id });
+
+      const { data: newLink, error: linkError } = await supabase
+        .from("outfit_layer")
+        .insert({
+          outfit_id: outfit_id,
+          layer_id: layer_id,
+        })
+        .select()
+        .single();
+
+      if (linkError) {
+        console.error("🔴 [OUTFITS] Error linking layer to outfit:", linkError);
+        return `❌ Failed to link layer to outfit: ${linkError.message}`;
+      }
+
+      console.log("🟢 [OUTFITS] Layer linked to outfit successfully:", newLink);
+      return `✅ Successfully linked layer ${layer_id} to outfit ${outfit_id}`;
+    } catch (error: unknown) {
+      console.error("🔴 [OUTFITS] Failed to link layer to outfit:", error);
+      return `⚠️ Failed to link layer to outfit: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});
+
+export const unlinkOutfitLayerTool = tool({
+  description: "Unlink a layer from an outfit by removing the record from the outfit_layer join table. Use this when the user wants to remove a layer from an outfit.",
+  parameters: z.object({
+    outfit_id: z.string().describe("ID of the outfit to unlink the layer from"),
+    layer_id: z.string().describe("ID of the layer to unlink from the outfit"),
+  }),
+  execute: async ({ outfit_id, layer_id }) => {
+    try {
+      const supabase = await createClient();
+
+      // Get the authenticated user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("🔴 [OUTFITS] Error getting user:", userError);
+        return `❌ Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        return `❌ No authenticated user found. Please log in first.`;
+      }
+
+      console.log("🟢 [OUTFITS] User data received:", { id: user.id });
+
+      // Verify that both the outfit and layer belong to the user
+      const { data: outfit, error: outfitError } = await supabase
+        .from("outfit")
+        .select("id")
+        .eq("id", outfit_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (outfitError || !outfit) {
+        console.error("🔴 [OUTFITS] Error verifying outfit:", outfitError);
+        return `❌ Outfit with ID ${outfit_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: layer, error: layerError } = await supabase
+        .from("layer")
+        .select("id")
+        .eq("id", layer_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (layerError || !layer) {
+        console.error("🔴 [OUTFITS] Error verifying layer:", layerError);
+        return `❌ Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+      }
+
+      console.log("🔵 [OUTFITS] Unlinking layer from outfit:", { outfit_id, layer_id });
+
+      const { error: unlinkError } = await supabase
+        .from("outfit_layer")
+        .delete()
+        .eq("outfit_id", outfit_id)
+        .eq("layer_id", layer_id);
+
+      if (unlinkError) {
+        console.error("🔴 [OUTFITS] Error unlinking layer from outfit:", unlinkError);
+        return `❌ Failed to unlink layer from outfit: ${unlinkError.message}`;
+      }
+
+      console.log("🟢 [OUTFITS] Layer unlinked from outfit successfully");
+      return `✅ Successfully unlinked layer ${layer_id} from outfit ${outfit_id}`;
+    } catch (error: unknown) {
+      console.error("🔴 [OUTFITS] Failed to unlink layer from outfit:", error);
+      return `⚠️ Failed to unlink layer from outfit: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});

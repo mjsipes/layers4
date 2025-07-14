@@ -2,7 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { getWeatherTool } from "./tools/get-weather";
 import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./tools/layers";
-import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool, selectOutfitByIdTool } from "./tools/outfits";
+import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool, selectOutfitByIdTool, linkOutfitLayerTool, unlinkOutfitLayerTool } from "./tools/outfits";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool } from "./tools/logs";
 import { getUserInfoTool } from "./tools/get-user-info";
 import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./tools/global";
@@ -28,6 +28,8 @@ export async function POST(req: Request) {
       insert_outfit: insertOutfitTool,
       delete_outfit: deleteOutfitTool,
       update_outfit: updateOutfitTool,
+      link_outfit_layer: linkOutfitLayerTool,
+      unlink_outfit_layer: unlinkOutfitLayerTool,
       select_logs: selectLogsTool,
       insert_log: insertLogTool,
       delete_log: deleteLogTool,

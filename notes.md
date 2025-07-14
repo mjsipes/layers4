@@ -9,6 +9,7 @@ chat scroll area should scroll down while generating
 updatable select card
 make it so log also displays outfit layer info.
 make it so outfit also displays log info.
+change lat and lon to real location
 
 what did you wear today?
 what should i wear today?
