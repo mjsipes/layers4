@@ -6,7 +6,7 @@ import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} f
 import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool, selectOutfitByIdTool } from "./tools/outfits";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool } from "./tools/logs";
 import { getUserInfoTool } from "./tools/get-user-info";
-import { displayUITool } from "./tools/global";
+import { displayUITool, getCurrentUITool } from "./tools/global";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -35,6 +35,7 @@ export async function POST(req: Request) {
       delete_log: deleteLogTool,
       update_log: updateLogTool,
       display_ui: displayUITool,
+      get_current_ui: getCurrentUITool,
     },
   });
 

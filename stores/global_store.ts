@@ -2,7 +2,6 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { createClient } from "@/lib/supabase/client";
-import { Tables } from "@/lib/supabase/database.types";
 
 const supabase = createClient();
 
@@ -44,7 +43,6 @@ type GlobalState = {
 
 let isSubscribed = false;
 let channel: any = null;
-let isUpdatingFromSubscription = false;
 
 export const useGlobalStore = create<GlobalState>()(
   devtools(
@@ -63,13 +61,9 @@ export const useGlobalStore = create<GlobalState>()(
         weatherData: null,
         
         // Global UI actions
-        setSelectedItem: async (itemId, type) => {
+        setSelectedItem: (itemId, type) => {
+          console.log("🔵 [GLOBAL] Setting selected item:", { itemId, type });
           set({ selectedItemId: itemId, selectedType: type });
-          
-          // Only push to database if not updating from subscription
-          if (!isUpdatingFromSubscription) {
-            await push_selected_item_to_db(itemId, type);
-          }
         },
         setWardrobeViewMode: (mode) =>
           set({ wardrobeViewMode: mode }),
@@ -145,45 +139,6 @@ const push_lat_lon_to_db = async (lat: number, lon: number) => {
   }
 };
 
-const push_selected_item_to_db = async (itemId: string | null, type: SelectedItemType) => {
-  try {
-    /* 1. Get user */
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError) {
-      console.error("🔴 [GLOBAL] Error getting user:", userError);
-      throw userError;
-    }
-    console.log("🟢 [GLOBAL] User data:", { id: user?.id });
-
-    /* 2. Update user's profile with selected item */
-    if (user?.id) {
-      const updateData = {
-        selectedItemId: itemId,
-        selectedType: type,
-      };
-      console.log("🔵 [GLOBAL] Updating profile selected item:", updateData);
-
-      const { data: profileData, error: updateError } = await supabase
-        .from("profiles")
-        .update(updateData)
-        .eq("id", user.id)
-        .select();
-
-      if (updateError) {
-        console.error("🔴 [GLOBAL] Failed to update profile selected item:", updateError);
-        throw updateError;
-      }
-      console.log("🟢 [GLOBAL] Profile selected item updated:", profileData);
-    }
-  } catch (err) {
-    console.error("🔴 [GLOBAL] Failed to push selected item to database:", err);
-    throw err;
-  }
-};
-
 /* ------------------------------------------------------------------ */
 /* Live-query initialization                                           */
 /* ------------------------------------------------------------------ */
@@ -207,53 +162,46 @@ const initializeStore = async () => {
       return;
     }
 
-    /* 2. Fetch initial profile data */
-    const { data: profileData, error: fetchError } = await supabase
-      .from("profiles")
-      .select("selectedItemId, selectedType")
-      .eq("id", user.id)
-      .single();
-
-    if (fetchError) {
-      console.error("🔴 [GLOBAL] Error fetching profile:", fetchError);
-    } else if (profileData) {
-      console.log("🟢 [GLOBAL] Profile data loaded:", profileData);
-      isUpdatingFromSubscription = true;
-      useGlobalStore.getState().setSelectedItem(
-        profileData.selectedItemId,
-        profileData.selectedType as SelectedItemType
-      );
-      isUpdatingFromSubscription = false;
-    }
-
-    /* 3. Set up subscription */
+    /* 2. Set up bidirectional channel */
     channel = supabase
-      .channel("global-channel")
+      .channel("ui-updates")
       .on(
-        "postgres_changes",
-        { 
-          event: "*", 
-          schema: "public", 
-          table: "profiles",
-          filter: `id=eq.${user.id}`
-        },
-        async (payload) => {
-          console.log("🔵 [GLOBAL] Profile change:", payload);
-          if (payload.new) {
-            const newData = payload.new as any;
-            isUpdatingFromSubscription = true;
-            useGlobalStore.getState().setSelectedItem(
-              newData.selectedItemId,
-              newData.selectedType as SelectedItemType
-            );
-            isUpdatingFromSubscription = false;
-          }
+        "broadcast",
+        { event: "display-item" },
+        (payload) => {
+          console.log("🔵 [GLOBAL] Received display command:", payload);
+          console.log("🔵 [GLOBAL] Payload details:", {
+            selectedItemId: payload.payload?.selectedItemId,
+            selectedType: payload.payload?.selectedType,
+            payloadType: typeof payload.payload?.selectedType
+          });
+          const { selectedItemId, selectedType } = payload.payload || {};
+          useGlobalStore.getState().setSelectedItem(selectedItemId, selectedType);
+        }
+      )
+      .on(
+        "broadcast",
+        { event: "get-current-ui" },
+        (payload) => {
+          console.log("🔵 [GLOBAL] Received UI state request:", payload);
+          const currentState = useGlobalStore.getState();
+          
+          // Send current state back
+          supabase.channel("ui-updates").send({
+            type: "broadcast",
+            event: "ui-state-response",
+            payload: {
+              requestId: payload.payload?.requestId,
+              selectedItemId: currentState.selectedItemId,
+              selectedType: currentState.selectedType,
+            },
+          });
         }
       )
       .subscribe();
 
     isSubscribed = true;
-    console.log("🟢 [GLOBAL] Subscription initialized");
+    console.log("🟢 [GLOBAL] UI updates channel initialized");
   } catch (err) {
     console.error("🔴 [GLOBAL] Init error:", err);
   }

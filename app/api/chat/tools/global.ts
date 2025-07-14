@@ -37,30 +37,70 @@ export const displayUITool = tool({
 
       console.log("🟢 [GLOBAL] User data received:", { id: user.id });
 
-      const updateData = {
-        selectedItemId: selectedItemId,
-        selectedType: selectedType,
-      };
+      // Send display command via realtime channel
+      await supabase
+        .channel("ui-updates")
+        .send({
+          type: "broadcast",
+          event: "display-item",
+          payload: {
+            selectedItemId: selectedItemId,
+            selectedType: selectedType,
+          },
+        });
 
-      console.log("🔵 [GLOBAL] Updating UI state:", updateData);
+      console.log("🟢 [GLOBAL] Display command sent successfully");
+      return `✅ Successfully sent display command: selectedItemId=${selectedItemId}, selectedType=${selectedType}`;
+    } catch (error: unknown) {
+      console.error("🔴 [GLOBAL] Failed to send display command:", error);
+      return `⚠️ Failed to send display command: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  }
+});
 
-      const { data: profileData, error: updateError } = await supabase
-        .from("profiles")
-        .update(updateData)
-        .eq("id", user.id)
-        .select()
-        .single();
+export const getCurrentUITool = tool({
+  description: "Get the currently selected item and type from the UI. Use this when the user asks 'what am I currently viewing?' or 'what's selected?' to understand the current UI state.",
+  parameters: z.object({}),
+  execute: async () => {
+    try {
+      const supabase = await createClient();
 
-      if (updateError) {
-        console.error("🔴 [GLOBAL] Error updating UI state:", updateError);
-        return `❌ Failed to update UI state: ${updateError.message}`;
+      // Get the authenticated user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("🔴 [GLOBAL] Error getting user:", userError);
+        return `❌ Authentication error: ${userError.message}`;
       }
 
-      console.log("🟢 [GLOBAL] UI state updated successfully:", profileData);
-      return `✅ Successfully updated UI state: selectedItemId=${selectedItemId}, selectedType=${selectedType}`;
+      if (!user) {
+        return `❌ No authenticated user found. Please log in first.`;
+      }
+
+      console.log("🟢 [GLOBAL] User data received:", { id: user.id });
+
+      // Send request for current UI state via realtime channel
+      const requestId = Date.now();
+      await supabase
+        .channel("ui-updates")
+        .send({
+          type: "broadcast",
+          event: "get-current-ui",
+          payload: {
+            requestId: requestId,
+          },
+        });
+
+      console.log("🟢 [GLOBAL] Current UI state request sent successfully");
+      return `✅ Requested current UI state. The client will respond with the current selection.`;
     } catch (error: unknown) {
-      console.error("🔴 [GLOBAL] Failed to update UI state:", error);
-      return `⚠️ Failed to update UI state: ${
+      console.error("🔴 [GLOBAL] Failed to request current UI state:", error);
+      return `⚠️ Failed to request current UI state: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
