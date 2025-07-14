@@ -7,11 +7,14 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SendIcon, CheckCircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useStickToBottom } from "use-stick-to-bottom";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     maxSteps: 5,
   });
+
+  const { scrollRef, contentRef } = useStickToBottom();
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -25,8 +28,8 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden border-l">
-      <ScrollArea className="h-[calc(100vh-10rem)] px-4 py-2">
-        <div className="space-y-2 w-full">
+      <ScrollArea className="h-[calc(100vh-10rem)] px-4 py-2" viewportRef={scrollRef}>
+        <div className="space-y-2 w-full" ref={contentRef}>
           {messages.map(message => (
             <div
               key={message.id}
