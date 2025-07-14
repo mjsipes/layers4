@@ -1,7 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { TablesUpdate } from "@/lib/supabase/database.types";
+import { TablesUpdate, Tables } from "@/lib/supabase/database.types";
 
 export const selectOutfitsTool = tool({
   description: "Get all outfits from the database for the authenticated user",
@@ -279,7 +279,7 @@ export const selectOutfitByIdTool = tool({
       // Transform the data to match the store structure
       const outfitWithLayers = {
         ...outfit,
-        layers: outfit.outfit_layer?.map((ol: any) => ol.layer) ?? [],
+        layers: outfit.outfit_layer?.map((ol: { layer: Tables<"layer"> }) => ol.layer) ?? [],
       };
 
       return `👔 Outfit Details:\n${JSON.stringify(outfitWithLayers, null, 2)}`;
