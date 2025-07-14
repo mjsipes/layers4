@@ -22,4 +22,5 @@ ai integrated wardrobe. so you never dress to hot or to cold. For Skiing or any 
 
 i wore my uniqlo heat tech, my my orange pants, my patagonia shell, and i got hot by the time i finished the day.
 
+database subscriptions working for layers but not for logs or outfits
 
