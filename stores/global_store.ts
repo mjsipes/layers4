@@ -32,7 +32,7 @@ type GlobalState = {
   setWardrobeActiveTab: (tab: WardrobeTab) => void;
   toggleWardrobeViewMode: () => void;
   setDate: (date: Date) => void;
-  setLocation: (lat: number, lon: number) => Promise<void>;
+  setLocation: (lat: number, lon: number) => void;
   setWeatherData: (data: any) => void;
   clearWeather: () => void;
 };
@@ -76,9 +76,8 @@ export const useGlobalStore = create<GlobalState>()(
         
         // Weather actions
         setDate: (date) => set({ date }),
-        setLocation: async (lat, lon) => {
+        setLocation: (lat, lon) => {
           set({ lat, lon });
-          await push_lat_lon_to_db(lat, lon);
         },
         setWeatherData: (data) => set({ weatherData: data }),
         clearWeather: () => set({ weatherData: null }),
@@ -97,49 +96,6 @@ export const useGlobalStore = create<GlobalState>()(
 );
 
 /* ------------------------------------------------------------------ */
-/* Helpers                                                             */
-/* ------------------------------------------------------------------ */
-
-const push_lat_lon_to_db = async (lat: number, lon: number) => {
-  try {
-    /* 1. Get user */
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError) {
-      console.error("🔴 [WEATHER] Error getting user:", userError);
-      throw userError;
-    }
-    console.log("🟢 [WEATHER] User data:", { id: user?.id });
-
-    /* 2. Update user's profile with location */
-    if (user?.id) {
-      const updateData = {
-        latitude: lat,
-        longitude: lon,
-      };
-      console.log("🔵 [WEATHER] Updating profile location:", updateData);
-
-      const { data: profileData, error: updateError } = await supabase
-        .from("profiles")
-        .update(updateData)
-        .eq("id", user.id)
-        .select();
-
-      if (updateError) {
-        console.error("🔴 [WEATHER] Failed to update profile location:", updateError);
-        throw updateError;
-      }
-      console.log("🟢 [WEATHER] Profile location updated:", profileData);
-    }
-  } catch (err) {
-    console.error("🔴 [WEATHER] Failed to push location to database:", err);
-    throw err;
-  }
-};
-
-/* ------------------------------------------------------------------ */
 /* Live-query initialization                                           */
 /* ------------------------------------------------------------------ */
 
@@ -147,7 +103,7 @@ const initializeStore = async () => {
   if (isSubscribed) return;
 
   try {
-    /* 1. Get user */
+    /* 1. Get user for private channel */
     const {
       data: { user },
       error: userError,
@@ -162,9 +118,10 @@ const initializeStore = async () => {
       return;
     }
 
-    /* 2. Set up bidirectional channel */
+    /* 2. Set up bidirectional private channel */
+    const channelName = `ui-updates-${user.id}`;
     channel = supabase
-      .channel("ui-updates")
+      .channel(channelName)
       .on(
         "broadcast",
         { event: "display-item" },
@@ -187,7 +144,7 @@ const initializeStore = async () => {
           const currentState = useGlobalStore.getState();
           
           // Send current state back
-          supabase.channel("ui-updates").send({
+          supabase.channel(channelName).send({
             type: "broadcast",
             event: "ui-state-response",
             payload: {
@@ -198,10 +155,38 @@ const initializeStore = async () => {
           });
         }
       )
+      .on(
+        "broadcast",
+        { event: "set-location" },
+        (payload) => {
+          console.log("🔵 [GLOBAL] Received location update:", payload);
+          const { lat, lon } = payload.payload || {};
+          useGlobalStore.getState().setLocation(lat, lon);
+        }
+      )
+      .on(
+        "broadcast",
+        { event: "get-current-location" },
+        (payload) => {
+          console.log("🔵 [GLOBAL] Received location state request:", payload);
+          const currentState = useGlobalStore.getState();
+          
+          // Send current location back
+          supabase.channel(channelName).send({
+            type: "broadcast",
+            event: "location-state-response",
+            payload: {
+              requestId: payload.payload?.requestId,
+              lat: currentState.lat,
+              lon: currentState.lon,
+            },
+          });
+        }
+      )
       .subscribe();
 
     isSubscribed = true;
-    console.log("🟢 [GLOBAL] UI updates channel initialized");
+    console.log("🟢 [GLOBAL] Private UI updates channel initialized:", channelName);
   } catch (err) {
     console.error("🔴 [GLOBAL] Init error:", err);
   }

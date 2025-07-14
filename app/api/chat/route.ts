@@ -1,12 +1,11 @@
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
-import { rollDiceTool } from "./tools/roll-dice";
 import { getWeatherTool } from "./tools/get-weather";
 import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./tools/layers";
 import { selectOutfitsTool, insertOutfitTool, deleteOutfitTool, updateOutfitTool, selectOutfitByIdTool } from "./tools/outfits";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool } from "./tools/logs";
 import { getUserInfoTool } from "./tools/get-user-info";
-import { displayUITool, getCurrentUITool } from "./tools/global";
+import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./tools/global";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -18,7 +17,6 @@ export async function POST(req: Request) {
     model: openai("gpt-4o"),
     messages,
     tools: {
-      roll_dice: rollDiceTool,
       get_weather: getWeatherTool,
       get_user_info: getUserInfoTool,
       select_layers: selectLayersTool,
@@ -35,6 +33,8 @@ export async function POST(req: Request) {
       delete_log: deleteLogTool,
       update_log: updateLogTool,
       display_ui: displayUITool,
+      set_location: setLocationTool,
+      get_location: getLocationTool,
       get_current_ui: getCurrentUITool,
     },
   });

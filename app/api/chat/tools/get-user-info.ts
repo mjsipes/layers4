@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
 export const getUserInfoTool = tool({
-  description: "Get the authenticated user's profile information including location data",
+  description: "Get the authenticated user's profile information",
   parameters: z.object({}),
   execute: async () => {
     try {
