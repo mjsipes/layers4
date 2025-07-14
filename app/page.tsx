@@ -19,9 +19,10 @@ export default function Home() {
                 Layers
               </h1>
               <h1 className="text-5xl font-bold tracking-tight text-foreground text-center">
-                Not too hot, not too cold.
+                AI integrated wardrobe.
+                So you never dress too hot or too cold.
               </h1>
-          </div>
+              </div>
         </div>
       </div>
     </main>
