@@ -27,9 +27,6 @@ type LayerState = {
 /* Store                                                               */
 /* ------------------------------------------------------------------ */
 
-let isSubscribed = false;
-let channel: any = null;
-
 export const useLayerStore = create<LayerState>()(
   devtools(
     (set) => ({
@@ -91,70 +88,5 @@ export const useLayerStore = create<LayerState>()(
     { name: "🧩 Layer Store" }
   )
 );
-
-/* ------------------------------------------------------------------ */
-/* Helpers                                                             */
-/* ------------------------------------------------------------------ */
-
-export const fetchLayers = async () => {
-  const { data, error } = await supabase.from("layer").select("*");
-
-  if (error) {
-    console.error("🔴 [LAYERS] Fetch error:", error);
-    useLayerStore.getState().setLayers([]);
-    return [];
-  }
-
-  console.log("🟢 [LAYERS] Raw data:", data);
-  useLayerStore.getState().setLayers(data || []);
-  return data || [];
-};
-
-/* ------------------------------------------------------------------ */
-/* Live-query initialization                                           */
-/* ------------------------------------------------------------------ */
-
-const initializeStore = async () => {
-  if (isSubscribed) return;
-
-  try {
-    await fetchLayers();
-
-    channel = supabase
-      .channel("layers-channel")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "layer" },
-        async (payload) => {
-          console.log("🔵 [LAYERS] Subscription triggered:", payload);
-          await fetchLayers();
-        }
-      )
-      .subscribe();
-
-    isSubscribed = true;
-  } catch (err) {
-    console.error("🔴 [LAYERS] Init error:", err);
-    useLayerStore.getState().setLayers([]);
-  }
-};
-
-initializeStore();
-
-/* ------------------------------------------------------------------ */
-/* Cleanup                                                             */
-/* ------------------------------------------------------------------ */
-
-export const cleanupLayersStore = () => {
-  if (channel) {
-    supabase.removeChannel(channel);
-    channel = null;
-    isSubscribed = false;
-  }
-};
-
-/* ------------------------------------------------------------------ */
-/* Exports                                                             */
-/* ------------------------------------------------------------------ */
 
 export type { Layer };

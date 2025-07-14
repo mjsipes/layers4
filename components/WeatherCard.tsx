@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useWeather } from "@/hooks/useWeather";
+import { useLayersSubscription } from "@/hooks/useLayersSubscription";
 
 const WeatherCard = () => {
+  useLayersSubscription();
+
   const date = useGlobalStore((state) => state.date);
   const [currentTime, setCurrentTime] = useState(new Date());
 
