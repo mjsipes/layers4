@@ -352,7 +352,7 @@ export const linkOutfitLayerTool = tool({
         .eq("layer_id", layer_id)
         .single();
 
-      if (existingLink) {
+      if (existingLink || checkError) {
         return `⚠️ Layer ${layer_id} is already linked to outfit ${outfit_id}.`;
       }
 
