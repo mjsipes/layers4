@@ -9,7 +9,7 @@ import { useGlobalStore } from "@/stores/global_store";
 const AddOutfitCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addOutfit } = useOutfitStore();
-  const { setWardrobeActiveTab } = useGlobalStore();
+  // const { setWardrobeActiveTab } = useGlobalStore();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,7 +24,7 @@ const AddOutfitCard = () => {
       });
       
       // Switch to outfits tab after successful addition
-      setWardrobeActiveTab("outfits");
+      // setWardrobeActiveTab("outfits");
       
       // Reset form
       if (event.currentTarget) {
