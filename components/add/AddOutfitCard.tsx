@@ -5,11 +5,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useOutfitStore } from "@/stores/outfits_store";
 import { useGlobalStore } from "@/stores/global_store";
+import {
+  MultiSelector,
+  MultiSelectorTrigger,
+  MultiSelectorInput,
+  MultiSelectorContent,
+  MultiSelectorList,
+  MultiSelectorItem,
+} from "@/components/ui/multi-select";
+ 
+
+const options = [
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Svelte", value: "svelte" },
+];
 
 const AddOutfitCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addOutfit } = useOutfitStore();
   // const { setWardrobeActiveTab } = useGlobalStore();
+  const [value, setValue] = useState<string[]>([]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,14 +55,27 @@ const AddOutfitCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
+    <div className="relative p-4 border rounded-lg bg-background border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Outfit</h3>
-        <p className="text-sm text-muted-foreground">
-          Create a new outfit to track your clothing combinations
-        </p>
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add a new outfit</h3>
+
       </div>
+
+      <MultiSelector values={value} onValuesChange={setValue} loop={false}>
+      <MultiSelectorTrigger>
+        <MultiSelectorInput placeholder="Search/Create Layers" />
+      </MultiSelectorTrigger>
+      <MultiSelectorContent>
+        <MultiSelectorList>
+          {options.map((option, i) => (
+            <MultiSelectorItem key={i} value={option.value}>
+              {option.label}
+            </MultiSelectorItem>
+          ))}
+        </MultiSelectorList>
+      </MultiSelectorContent>
+    </MultiSelector>
 
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
