@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
-import { useGlobalStore } from "@/stores/global_store";
 import { Textarea } from "@/components/ui/textarea"
 
 import {
@@ -51,8 +50,6 @@ const AddLogCard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const { addLog } = useLogStore();
-  // should remove this everywhere
-  // const { setWardrobeActiveTab } = useGlobalStore();
 
 
 
@@ -89,10 +86,7 @@ const AddLogCard = () => {
         date: date ? date.toISOString().split("T")[0] : undefined,
       });
 
-      // Switch to logs tab after successful addition
-      // setWardrobeActiveTab("logs");
 
-      // Reset form
       if (event.currentTarget) {
         event.currentTarget.reset();
         setComfortLevel([5]);
