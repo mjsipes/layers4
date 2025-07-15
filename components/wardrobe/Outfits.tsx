@@ -23,12 +23,12 @@ const Outfits = ({ viewMode }: OutfitsProps) => {
   const { setSelectedItem } = useGlobalStore();
 
   const handleOutfitClick = (outfit: Outfit) => {
-    console.log("[OUTFITS] Outfit clicked:", { id: outfit.id, name: outfit.name, layers: outfit.layers });
+    console.log("Outfit clicked:", outfit.id);
     setSelectedItem(outfit.id, "selectoutfit");
   };
 
-  const handleLayerClick = (layerId: string, outfit: Outfit) => {
-    console.log("[OUTFITS] Layer clicked:", { layerId, outfitId: outfit.id, outfitName: outfit.name });
+  const handleLayerClick = (layerId: string) => {
+    console.log("Layer clicked:", layerId);
     setSelectedItem(layerId, "selectlayer");
   };
 
