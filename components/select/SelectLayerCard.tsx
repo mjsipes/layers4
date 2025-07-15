@@ -17,7 +17,7 @@ const SelectLayerCard = () => {
   }
 
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
+    <div className="relative p-4 border rounded-lg bg-background border-secondary m-4">
       <div className="absolute top-3 right-3">
         <Badge variant="default" className="text-sm">
           {layer.warmth || "-"}
