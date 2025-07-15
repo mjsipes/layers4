@@ -193,7 +193,7 @@ const Logs = ({ viewMode }: LogsProps) => {
             
             <div className="mt-auto">
               <p className="text-sm text-foreground line-clamp-3">
-                {log.feedback || 'No feedback provided'}
+                {log.feedback || ''}
               </p>
             </div>
           </div>

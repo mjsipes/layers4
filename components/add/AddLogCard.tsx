@@ -12,37 +12,19 @@ import {
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
-import { Textarea } from "@/components/ui/textarea"
 
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useOutfitStore } from "@/stores/outfits_store";
 import {
-  Tags,
-  TagsContent,
-  TagsEmpty,
-  TagsGroup,
-  TagsInput,
-  TagsItem,
-  TagsList,
-  TagsTrigger,
-  TagsValue,
-} from '@/components/ui/kibo-ui/tags';
-import { CheckIcon } from 'lucide-react';
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
-const tags = [
-  { id: 'react', label: 'React' },
-  { id: 'typescript', label: 'TypeScript' },
-  { id: 'javascript', label: 'JavaScript' },
-  { id: 'nextjs', label: 'Next.js' },
-  { id: 'vuejs', label: 'Vue.js' },
-  { id: 'angular', label: 'Angular' },
-  { id: 'svelte', label: 'Svelte' },
-  { id: 'nodejs', label: 'Node.js' },
-  { id: 'python', label: 'Python' },
-  { id: 'ruby', label: 'Ruby' },
-  { id: 'java', label: 'Java' },
-  { id: 'csharp', label: 'C#' },
-  { id: 'php', label: 'PHP' },
-  { id: 'go', label: 'Go' },
-];
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,26 +32,9 @@ const AddLogCard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const { addLog } = useLogStore();
-
-
-
-  const [selected, setSelected] = useState<string[]>([]);
-  const handleRemove = (value: string) => {
-    if (!selected.includes(value)) {
-      return;
-    }
-    console.log(`removed: ${value}`);
-    setSelected((prev) => prev.filter((v) => v !== value));
-  };
-  const handleSelect = (value: string) => {
-    if (selected.includes(value)) {
-      handleRemove(value);
-      return;
-    }
-    console.log(`selected: ${value}`);
-    setSelected((prev) => [...prev, value]);
-  };
-
+  const { outfits } = useOutfitStore();
+  const [selectedOutfit, setSelectedOutfit] = useState<string>("");
+  const [outfitPopoverOpen, setOutfitPopoverOpen] = useState(false);
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -83,7 +48,10 @@ const AddLogCard = () => {
       await addLog({
         feedback: feedback.trim() || undefined,
         comfort_level: comfortLevel[0],
-        date: date ? date.toISOString().split("T")[0] : undefined,
+        date: date
+          ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+          : undefined,
+        outfit_id: selectedOutfit || undefined,
       });
 
 
@@ -91,6 +59,7 @@ const AddLogCard = () => {
         event.currentTarget.reset();
         setComfortLevel([5]);
         setDate(new Date());
+        setSelectedOutfit("");
       }
     } catch (error: unknown) {
       console.error("Error saving log:", error);
@@ -115,7 +84,7 @@ const AddLogCard = () => {
         <div className="flex flex-col gap-6">
           {/* date input */}
           <div className="grid gap-2">
-            {/* <Label htmlFor="log-date">Date</Label> */}
+            <Label htmlFor="log-date">Date</Label>``
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -140,6 +109,53 @@ const AddLogCard = () => {
                     setDatePickerOpen(false);
                   }}
                 />
+              </PopoverContent>
+            </Popover>
+          </div>
+          {/* outfit combobox */}
+          <div className="grid gap-2">
+            <Label>Link Outfit</Label>
+            <Popover open={outfitPopoverOpen} onOpenChange={setOutfitPopoverOpen} >
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={outfitPopoverOpen}
+                  className="w-full justify-between"
+                  type="button"
+                >
+                  {selectedOutfit
+                    ? outfits.find((o) => o.id === selectedOutfit)?.name || "Unnamed Outfit"
+                    : ""}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput placeholder="Search outfit..." className="h-9" />
+                  <CommandList>
+                    <CommandEmpty>No outfit found.</CommandEmpty>
+                    <CommandGroup>
+                      {outfits.map((outfit) => (
+                        <CommandItem
+                          key={outfit.id}
+                          value={outfit.id}
+                          onSelect={() => {
+                            setSelectedOutfit(outfit.id);
+                            setOutfitPopoverOpen(false);
+                          }}
+                        >
+                          {outfit.name || "Unnamed Outfit"}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              selectedOutfit === outfit.id ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
               </PopoverContent>
             </Popover>
           </div>
