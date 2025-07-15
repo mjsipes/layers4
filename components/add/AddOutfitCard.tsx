@@ -38,6 +38,7 @@ const AddOutfitCard = () => {
 
       await addOutfit({
         name: name.trim(),
+        layer_ids: value,
       });
 
       // Switch to outfits tab after successful addition
