@@ -60,7 +60,7 @@ const AddLayerCard = () => {
               name="name" 
               // placeholder="Enter layer name..." 
               required 
-              className="bg-background shadow-none"
+              className="bg-background border-none"
             />
           </div>
           <div className="grid gap-2">
@@ -69,7 +69,7 @@ const AddLayerCard = () => {
               id="layer-description" 
               name="description" 
               // placeholder="Enter description..." 
-              className="bg-background shadow-none"
+              className="bg-background border-none"
             />
           </div>
           <div className="grid gap-2">

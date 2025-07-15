@@ -13,7 +13,6 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
- 
 
 const options = [
   { label: "React", value: "react" },
@@ -34,19 +33,18 @@ const AddOutfitCard = () => {
     try {
       const formData = new FormData(event.currentTarget);
       const name = formData.get("name") as string;
-      
+
       await addOutfit({
         name: name.trim(),
       });
-      
+
       // Switch to outfits tab after successful addition
       // setWardrobeActiveTab("outfits");
-      
+
       // Reset form
       if (event.currentTarget) {
         event.currentTarget.reset();
       }
-      
     } catch (error: unknown) {
       console.error("Error saving outfit:", error);
     } finally {
@@ -55,54 +53,59 @@ const AddOutfitCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4 ">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add a new outfit</h3>
-
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">
+          Add a new outfit
+        </h3>
       </div>
-
-      <MultiSelector values={value} onValuesChange={setValue} loop={false}>
-      <MultiSelectorTrigger>
-        <MultiSelectorInput placeholder="Search/Create Layers" />
-      </MultiSelectorTrigger>
-      <MultiSelectorContent>
-        <MultiSelectorList>
-          {options.map((option, i) => (
-            <MultiSelectorItem key={i} value={option.value}>
-              {option.label}
-            </MultiSelectorItem>
-          ))}
-        </MultiSelectorList>
-      </MultiSelectorContent>
-    </MultiSelector>
 
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label htmlFor="outfit-name">Outfit Name</Label>
-            <Input 
-              id="outfit-name" 
-              name="name" 
-              placeholder="Enter outfit name..." 
-              required 
-              className="bg-background shadow-none"
+            <Input
+              id="outfit-name"
+              name="name"
+              // placeholder="Enter outfit name..."
+              required
+              className="bg-background border-none"
             />
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="outfit-name">Search / Create Layers</Label>
+            <MultiSelector
+              values={value}
+              onValuesChange={setValue}
+              loop={false}
+            >
+              <MultiSelectorTrigger>
+              {/* placeholder="Search/Create Layers" */}
+                <MultiSelectorInput  />
+              </MultiSelectorTrigger>
+              <MultiSelectorContent>
+                <MultiSelectorList>
+                  {options.map((option, i) => (
+                    <MultiSelectorItem key={i} value={option.value}>
+                      {option.label}
+                    </MultiSelectorItem>
+                  ))}
+                </MultiSelectorList>
+              </MultiSelectorContent>
+            </MultiSelector>
+          </div>
+
+          <div className="grid gap-2">
             <Label htmlFor="outfit-description">Description</Label>
-            <Input 
-              id="outfit-description" 
-              name="description" 
-              placeholder="Describe this outfit..." 
-              className="bg-background shadow-none"
+            <Input
+              id="outfit-description"
+              name="description"
+              // placeholder="Describe this outfit..."
+              className="bg-background border-none"
             />
           </div>
-          <Button 
-            type="submit" 
-            disabled={isLoading}
-            className="w-full"
-          >
+          <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Saving..." : "Add Outfit"}
           </Button>
         </div>
