@@ -45,13 +45,10 @@ const AddLayerCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-background border-secondary m-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Layer</h3>
-        <p className="text-sm text-muted-foreground">
-          Create a new clothing layer to build your outfits
-        </p>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -61,17 +58,17 @@ const AddLayerCard = () => {
             <Input 
               id="layer-name" 
               name="name" 
-              placeholder="Enter layer name..." 
+              // placeholder="Enter layer name..." 
               required 
               className="bg-background shadow-none"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="layer-description">Description</Label>
+            <Label htmlFor="layer-description">Layer Description</Label>
             <Input 
               id="layer-description" 
               name="description" 
-              placeholder="Enter description..." 
+              // placeholder="Enter description..." 
               className="bg-background shadow-none"
             />
           </div>

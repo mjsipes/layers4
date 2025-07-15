@@ -55,7 +55,7 @@ const AddOutfitCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-background border-secondary m-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add a new outfit</h3>
