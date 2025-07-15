@@ -5,10 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
 import { useGlobalStore } from "@/stores/global_store";
+import { Textarea } from "@/components/ui/textarea"
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,23 +30,22 @@ const AddLogCard = () => {
     try {
       const formData = new FormData(event.currentTarget);
       const feedback = formData.get("feedback") as string;
-      
+
       await addLog({
         feedback: feedback.trim() || undefined,
         comfort_level: comfortLevel[0],
-        date: date ? date.toISOString().split('T')[0] : undefined,
+        date: date ? date.toISOString().split("T")[0] : undefined,
       });
-      
+
       // Switch to logs tab after successful addition
       setWardrobeActiveTab("logs");
-      
+
       // Reset form
       if (event.currentTarget) {
         event.currentTarget.reset();
         setComfortLevel([5]);
         setDate(new Date());
       }
-      
     } catch (error: unknown) {
       console.error("Error saving log:", error);
     } finally {
@@ -53,14 +57,17 @@ const AddLogCard = () => {
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Log</h3>
-        <p className="text-sm text-muted-foreground">
-          Record your experience with an outfit
-        </p>
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">
+          What are you wearing today?
+        </h3>
       </div>
+      <Textarea placeholder="Add / Create New Outfit." />
+
+
 
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
+          {/* date input */}
           <div className="grid gap-2">
             <Label htmlFor="log-date">Date</Label>
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
@@ -74,7 +81,10 @@ const AddLogCard = () => {
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
                 <Calendar
                   mode="single"
                   selected={date}
@@ -87,15 +97,18 @@ const AddLogCard = () => {
               </PopoverContent>
             </Popover>
           </div>
+          {/* feedback and comfort */}
           <div className="grid gap-2">
+            {/* feedback */}
             <Label htmlFor="log-feedback">Feedback</Label>
-            <Input 
-              id="log-feedback" 
-              name="feedback" 
-              placeholder="How did the outfit feel?..." 
+            <Input
+              id="log-feedback"
+              name="feedback"
+              placeholder="How did the outfit feel?..."
               className="bg-background shadow-none"
             />
           </div>
+          {/* comfort */}
           <div className="grid gap-2">
             <Label>Comfort: {comfortLevel[0]}/10</Label>
             <Slider
@@ -107,11 +120,7 @@ const AddLogCard = () => {
               className="w-full"
             />
           </div>
-          <Button 
-            type="submit" 
-            disabled={isLoading}
-            className="w-full"
-          >
+          <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Saving..." : "Add Log"}
           </Button>
         </div>

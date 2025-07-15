@@ -14,5 +14,5 @@ what should i wear today?
 i wore my uniqlo heat tech, my my orange pants, my patagonia shell, and i got hot by the time i finished the day.
 
 
-figure out if i am subscribing to the database through zustand in the best way.
+get rid of zustand?
 
