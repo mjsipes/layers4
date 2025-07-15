@@ -299,6 +299,7 @@ export const linkOutfitLayerTool = tool({
     layer_id: z.string().describe("ID of the layer to link to the outfit"),
   }),
   execute: async ({ outfit_id, layer_id }) => {
+    console.log(`[OUTFITS] Linking layer to outfit:`, { outfit_id, layer_id });
     try {
       const supabase = await createClient();
 
@@ -338,6 +339,7 @@ export const linkOutfitLayerTool = tool({
         .eq("id", layer_id)
         .eq("user_id", user.id)
         .single();
+      console.log("[OUTFITS] Layer fetch result:", { layer, layerError });
 
       if (layerError || !layer) {
         console.error("🔴 [OUTFITS] Error verifying layer:", layerError);
@@ -351,12 +353,17 @@ export const linkOutfitLayerTool = tool({
         .eq("outfit_id", outfit_id)
         .eq("layer_id", layer_id)
         .single();
+      console.log("[OUTFITS] Existing link fetch result:", { existingLink, checkError });
 
-      if (existingLink || checkError) {
+      // if (checkError){
+      //   return checkError;
+      // }
+
+      if (existingLink) {
         return `⚠️ Layer ${layer_id} is already linked to outfit ${outfit_id}.`;
       }
 
-      console.log("🔵 [OUTFITS] Linking layer to outfit:", { outfit_id, layer_id });
+      // Already logged above
 
       const { data: newLink, error: linkError } = await supabase
         .from("outfit_layer")
@@ -366,6 +373,8 @@ export const linkOutfitLayerTool = tool({
         })
         .select()
         .single();
+      console.log("[OUTFITS] New link result:", { newLink, linkError });
+
 
       if (linkError) {
         console.error("🔴 [OUTFITS] Error linking layer to outfit:", linkError);

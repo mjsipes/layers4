@@ -84,7 +84,7 @@ const AddLogCard = () => {
         <div className="flex flex-col gap-6">
           {/* date input */}
           <div className="grid gap-2">
-            <Label htmlFor="log-date">Date</Label>``
+            <Label htmlFor="log-date">Date</Label>
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
