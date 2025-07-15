@@ -54,7 +54,7 @@ const AddOutfitCard = () => {
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-2xl font-semibold text-blue-600 leading-tight">
-          Add a new outfit
+          Add Outfit
         </h3>
       </div>
 
@@ -71,7 +71,7 @@ const AddOutfitCard = () => {
             />
           </div>
           <div className="grid ">
-            <Label htmlFor="outfit-name">Search / Create Layers</Label>
+            <Label htmlFor="outfit-name">Link Layers</Label>
             <MultiSelector
               values={value}
               onValuesChange={setValue}
@@ -109,15 +109,6 @@ const AddOutfitCard = () => {
             </MultiSelector>
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="outfit-description">Description</Label>
-            <Input
-              id="outfit-description"
-              name="description"
-              // placeholder="Describe this outfit..."
-              className="bg-background border-none"
-            />
-          </div>
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Saving..." : "Add Outfit"}
           </Button>

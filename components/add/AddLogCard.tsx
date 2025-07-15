@@ -102,37 +102,12 @@ const AddLogCard = () => {
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
-      <div className="mb-6">
-        <h3 className="text-2xl font-semibold text-blue-600 leading-tight">
-          What are you wearing today?
+      <div className="mb-6 ">
+        <h3 className="text-2xl font-semibold text-blue-600 leading-tight ">
+          Add Log
         </h3>
       </div>
-      <Textarea placeholder="Add / Create New Outfit." />
-      <Tags className="max-w-[300px]">
-      <TagsTrigger>
-        {selected.map((tag) => (
-          <TagsValue key={tag} onRemove={() => handleRemove(tag)}>
-            {tags.find((t) => t.id === tag)?.label}
-          </TagsValue>
-        ))}
-      </TagsTrigger>
-      <TagsContent>
-        <TagsInput placeholder="Search tag..." />
-        <TagsList>
-          <TagsEmpty />
-          <TagsGroup>
-            {tags.map((tag) => (
-              <TagsItem key={tag.id} onSelect={handleSelect} value={tag.id}>
-                {tag.label}
-                {selected.includes(tag.id) && (
-                  <CheckIcon className="text-muted-foreground" size={14} />
-                )}
-              </TagsItem>
-            ))}
-          </TagsGroup>
-        </TagsList>
-      </TagsContent>
-    </Tags>
+    
 
 
 
@@ -140,7 +115,7 @@ const AddLogCard = () => {
         <div className="flex flex-col gap-6">
           {/* date input */}
           <div className="grid gap-2">
-            <Label htmlFor="log-date">Date</Label>
+            {/* <Label htmlFor="log-date">Date</Label> */}
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -171,11 +146,11 @@ const AddLogCard = () => {
           {/* feedback and comfort */}
           <div className="grid gap-2">
             {/* feedback */}
-            <Label htmlFor="log-feedback">Feedback</Label>
+            <Label htmlFor="log-feedback">Description - how did your outfit feel?</Label>
             <Input
               id="log-feedback"
               name="feedback"
-              placeholder="How did the outfit feel?..."
+              // placeholder="How did your outfit feel?"
               className="bg-background shadow-none"
             />
           </div>
