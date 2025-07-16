@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { GoToDashboard } from "./GoToDashboard";
+import { GoToDashboard } from "@/components/ui/GoToDashboard";
 
 interface AuthButtonProps {
   showDashboardButton?: boolean;

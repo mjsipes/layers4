@@ -9,7 +9,7 @@ import {
 import WeatherCard from "@/components/WeatherCard";
 import WardobeCard from "@/components/wardrobe/WardobeCard";
 import Chat from "@/components/Chat";
-import DynamicCard from "@/components/DynamicCard";
+import DynamicCard from "@/components/dynamic/DynamicCard";
 import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardPage() {

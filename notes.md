@@ -16,3 +16,48 @@ i wore my uniqlo heat tech, my my orange pants, my patagonia shell, and i got ho
 
 get rid of zustand?
 
+get rid of outfits?
+also log should have default date and location and should be set up to get weather via trigger
+
+
+login with google:
+https://supabase.com/docs/guides/auth/social-login/auth-google#google-pre-built
+https://console.cloud.google.com/auth/clients?inv=1&invt=Ab2yVg&project=mymlproject-431919
+
+
+
+
+
+
+
+
+alter table public.logs_clothing enable row level security;
+
+-- Read policy: user can see rows tied to their own logs
+create policy "select if owns log"
+on public.logs_clothing
+for select
+using (
+  exists (
+    select 1 from logs
+    where logs.id = logs_clothing.log_id
+      and logs.user_id = auth.uid()
+  )
+);
+
+-- Insert policy: user can only create links between their own logs and their own clothes
+create policy "insert if owns both"
+on public.logs_clothing
+for insert
+with check (
+  exists (
+    select 1 from logs
+    where logs.id = logs_clothing.log_id
+      and logs.user_id = auth.uid()
+  ) and
+  exists (
+    select 1 from clothes
+    where clothes.id = logs_clothing.clothing_id
+      and clothes.user_id = auth.uid()
+  )
+);

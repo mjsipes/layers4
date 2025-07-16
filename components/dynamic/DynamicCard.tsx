@@ -2,12 +2,12 @@
 import React from "react";
 import { Plus, Star } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import AddLayerCard from "@/components/add/AddLayerCard";
-import AddLogCard from "@/components/add/AddLogCard";
-import AddOutfitCard from "@/components/add/AddOutfitCard";
-import SelectLayerCard from "@/components/select/SelectLayerCard";
-import SelectOutfitCard from "@/components/select/SelectOutfitCard";
-import SelectLogCard from "@/components/select/SelectLogCard";
+import AddLayerCard from "@/components/dynamic/AddLayerCard";
+import AddLogCard from "@/components/dynamic/AddLogCard";
+import AddOutfitCard from "@/components/dynamic/AddOutfitCard";
+import SelectLayerCard from "@/components/dynamic/SelectLayerCard";
+import SelectOutfitCard from "@/components/dynamic/SelectOutfitCard";
+import SelectLogCard from "@/components/dynamic/SelectLogCard";
 import { useGlobalStore } from "@/stores/global_store";
 
 const DynamicCard = () => {
