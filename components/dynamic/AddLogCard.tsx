@@ -108,6 +108,17 @@ const AddLogCard = () => {
               </PopoverContent>
             </Popover>
           </div>
+          {/* feedback and comfort */}
+          <div className="grid gap-2">
+            {/* feedback */}
+            <Label htmlFor="log-feedback">Feedback</Label>
+            <Input
+              id="log-feedback"
+              name="feedback"
+              placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
+              className="bg-background shadow-none border-none"
+            />
+          </div>
           {/* layer multi-select */}
           <div className="grid ">
             <Label>Link Layers</Label>
@@ -145,17 +156,6 @@ const AddLogCard = () => {
                 </MultiSelectorList>
               </MultiSelectorContent>
             </MultiSelector>
-          </div>
-          {/* feedback and comfort */}
-          <div className="grid gap-2">
-            {/* feedback */}
-            <Label htmlFor="log-feedback">Description - how did your outfit feel?</Label>
-            <Input
-              id="log-feedback"
-              name="feedback"
-              // placeholder="How did your outfit feel?"
-              className="bg-background shadow-none border-none"
-            />
           </div>
           {/* comfort */}
           <div className="grid gap-2">
