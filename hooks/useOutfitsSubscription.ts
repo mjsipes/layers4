@@ -35,6 +35,8 @@ export function useOutfitsSubscription() {
         layers: o.outfit_layer?.map((ol: any) => ol.layer) ?? [],
       })) ?? [];
 
+    console.log("🟢 [OUTFITS] Outfits with layers:", outfitsWithLayers);
+
     setOutfits(outfitsWithLayers);
     return outfitsWithLayers;
   };

@@ -8,7 +8,7 @@ import { useGlobalSubscription } from "@/hooks/useGlobalSubscription";
 
 const WeatherCard = () => {
   useLayersSubscription();
-  // useOutfitsSubscription();
+  // useOutfitsSubscription();  
   useLogsSubscription();
   useGlobalSubscription();
 

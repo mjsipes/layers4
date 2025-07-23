@@ -10,20 +10,23 @@ const SelectLogCard = () => {
   const { selectedItemId } = useGlobalStore();
   const { logs, deleteLog } = useLogStore();
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    const localDate = new Date(Number(year), Number(month) - 1, Number(day));
+    return localDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   const log = logs.find(l => l.id === selectedItemId);
   console.log("SelectLogCard.log: ", log);
 
   if (!log) {
     return null;
   }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
 
   const getWeatherInfo = () => {
     if (!log.weather?.weather_data) return null;
@@ -78,7 +81,7 @@ const SelectLogCard = () => {
 
       <div className="mb-3 pr-12">
         <h3 className="text-2xl font-semibold text-primary leading-tight">
-          {log.date ? formatDate(log.date) : formatDate(log.created_at)}
+          {formatDate(log.date || '')}
         </h3>
       </div>
 

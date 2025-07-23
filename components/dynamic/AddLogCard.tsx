@@ -43,9 +43,7 @@ const AddLogCard = () => {
       await addLog({
         feedback: feedback,
         comfort_level: comfortLevel,
-        date: date
-          ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
-          : undefined,
+        date: date ? date.toISOString().slice(0, 10) : undefined,
         layer_ids: selectedLayers,
       });
 

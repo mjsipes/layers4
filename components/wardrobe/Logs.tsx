@@ -34,7 +34,10 @@ const Logs = ({ viewMode }: LogsProps) => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    const localDate = new Date(Number(year), Number(month) - 1, Number(day));
+    return localDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
