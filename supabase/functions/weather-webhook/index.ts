@@ -8,6 +8,10 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 console.log("Hello from Functions!")
 
+function round(num: number, decimals: number): number {
+  return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
 Deno.serve(async (req) => {
   const payload = await req.json();
   console.log("weather-webhook/index.ts echo POST:", payload);
