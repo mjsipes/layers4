@@ -8,6 +8,7 @@ export const getWeatherTool = tool({
     longitude: z.number().describe("The longitude of the location"),
   }),
   execute: async ({ latitude, longitude }) => {
+    console.log("🔵 [GLOBAL] getWeatherTool", { latitude, longitude });
     const currentDate = new Date().toISOString().split("T")[0];
 
     try {

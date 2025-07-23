@@ -15,6 +15,7 @@ export function useLayersSubscription() {
       setLayers([]);
       return [];
     }
+    console.log("🔴 [LAYERS] Fetch success:", data);
     setLayers(data || []);
     return data || [];
   };
@@ -28,6 +29,7 @@ export function useLayersSubscription() {
         "postgres_changes",
         { event: "*", schema: "public", table: "layer" },
         async () => {
+          console.log("🔴 [LAYERS] Subscription triggered");
           await fetchLayers();
         }
       )

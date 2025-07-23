@@ -34,9 +34,6 @@ type LogState = {
 /* Store                                                               */
 /* ------------------------------------------------------------------ */
 
-let isSubscribed = false;
-let channel: any = null;
-
 export const useLogStore = create<LogState>()(
   devtools(
     (set) => ({
@@ -96,91 +93,6 @@ export const useLogStore = create<LogState>()(
     { name: "📓 Log Store" }
   )
 );
-
-/* ------------------------------------------------------------------ */
-/* Helpers                                                             */
-/* ------------------------------------------------------------------ */
-
-export const fetchLogs = async () => {
-  const { data, error } = await supabase
-    .from("log")
-    .select(`
-      *,
-      outfit:outfit_id (
-        *,
-        outfit_layer (
-          layer(*)
-        )
-      ),
-      weather:weather_id (*)
-    `)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("🔴 [LOGS] Fetch error:", error);
-    useLogStore.getState().setLogs([]);
-    return [];
-  }
-
-  console.log("🟢 [LOGS] Raw data:", data);
-
-  const logsWithRelations: Log[] =
-    data?.map((log: any) => ({
-      ...log,
-      outfit: log.outfit
-        ? {
-            ...log.outfit,
-            layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) ?? [],
-          }
-        : undefined,
-    })) ?? [];
-
-  useLogStore.getState().setLogs(logsWithRelations);
-  return logsWithRelations;
-};
-
-/* ------------------------------------------------------------------ */
-/* Live-query initialization                                           */
-/* ------------------------------------------------------------------ */
-
-const initializeStore = async () => {
-  if (isSubscribed) return;
-
-  try {
-    await fetchLogs();
-
-    channel = supabase
-      .channel("logs-channel")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "log" },
-        async (payload) => {
-          console.log("🔵 [LOGS] Subscription triggered:", payload);
-          await fetchLogs();
-        }
-      )
-      .subscribe();
-
-    isSubscribed = true;
-  } catch (err) {
-    console.error("🔴 [LOGS] Init error:", err);
-    useLogStore.getState().setLogs([]);
-  }
-};
-
-initializeStore();
-
-/* ------------------------------------------------------------------ */
-/* Cleanup                                                             */
-/* ------------------------------------------------------------------ */
-
-export const cleanupLogsStore = () => {
-  if (channel) {
-    supabase.removeChannel(channel);
-    channel = null;
-    isSubscribed = false;
-  }
-};
 
 /* ------------------------------------------------------------------ */
 /* Exports                                                             */

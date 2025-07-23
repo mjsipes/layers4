@@ -1,18 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useGlobalStore } from "@/stores/global_store";
-import { useGeolocation } from "@/hooks/useGeolocation";
-import { useWeather } from "@/hooks/useWeather";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
+import { useOutfitsSubscription } from "@/hooks/useOutfitsSubscription";
+import { useLogsSubscription } from "@/hooks/useLogsSubscription";
+import { useGlobalSubscription } from "@/hooks/useGlobalSubscription";
 
 const WeatherCard = () => {
   useLayersSubscription();
+  useOutfitsSubscription();
+  useLogsSubscription();
+  useGlobalSubscription();
 
   const date = useGlobalStore((state) => state.date);
   const [currentTime, setCurrentTime] = useState(new Date());
-
-  useGeolocation();
-  useWeather();
 
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
