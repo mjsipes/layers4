@@ -32,7 +32,7 @@ const WeatherCard = () => {
 
   if (!weatherData) {
     return (
-      <div className="w-full h-[300px] flex items-center justify-center">
+      <div className="flex items-center justify-center h-full">
         <p className="text-muted-foreground">Loading weather data...</p>
       </div>
     );
@@ -41,15 +41,13 @@ const WeatherCard = () => {
   const currentWeather = weatherData.days?.[0];
 
   return (
-    <div className="w-full flex flex-col p-4 gap-4 justify-between">
+    <div className="w-full h-full flex flex-col p-4 gap-4 justify-between">
       {/* Location & Time row */}
       <div className="grid grid-cols-4 gap-2">
-        <span className="badge">Lat: {lat?.toFixed(2) || "--"}</span>
-        <span className="badge">Lon: {lon?.toFixed(2) || "--"}</span>
-        <span className="badge">{date.toDateString()}</span>
-        <span className="badge ">
-          {currentTime.toLocaleTimeString()}
-        </span>
+        <span className="badge truncate">Lat: {lat?.toFixed(2) || "--"}</span>
+        <span className="badge truncate">Lon: {lon?.toFixed(2) || "--"}</span>
+        <span className="badge truncate">{date.toDateString()}</span>
+        <span className="badge truncate">{currentTime.toLocaleTimeString()}</span>
       </div>
       {/* Temperature and Weather Stats */}
       <div className=" grid grid-cols-4 gap-2">
@@ -62,23 +60,23 @@ const WeatherCard = () => {
             <span className="text-3xl font-bold text-primary">°</span>
           </div>
           <div className="flex gap-2 mt-2">
-            <span className="badge text-xs">
+            <span className="badge truncate text-xs">
               L: {currentWeather?.tempmin || "--"}°
             </span>
-            <span className="badge text-xs">
+            <span className="badge truncate text-xs">
               H: {currentWeather?.tempmax || "--"}°
             </span>
           </div>
         </div>
         {/* Weather Stats */}
         <div className="col-span-2 flex flex-col justify-around gap-2">
-          <span className="badge w-full text-left">
+          <span className="badge truncate w-full text-left">
             Wind: {currentWeather?.windspeed || "--"} mph
           </span>
-          <span className="badge w-full text-left">
+          <span className="badge truncate w-full text-left">
             Precip: {currentWeather?.precip || "0"}%
           </span>
-          <span className="badge w-full text-left">
+          <span className="badge truncate w-full text-left">
             Humidity: {currentWeather?.humidity || "--"}%
           </span>
         </div>
