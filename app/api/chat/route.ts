@@ -4,6 +4,7 @@ import { getWeatherTool } from "./tools/get-weather";
 import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./tools/layers";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool } from "./tools/logs";
 import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./tools/global";
+import { getDateTool } from "./tools/get-date";
 
 export const maxDuration = 30;
 
@@ -15,6 +16,7 @@ export async function POST(req: Request) {
     messages,
     tools: {
       get_weather: getWeatherTool,
+      get_date: getDateTool,
       select_layers: selectLayersTool,
       insert_layer: insertLayerTool,
       delete_layer: deleteLayerTool,
