@@ -31,6 +31,7 @@ export const getWeatherTool = tool({
       );
 
       if (!response.ok) {
+        console.log("🔴 [GLOBAL] Error from weather API", response);
         const errorText = await response.text();
         return `❌ Error from weather API: ${response.status} - ${errorText}`;
       }
