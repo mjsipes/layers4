@@ -16,6 +16,7 @@ export function useLogsSubscription() {
         log_layer:log_layer(*, layer:layer_id(*)),
         weather:weather_id (*)
       `)
+      .order("date", { ascending: false })
       .order("created_at", { ascending: false });
 
     if (error) {
