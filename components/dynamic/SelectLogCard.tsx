@@ -11,6 +11,7 @@ const SelectLogCard = () => {
   const { logs, deleteLog } = useLogStore();
 
   const log = logs.find(l => l.id === selectedItemId);
+  console.log("SelectLogCard.log: ", log);
 
   if (!log) {
     return null;
@@ -22,13 +23,6 @@ const SelectLogCard = () => {
       month: 'short',
       day: 'numeric'
     });
-  };
-
-  const getComfortColor = (comfort: number | null) => {
-    if (!comfort) return 'secondary';
-    if (comfort >= 8) return 'default';
-    if (comfort >= 6) return 'secondary';
-    return 'default';
   };
 
   const getWeatherInfo = () => {
@@ -77,7 +71,7 @@ const SelectLogCard = () => {
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       <div className="absolute top-3 right-3">
-        <Badge variant={getComfortColor(log.comfort_level)} className="text-sm">
+        <Badge variant="default" className="text-sm">
           {log.comfort_level || "-"}
         </Badge>
       </div>

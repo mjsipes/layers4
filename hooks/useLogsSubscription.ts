@@ -25,11 +25,15 @@ export function useLogsSubscription() {
       return [];
     }
 
+    console.log("useLogsSubscription.fetchLogs: ", data);
+
     const logsWithRelations =
       data?.map((log: any) => ({
         ...log,
         layers: log.log_layer?.map((ll: any) => ll.layer) ?? [],
       })) ?? [];
+
+    console.log("useLogsSubscription.fetchLogs: ", logsWithRelations);
 
     setLogs(logsWithRelations);
     return logsWithRelations;

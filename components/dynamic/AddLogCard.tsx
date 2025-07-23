@@ -26,37 +26,33 @@ import {
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [comfortLevel, setComfortLevel] = useState([5]);
+  const [comfortLevel, setComfortLevel] = useState(5);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const { addLog } = useLogStore();
   const { layers } = useLayerStore();
   const [selectedLayers, setSelectedLayers] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState("");
 
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      const formData = new FormData(event.currentTarget);
-      const feedback = formData.get("feedback") as string;
-
+      console.log("AddLogCard.handleSubmit: ", feedback, comfortLevel, date, selectedLayers);
       await addLog({
-        feedback: feedback.trim() || undefined,
-        comfort_level: comfortLevel[0],
+        feedback: feedback,
+        comfort_level: comfortLevel,
         date: date
           ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
           : undefined,
         layer_ids: selectedLayers,
       });
 
-      if (event.currentTarget) {
-        event.currentTarget.reset();
-        setComfortLevel([5]);
-        setDate(new Date());
-        setSelectedLayers([]);
-      }
+      setFeedback("");
+      setComfortLevel(5);
+      setDate(new Date());
+      setSelectedLayers([]);
     } catch (error: unknown) {
       console.error("Error saving log:", error);
     } finally {
@@ -72,10 +68,6 @@ const AddLogCard = () => {
           Add Log
         </h3>
       </div>
-    
-
-
-
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           {/* date input */}
@@ -117,6 +109,8 @@ const AddLogCard = () => {
               name="feedback"
               placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
               className="bg-background shadow-none border-none"
+              value={feedback}
+              onChange={e => setFeedback(e.target.value)}
             />
           </div>
           {/* layer multi-select */}
@@ -159,10 +153,10 @@ const AddLogCard = () => {
           </div>
           {/* comfort */}
           <div className="grid gap-2">
-            <Label>Comfort: {comfortLevel[0]}/10</Label>
+            <Label>Comfort: {comfortLevel}/10</Label>
             <Slider
-              value={comfortLevel}
-              onValueChange={setComfortLevel}
+              value={[comfortLevel]}
+              onValueChange={([val]) => setComfortLevel(val)}
               max={10}
               min={1}
               step={1}

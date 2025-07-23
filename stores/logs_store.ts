@@ -40,6 +40,7 @@ export const useLogStore = create<LogState>()(
       setLogs: (logs) => set({ logs }),
 
       addLog: async (logData) => {
+        console.log("logs_store.addLog:Adding log:", logData);
         try {
           /* 1. Get user */
           const {
