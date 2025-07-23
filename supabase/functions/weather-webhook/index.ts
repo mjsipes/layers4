@@ -4,6 +4,7 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { createClient } from "jsr:@supabase/supabase-js@2";
 
 console.log("Hello from Functions!")
 
@@ -18,6 +19,34 @@ Deno.serve(async (req) => {
   const longitude = payload.record.longitude;
   const weather_id = payload.record.weather_id;
   console.log("weather-webhook/index.ts webhook triggered for log:", id, "on", date,  "at", latitude, longitude, "with weather:", weather_id);
+
+  if (date && latitude && longitude){
+    // get weather for this log
+    //create supabase client
+    const supabase = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_ANON_KEY") ?? "", {
+      global: {
+        headers: {
+          Authorization: req.headers.get("Authorization")
+        }
+      }
+    });
+    //first check if weather exists for this log
+    const roundedLat = round(latitude, 2);
+    const roundedLon = round(longitude, 2);
+    const { data: existing, error: fetchError } = await supabase
+    .from("weather")
+    .select("weather_data")
+    .eq("latitude", roundedLat)
+    .eq("longitude", roundedLon)
+    .eq("date", date)
+    .maybeSingle();
+
+    if (existing) {
+      console.log("weather-webhook/index.ts weather already exists for this log:", existing);
+    } else {
+      console.log("weather-webhook/index.ts weather does not exist for this log");
+    }
+  }
 
 
   return new Response(
