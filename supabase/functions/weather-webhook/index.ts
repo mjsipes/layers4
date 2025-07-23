@@ -10,14 +10,19 @@ console.log("Hello from Functions!")
 Deno.serve(async (req) => {
   const payload = await req.json();
   console.log("weather-webhook/index.ts echo POST:", payload);
-  const { name } = await req.json()
-  const data = {
-    message: `Hello ${name}!`,
-  }
+  const id = payload.record.id;
+  const date = payload.record.date;
+  const user_id = payload.record.user_id;
+  const feedback = payload.record.feedback;
+  const latitude = payload.record.latitude;
+  const longitude = payload.record.longitude;
+  const weather_id = payload.record.weather_id;
+  console.log("weather-webhook/index.ts webhook triggered for log:", id, "on", date,  "at", latitude, longitude, "with weather:", weather_id);
+
 
   return new Response(
-    JSON.stringify(data),
-    { headers: { "Content-Type": "application/json" } },
+    null,
+    { status: 200 }
   )
 })
 
