@@ -15,6 +15,8 @@ import { useLogStore } from "@/stores/logs_store";
 
 
 import { useLayerStore } from "@/stores/layers_store";
+import { useGlobalStore } from "@/stores/global_store";
+
 import {
   MultiSelector,
   MultiSelectorInput,
@@ -33,6 +35,8 @@ const AddLogCard = () => {
   const { layers } = useLayerStore();
   const [selectedLayers, setSelectedLayers] = useState<string[]>([]);
   const [feedback, setFeedback] = useState("");
+  const lat = useGlobalStore((state) => state.lat);
+  const lon = useGlobalStore((state) => state.lon);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -40,11 +44,14 @@ const AddLogCard = () => {
 
     try {
       console.log("AddLogCard.handleSubmit: ", feedback, comfortLevel, date, selectedLayers);
+
       await addLog({
         feedback: feedback,
         comfort_level: comfortLevel,
         date: date ? date.toISOString().slice(0, 10) : undefined,
         layer_ids: selectedLayers,
+        lat: lat ?? undefined,
+        lon: lon ?? undefined,
       });
 
       setFeedback("");

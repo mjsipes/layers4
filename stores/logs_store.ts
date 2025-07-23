@@ -24,6 +24,8 @@ type LogState = {
     date?: string;
     weather_id?: string;
     layer_ids?: string[];
+    lat?: number;
+    lon?: number;
   }) => Promise<void>;
   deleteLog: (logId: string) => Promise<void>;
 };
@@ -57,13 +59,15 @@ export const useLogStore = create<LogState>()(
             date: logData.date ?? null,
             weather_id: logData.weather_id ?? null,
             user_id: user?.id ?? null,
+            latitude: logData.lat ?? null,
+            longitude: logData.lon ?? null,
           };
-          console.log("\ud83d\udd35 [LOGS] Inserting:", insertData);
+          console.log("[LOGS] Inserting:", insertData);
 
           const { data: insertedLog, error } = await supabase.from("log").insert(insertData).select().single();
 
           if (error) throw error;
-          console.log("\ud83d\udfe2 [LOGS] Log inserted successfully");
+          console.log("[LOGS] Log inserted successfully");
 
           /* 3. Insert into log_layer join table */
           if (logData.layer_ids && logData.layer_ids.length > 0) {
@@ -73,10 +77,10 @@ export const useLogStore = create<LogState>()(
             }));
             const { error: joinError } = await supabase.from("log_layer").insert(logLayerRows);
             if (joinError) throw joinError;
-            console.log("\ud83d\udfe2 [LOGS] log_layer join rows inserted");
+            console.log("[LOGS] log_layer join rows inserted");
           }
         } catch (err) {
-          console.error("\ud83d\udd34 [LOGS] Failed to add log:", err);
+          console.error(" [LOGS] Failed to add log:", err);
           throw err;
         }
       },
