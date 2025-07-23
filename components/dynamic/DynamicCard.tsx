@@ -4,9 +4,9 @@ import { Plus, Star } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AddLayerCard from "@/components/dynamic/AddLayerCard";
 import AddLogCard from "@/components/dynamic/AddLogCard";
-import AddOutfitCard from "@/components/dynamic/AddOutfitCard";
+// import AddOutfitCard from "@/components/dynamic/AddOutfitCard";
 import SelectLayerCard from "@/components/dynamic/SelectLayerCard";
-import SelectOutfitCard from "@/components/dynamic/SelectOutfitCard";
+// import SelectOutfitCard from "@/components/dynamic/SelectOutfitCard";
 import SelectLogCard from "@/components/dynamic/SelectLogCard";
 import { useGlobalStore } from "@/stores/global_store";
 
@@ -17,14 +17,14 @@ const DynamicCard = () => {
     switch (selectedType) {
       case "addlayer":
         return <AddLayerCard />;
-      case "addoutfit":
-        return <AddOutfitCard />;
+      // case "addoutfit":
+      //   return <AddOutfitCard />;
       case "addlog":
         return <AddLogCard />;
       case "selectlayer":
         return <SelectLayerCard />;
-      case "selectoutfit":
-        return <SelectOutfitCard />;
+      // case "selectoutfit":
+      //   return <SelectOutfitCard />;
       case "selectlog":
         return <SelectLogCard />;
       case "recommendations":
@@ -55,13 +55,6 @@ const DynamicCard = () => {
         >
           <Plus size={14} className="mr-1" />
           Log
-        </button>
-        <button 
-          className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={() => setSelectedItem(null, "addoutfit")}
-        >
-          <Plus size={14} className="mr-1" />
-          Outfit
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 

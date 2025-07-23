@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
-import { useOutfitsSubscription } from "@/hooks/useOutfitsSubscription";
+// import { useOutfitsSubscription } from "@/hooks/useOutfitsSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
 import { useGlobalSubscription } from "@/hooks/useGlobalSubscription";
 
 const WeatherCard = () => {
   useLayersSubscription();
-  useOutfitsSubscription();
+  // useOutfitsSubscription();
   useLogsSubscription();
   useGlobalSubscription();
 

@@ -9,9 +9,9 @@ const supabase = createClient();
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
 
-type SelectedItemType = "selectlayer" | "selectoutfit" | "selectlog" | "addlayer" | "addoutfit" | "addlog" | "recommendations";
+type SelectedItemType = "selectlayer" | "selectlog" | "addlayer" | "addlog" | "recommendations";
 type ViewMode = "table" | "grid";
-type WardrobeTab = "layers" | "outfits" | "logs";
+type WardrobeTab = "layers" | "logs";
 
 type GlobalState = {
   // Global UI state

@@ -146,40 +146,25 @@ const SelectLogCard = () => {
         </div>
       )}
 
-      {/* Outfit and Layers Card */}
-      {log.outfit && (
+      {/* Layers Card */}
+      {log.layers && log.layers.length > 0 && (
         <div className="mt-2 mb-4">
           <div className="p-3 rounded-lg bg-background ">
             <div className="space-y-2">
               <div className="font-semibold text-primary text-base">
-                {log.outfit.name || "Outfit"}
+                Layers
               </div>
-              {log.outfit.layers && log.outfit.layers.length > 0 ? (
-                <div className="flex gap-1 flex-wrap">
-                  {log.outfit.layers.map((layer) => (
-                    <span
-                      key={layer.id}
-                      className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground"
-                    >
-                      {layer.name || "Unnamed Layer"}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-xs text-muted-foreground">No layers in this outfit.</div>
-              )}
+              <div className="flex gap-1 flex-wrap">
+                {log.layers.map((layer) => (
+                  <span
+                    key={layer.id}
+                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground"
+                  >
+                    {layer.name || "Unnamed Layer"}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Outfit Info */}
-      {log.outfit?.name && (
-        <div className="mt-2 mb-4">
-          <div className="flex gap-1 flex-wrap">
-            <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-background text-foreground">
-              {log.outfit.name}
-            </span>
           </div>
         </div>
       )}

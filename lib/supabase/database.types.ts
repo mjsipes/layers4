@@ -95,6 +95,42 @@ export type Database = {
           },
         ]
       }
+      log_layer: {
+        Row: {
+          created_at: string
+          id: string
+          layer_id: string | null
+          log_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          layer_id?: string | null
+          log_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          layer_id?: string | null
+          log_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "log_layer_log_id_fkey"
+            columns: ["log_id"]
+            isOneToOne: false
+            referencedRelation: "log"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outfit_layer_layer_id_fkey"
+            columns: ["layer_id"]
+            isOneToOne: false
+            referencedRelation: "layer"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       outfit: {
         Row: {
           created_at: string
@@ -119,49 +155,11 @@ export type Database = {
         }
         Relationships: []
       }
-      outfit_layer: {
-        Row: {
-          created_at: string
-          id: string
-          layer_id: string | null
-          outfit_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          layer_id?: string | null
-          outfit_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          layer_id?: string | null
-          outfit_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "outfit_layer_layer_id_fkey"
-            columns: ["layer_id"]
-            isOneToOne: false
-            referencedRelation: "layer"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outfit_layer_outfit_id_fkey"
-            columns: ["outfit_id"]
-            isOneToOne: false
-            referencedRelation: "outfit"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           avatar_url: string | null
           full_name: string | null
           id: string
-          latitude: number | null
-          longitude: number | null
           updated_at: string | null
           username: string | null
         }
@@ -169,8 +167,6 @@ export type Database = {
           avatar_url?: string | null
           full_name?: string | null
           id: string
-          latitude?: number | null
-          longitude?: number | null
           updated_at?: string | null
           username?: string | null
         }
@@ -178,8 +174,6 @@ export type Database = {
           avatar_url?: string | null
           full_name?: string | null
           id?: string
-          latitude?: number | null
-          longitude?: number | null
           updated_at?: string | null
           username?: string | null
         }

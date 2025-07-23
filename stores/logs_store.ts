@@ -11,9 +11,7 @@ const supabase = createClient();
 /* ------------------------------------------------------------------ */
 
 type Log = Tables<"log"> & {
-  outfit?: Tables<"outfit"> & {
-    layers: Tables<"layer">[];
-  };
+  layers?: Tables<"layer">[];
   weather?: Tables<"weather">;
 };
 
@@ -24,8 +22,8 @@ type LogState = {
     feedback?: string;
     comfort_level?: number;
     date?: string;
-    outfit_id?: string;
     weather_id?: string;
+    layer_ids?: string[];
   }) => Promise<void>;
   deleteLog: (logId: string) => Promise<void>;
 };
@@ -48,26 +46,36 @@ export const useLogStore = create<LogState>()(
             data: { user },
             error: userError,
           } = await supabase.auth.getUser();
-          if (userError) console.error("🔴 [LOGS] Error getting user:", userError);
-          else console.log("🟢 [LOGS] User data:", { id: user?.id });
+          if (userError) console.error("\ud83d\udd34 [LOGS] Error getting user:", userError);
+          else console.log("\ud83d\udfe2 [LOGS] User data:", { id: user?.id });
 
           /* 2. Insert log */
           const insertData = {
             feedback: logData.feedback ?? null,
             comfort_level: logData.comfort_level ?? null,
             date: logData.date ?? null,
-            outfit_id: logData.outfit_id ?? null,
             weather_id: logData.weather_id ?? null,
             user_id: user?.id ?? null,
           };
-          console.log("🔵 [LOGS] Inserting:", insertData);
+          console.log("\ud83d\udd35 [LOGS] Inserting:", insertData);
 
-          const { error } = await supabase.from("log").insert(insertData);
+          const { data: insertedLog, error } = await supabase.from("log").insert(insertData).select().single();
 
           if (error) throw error;
-          console.log("🟢 [LOGS] Log inserted successfully");
+          console.log("\ud83d\udfe2 [LOGS] Log inserted successfully");
+
+          /* 3. Insert into log_layer join table */
+          if (logData.layer_ids && logData.layer_ids.length > 0) {
+            const logLayerRows = logData.layer_ids.map((layer_id) => ({
+              log_id: insertedLog.id,
+              layer_id,
+            }));
+            const { error: joinError } = await supabase.from("log_layer").insert(logLayerRows);
+            if (joinError) throw joinError;
+            console.log("\ud83d\udfe2 [LOGS] log_layer join rows inserted");
+          }
         } catch (err) {
-          console.error("🔴 [LOGS] Failed to add log:", err);
+          console.error("\ud83d\udd34 [LOGS] Failed to add log:", err);
           throw err;
         }
       },

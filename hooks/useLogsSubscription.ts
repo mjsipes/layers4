@@ -9,38 +9,25 @@ export function useLogsSubscription() {
 
   // Fetch all logs and update the store
   const fetchLogs = async () => {
-    console.log("🔵 [LOGS] Fetching logs (initial)");
     const { data, error } = await supabase
       .from("log")
       .select(`
         *,
-        outfit:outfit_id (
-          *,
-          outfit_layer (
-            layer(*)
-          )
-        ),
+        log_layer:log_layer(*, layer:layer_id(*)),
         weather:weather_id (*)
       `)
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("🔴 [LOGS] Fetch error:", error);
+      console.error("[LOGS] Fetch error:", error);
       setLogs([]);
       return [];
     }
 
-    console.log("🟢 [LOGS] Raw data:", data);
-
     const logsWithRelations =
       data?.map((log: any) => ({
         ...log,
-        outfit: log.outfit
-          ? {
-              ...log.outfit,
-              layers: log.outfit.outfit_layer?.map((ol: any) => ol.layer) ?? [],
-            }
-          : undefined,
+        layers: log.log_layer?.map((ll: any) => ll.layer) ?? [],
       })) ?? [];
 
     setLogs(logsWithRelations);
@@ -50,21 +37,34 @@ export function useLogsSubscription() {
   useEffect(() => {
     fetchLogs();
 
-    const channel = supabase
-      .channel("logs-channel")
+    const logChannel = supabase
+      .channel("log-changes")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "log" },
         async () => {
-          console.log("🔵 [LOGS] log table subscription triggered");
+          console.log("[LOGS] log table changed");
+          await fetchLogs();
+        }
+      )
+      .subscribe();
+
+    const logLayerChannel = supabase
+      .channel("log-layer-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "log_layer" },
+        async () => {
+          console.log("[LOGS] log_layer table changed");
           await fetchLogs();
         }
       )
       .subscribe();
 
     return () => {
-      console.log("🟡 [LOGS] Removing logs channel");
-      supabase.removeChannel(channel);
+      console.log("[LOGS] Removing log and log_layer channels");
+      supabase.removeChannel(logChannel);
+      supabase.removeChannel(logLayerChannel);
     };
   }, []);
 } 

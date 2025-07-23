@@ -13,17 +13,15 @@ import {
 import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
 
-import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useOutfitStore } from "@/stores/outfits_store";
+
+import { useLayerStore } from "@/stores/layers_store";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+  MultiSelector,
+  MultiSelectorInput,
+  MultiSelectorContent,
+  MultiSelectorList,
+  MultiSelectorItem,
+} from "@/components/ui/multi-select";
 
 
 const AddLogCard = () => {
@@ -32,9 +30,8 @@ const AddLogCard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const { addLog } = useLogStore();
-  const { outfits } = useOutfitStore();
-  const [selectedOutfit, setSelectedOutfit] = useState<string>("");
-  const [outfitPopoverOpen, setOutfitPopoverOpen] = useState(false);
+  const { layers } = useLayerStore();
+  const [selectedLayers, setSelectedLayers] = useState<string[]>([]);
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -51,15 +48,14 @@ const AddLogCard = () => {
         date: date
           ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
           : undefined,
-        outfit_id: selectedOutfit || undefined,
+        layer_ids: selectedLayers,
       });
-
 
       if (event.currentTarget) {
         event.currentTarget.reset();
         setComfortLevel([5]);
         setDate(new Date());
-        setSelectedOutfit("");
+        setSelectedLayers([]);
       }
     } catch (error: unknown) {
       console.error("Error saving log:", error);
@@ -112,52 +108,43 @@ const AddLogCard = () => {
               </PopoverContent>
             </Popover>
           </div>
-          {/* outfit combobox */}
-          <div className="grid gap-2">
-            <Label>Link Outfit</Label>
-            <Popover open={outfitPopoverOpen} onOpenChange={setOutfitPopoverOpen} >
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={outfitPopoverOpen}
-                  className="w-full justify-between"
-                  type="button"
-                >
-                  {selectedOutfit
-                    ? outfits.find((o) => o.id === selectedOutfit)?.name || "Unnamed Outfit"
-                    : ""}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <Command>
-                  <CommandInput placeholder="Search outfit..." className="h-9" />
-                  <CommandList>
-                    <CommandEmpty>No outfit found.</CommandEmpty>
-                    <CommandGroup>
-                      {outfits.map((outfit) => (
-                        <CommandItem
-                          key={outfit.id}
-                          value={outfit.id}
-                          onSelect={() => {
-                            setSelectedOutfit(outfit.id);
-                            setOutfitPopoverOpen(false);
-                          }}
-                        >
-                          {outfit.name || "Unnamed Outfit"}
-                          <Check
-                            className={cn(
-                              "ml-auto",
-                              selectedOutfit === outfit.id ? "opacity-100" : "opacity-0"
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+          {/* layer multi-select */}
+          <div className="grid ">
+            <Label>Link Layers</Label>
+            <MultiSelector
+              values={selectedLayers}
+              onValuesChange={setSelectedLayers}
+              loop={false}
+            >
+              <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background">
+                {selectedLayers.map((id) => {
+                  const label = layers.find((l) => l.id === id)?.name || id;
+                  return (
+                    <span key={id} className="inline-flex items-center px-2 py-1 rounded-xl bg-secondary text-xs mr-1 mb-1">
+                      {label}
+                      <button
+                        type="button"
+                        className="ml-1 text-muted-foreground hover:text-destructive"
+                        onClick={() => setSelectedLayers(selectedLayers.filter((v) => v !== id))}
+                        aria-label={`Remove ${label}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  );
+                })}
+                <MultiSelectorInput />
+              </div>
+              <MultiSelectorContent>
+                <MultiSelectorList>
+                  {layers.map((layer) => (
+                    <MultiSelectorItem key={layer.id} value={layer.id}>
+                      {layer.name || "Unnamed Layer"}
+                    </MultiSelectorItem>
+                  ))}
+                </MultiSelectorList>
+              </MultiSelectorContent>
+            </MultiSelector>
           </div>
           {/* feedback and comfort */}
           <div className="grid gap-2">
@@ -167,7 +154,7 @@ const AddLogCard = () => {
               id="log-feedback"
               name="feedback"
               // placeholder="How did your outfit feel?"
-              className="bg-background shadow-none"
+              className="bg-background shadow-none border-none"
             />
           </div>
           {/* comfort */}

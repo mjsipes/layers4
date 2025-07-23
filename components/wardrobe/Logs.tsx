@@ -27,11 +27,6 @@ const Logs = ({ viewMode }: LogsProps) => {
     setSelectedItem(log.id, "selectlog");
   };
 
-  const handleOutfitClick = (outfitId: string) => {
-    console.log("Outfit clicked:", outfitId);
-    setSelectedItem(outfitId, "selectoutfit");
-  };
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFocused = (_item: unknown) => {
     // You can implement focus logic here if needed
@@ -69,8 +64,7 @@ const Logs = ({ viewMode }: LogsProps) => {
             <TableRow>
               <TableHead className="w-2/12">Date</TableHead>
               <TableHead className="w-2/12">Weather</TableHead>
-              <TableHead className="w-2/12">Outfit</TableHead>
-              <TableHead className="w-4/12">Feedback</TableHead>
+              <TableHead className="w-6/12">Layers</TableHead>
               <TableHead className="w-2/12 text-center">Comfort</TableHead>
             </TableRow>
           </TableHeader>
@@ -99,29 +93,33 @@ const Logs = ({ viewMode }: LogsProps) => {
                     <div className="flex gap-1 flex-wrap">
                       {(currentWeather?.temp || currentWeather?.description) && (
                         <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground">
-                          {currentWeather?.temp && `${currentWeather.temp}°`}
+                          {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
                           {currentWeather?.temp && currentWeather?.description && ' & '}
                           {currentWeather?.description && currentWeather.description.split(' ')[0]}
                         </span>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="truncate">
-                    {log.outfit?.name && (
-                      <span 
-                        className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOutfitClick(log.outfit!.id);
-                        }}
-                      >
-                        {log.outfit.name}
-                      </span>
-                    )}
-                    {!log.outfit?.name && '-'}
-                  </TableCell>
-                  <TableCell className="truncate">
-                    {log.feedback || '-'}
+                  <TableCell className="truncate p-1">
+                    <div className="flex gap-1 flex-wrap">
+                      {log.layers && log.layers.length > 0 ? (
+                        log.layers.map((layer) => (
+                          <span
+                            key={layer.id}
+                            className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedItem(layer.id, "selectlayer");
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {layer?.name || "Unnamed Layer"}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={getComfortColor(log.comfort_level)}>
@@ -137,6 +135,7 @@ const Logs = ({ viewMode }: LogsProps) => {
     );
   }
 
+  // Grid view
   return (
     <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
       {logs.map((log) => {
@@ -167,27 +166,29 @@ const Logs = ({ viewMode }: LogsProps) => {
               </h3>
             </div>
 
-            {/* Weather and Outfit Info */}
+            {/* Weather and Layers Info */}
             <div className="mt-2 mb-4">
               <div className="flex gap-1 flex-wrap">
                 {(currentWeather?.temp || currentWeather?.description) && (
                   <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground">
-                    {currentWeather?.temp && `${currentWeather.temp}°`}
+                    {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
                     {currentWeather?.temp && currentWeather?.description && ' & '}
                     {currentWeather?.description && currentWeather.description.split(' ')[0]}
                   </span>
                 )}
-                {log.outfit?.name && (
-                  <span 
-                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                {log.layers && log.layers.length > 0 && log.layers.map((layer) => (
+                  <span
+                    key={layer.id}
+                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleOutfitClick(log.outfit!.id);
+                      setSelectedItem(layer.id, "selectlayer");
                     }}
+                    style={{ cursor: "pointer" }}
                   >
-                    {log.outfit.name}
+                    {layer.name || "Unnamed Layer"}
                   </span>
-                )}
+                ))}
               </div>
             </div>
             
