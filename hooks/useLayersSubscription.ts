@@ -9,13 +9,14 @@ export function useLayersSubscription() {
 
   // Fetch all layers and update the store
   const fetchLayers = async () => {
+    console.log("useLayersSubscription/fetchLayers: Fetching layers");
     const { data, error } = await supabase.from("layer").select("*");
     if (error) {
-      console.error("🔴 [LAYERS] Fetch error:", error);
+      console.error("useLayersSubscription/fetchLayers: ", error);
       setLayers([]);
       return [];
     }
-    console.log("🔴 [LAYERS] Fetch success:", data);
+    console.log("useLayersSubscription/fetchLayers: ", data);
     setLayers(data || []);
     return data || [];
   };
@@ -29,7 +30,7 @@ export function useLayersSubscription() {
         "postgres_changes",
         { event: "*", schema: "public", table: "layer" },
         async () => {
-          console.log("🔴 [LAYERS] Subscription triggered");
+          console.log("useLayersSubscription: Subscription triggered");
           await fetchLayers();
         }
       )

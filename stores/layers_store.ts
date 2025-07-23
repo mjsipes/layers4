@@ -41,8 +41,8 @@ export const useLayerStore = create<LayerState>()(
             data: { user },
             error: userError,
           } = await supabase.auth.getUser();
-          if (userError) console.error("🔴 [LAYERS] Error getting user:", userError);
-          else console.log("🟢 [LAYERS] User data:", { id: user?.id });
+          if (userError) console.error("layers-store/addLayer: Error getting user:", userError);
+          else console.log("layers-store/addLayer: User data:", { id: user?.id });
 
           /* 2. Insert layer */
           const insertData = {
@@ -51,7 +51,7 @@ export const useLayerStore = create<LayerState>()(
             warmth: layerData.warmth ?? null,
             user_id: user?.id ?? null,
           };
-          console.log("🔵 [LAYERS] Inserting:", insertData);
+          console.log("layers-store/addLayer: Inserting:", insertData);
 
           const { data, error: insertErr } = await supabase
             .from("layer")
@@ -60,16 +60,16 @@ export const useLayerStore = create<LayerState>()(
             .single();
 
           if (insertErr) throw insertErr;
-          console.log("🟢 [LAYERS] Layer inserted:", data);
+          console.log("layers-store/addLayer: Layer inserted:", data);
         } catch (err) {
-          console.error("🔴 [LAYERS] Failed to add layer:", err);
+          console.error("layers-store/addLayer: Failed to add layer:", err);
           throw err;
         }
       },
 
       deleteLayer: async (layerId) => {
         try {
-          console.log("🔵 [LAYERS] Deleting layer:", layerId);
+          console.log("layers-store/deleteLayer: Deleting layer:", layerId);
 
           const { data, error } = await supabase
             .from("layer")
@@ -78,14 +78,14 @@ export const useLayerStore = create<LayerState>()(
             .select();
 
           if (error) throw error;
-          console.log("🟢 [LAYERS] Deleted:", data);
+          console.log("layers-store/deleteLayer: Deleted:", data);
         } catch (err) {
-          console.error("🔴 [LAYERS] Failed to delete layer:", err);
+          console.error("layers-store/deleteLayer: Failed to delete layer:", err);
           throw err;
         }
       },
     }),
-    { name: "🧩 Layer Store" }
+    { name: "layers-store" }
   )
 );
 

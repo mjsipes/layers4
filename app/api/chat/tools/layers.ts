@@ -8,45 +8,38 @@ export const selectLayersTool = tool({
   parameters: z.object({}),
   execute: async () => {
     try {
-      const supabase = await createClient();
 
-      // Get the authenticated user
+      console.log("selectLayersTool: Executing");
+      const supabase = await createClient();
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
-
       if (userError) {
-        console.error("🔴 [LAYERS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("selectLayersTool: error getting user:", userError);
+        return `selectLayersTool: Authentication error: ${userError.message}`;
       }
-
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("selectLayersTool: no authenticated user found");
+        return `selectLayersTool: No authenticated user found.`;
       }
-
-      console.log("🟢 [LAYERS] User data received:", { id: user.id });
+      console.log("selectLayersTool: User data received:", { id: user.id });
 
       const { data: layers, error: fetchError } = await supabase
         .from("layer")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
-
       if (fetchError) {
-        console.error("🔴 [LAYERS] Error fetching layers:", fetchError);
-        return `❌ Failed to fetch layers: ${fetchError.message}`;
+        console.error("selectLayersTool: Error fetching layers:", fetchError);
+        return `selectLayersTool: Failed to fetch layers: ${fetchError.message}`;
       }
+      console.log("selectLayersTool: Layers fetched successfully:", layers);
+      return `selectLayersTool: Found ${layers.length} layer(s) in your wardrobe:\n${JSON.stringify(layers, null, 2)}`;
 
-      if (!layers || layers.length === 0) {
-        return "📝 No layers found in your wardrobe";
-      }
-
-      console.log("🟢 [LAYERS] Layers fetched successfully:", layers);
-      return `🧥 Found ${layers.length} layer(s) in your wardrobe:\n${JSON.stringify(layers, null, 2)}`;
     } catch (error: unknown) {
-      console.error("🔴 [LAYERS] Failed to fetch layers:", error);
-      return `⚠️ Failed to fetch layers: ${
+      console.error("selectLayersTool: error:", error);
+      return `selectLayersTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -62,24 +55,22 @@ export const insertLayerTool = tool({
   }),
   execute: async ({ name, description, warmth }) => {
     try {
-      const supabase = await createClient();
 
-      // Get the authenticated user
+      console.log("insertLayerTool: Executing with:", { name, description, warmth });
+      const supabase = await createClient();
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
-
       if (userError) {
-        console.error("🔴 [LAYERS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("insertLayerTool: Error getting user:", userError);
+        return `insertLayerTool: Authentication error: ${userError.message}`;
       }
-
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("insertLayerTool: no authenticated user found");
+        return `insertLayerTool: No authenticated user found.`;
       }
-
-      console.log("🟢 [LAYERS] User data received:", { id: user.id });
+      console.log("insertLayerTool: User data received:", { id: user.id });
 
       const insertData = {
         name,
@@ -87,25 +78,22 @@ export const insertLayerTool = tool({
         warmth: warmth || null,
         user_id: user.id,
       };
-
-      console.log("🔵 [LAYERS] Inserting layer data:", insertData);
-
+      console.log("insertLayerTool: Inserting layer data:", insertData);
       const { data: newLayer, error: createError } = await supabase
         .from("layer")
         .insert(insertData)
         .select()
         .single();
-
       if (createError) {
-        console.error("🔴 [LAYERS] Error creating layer:", createError);
-        return `❌ Failed to create layer: ${createError.message}`;
+        console.error("insertLayerTool: Error creating layer:", createError);
+        return `insertLayerTool: Failed to create layer: ${createError.message}`;
       }
+      console.log("insertLayerTool: Layer inserted successfully:", newLayer);
+      return `insertLayerTool: Successfully created layer: ${JSON.stringify(newLayer, null, 2)}`;
 
-      console.log("🟢 [LAYERS] Layer inserted successfully:", newLayer);
-      return `✅ Successfully created layer: ${JSON.stringify(newLayer, null, 2)}`;
     } catch (error: unknown) {
-      console.error("🔴 [LAYERS] Failed to create layer:", error);
-      return `⚠️ Failed to create layer: ${
+      console.error("insertLayerTool: error:", error);
+      return `insertLayerTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -122,59 +110,53 @@ export const updateLayerTool = tool({
   }),
   execute: async ({ id, name, description, warmth }) => {
     try {
-      const supabase = await createClient();
 
-      // Get the authenticated user
+      console.log("updateLayerTool: Executing with:", { id, name, description, warmth });
+      const supabase = await createClient();
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
-
       if (userError) {
-        console.error("🔴 [LAYERS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("updateLayerTool: Error getting user:", userError);
+        return `updateLayerTool: Authentication error: ${userError.message}`;
       }
-
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("updateLayerTool: no authenticated user found");
+        return `updateLayerTool: No authenticated user found.`;
       }
+      console.log("updateLayerTool: User data received:", { id: user.id });
 
-      console.log("🟢 [LAYERS] User data received:", { id: user.id });
-
-      // Build update data object with only provided fields
       const updateData: TablesUpdate<"layer"> = {};
       if (name !== undefined) updateData.name = name;
       if (description !== undefined) updateData.description = description;
       if (warmth !== undefined) updateData.warmth = warmth;
-
       if (Object.keys(updateData).length === 0) {
-        return `❌ No fields provided to update. Please provide at least one field (name, description, or warmth).`;
+        console.error("updateLayerTool: No fields provided to update");
+        return `updateLayerTool: No fields provided to update.`;
       }
-
-      console.log("🔵 [LAYERS] Updating layer data:", { id, updateData });
-
+      console.log("updateLayerTool: Updating layer data:", { id, updateData });
       const { data: updatedLayer, error: updateError } = await supabase
         .from("layer")
         .update(updateData)
         .eq("id", id)
-        .eq("user_id", user.id) // Ensure user can only update their own layers
+        .eq("user_id", user.id)
         .select()
         .single();
-
       if (updateError) {
-        console.error("🔴 [LAYERS] Error updating layer:", updateError);
-        return `❌ Failed to update layer: ${updateError.message}`;
+        console.error("updateLayerTool: Error updating layer:", updateError);
+        return `updateLayerTool: Failed to update layer: ${updateError.message}`;
       }
-
       if (!updatedLayer) {
-        return `❌ Layer with ID ${id} not found or you don't have permission to update it.`;
+        console.error("updateLayerTool: Layer with ID ${id} not found or you don't have permission to update it.");
+        return `updateLayerTool: Layer with ID ${id} not found or you don't have permission to update it.`;
       }
-
-      console.log("🟢 [LAYERS] Layer updated successfully:", updatedLayer);
-      return `✅ Successfully updated layer: ${JSON.stringify(updatedLayer, null, 2)}`;
+      console.log("updateLayerTool: Layer updated successfully:", updatedLayer);
+      return `updateLayerTool: Successfully updated layer: ${JSON.stringify(updatedLayer, null, 2)}`;
+      
     } catch (error: unknown) {
-      console.error("🔴 [LAYERS] Failed to update layer:", error);
-      return `⚠️ Failed to update layer: ${
+      console.error("updateLayerTool: error:", error);
+      return `updateLayerTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -188,25 +170,23 @@ export const deleteLayerTool = tool({
   }),
   execute: async ({ id }) => {
     try {
+
+      console.log("deleteLayerTool: Executing with:", { id });
       const supabase = await createClient();
-
-      console.log("🔵 [LAYERS] Attempting to delete layer with ID:", id);
-
       const { error: deleteError } = await supabase
         .from("layer")
         .delete()
         .eq("id", id);
-
       if (deleteError) {
-        console.error("🔴 [LAYERS] Error deleting layer:", deleteError);
-        return `❌ Failed to delete layer: ${deleteError.message}`;
+        console.error("deleteLayerTool: Error deleting layer:", deleteError);
+        return `deleteLayerTool: Failed to delete layer: ${deleteError.message}`;
       }
+      console.log("deleteLayerTool: Layer deleted successfully:", id);
+      return `deleteLayerTool: Successfully deleted layer with ID: ${id}`;
 
-      console.log("🟢 [LAYERS] Layer deleted successfully:", id);
-      return `✅ Successfully deleted layer with ID: ${id}`;
     } catch (error: unknown) {
-      console.error("🔴 [LAYERS] Failed to delete layer:", error);
-      return `⚠️ Failed to delete layer: ${
+      console.error("deleteLayerTool: error:", error);
+      return `deleteLayerTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }

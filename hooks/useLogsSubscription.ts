@@ -20,12 +20,12 @@ export function useLogsSubscription() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[LOGS] Fetch error:", error);
+      console.error("useLogsSubscription/fetchLogs: ", error);
       setLogs([]);
       return [];
     }
 
-    console.log("useLogsSubscription.fetchLogs: ", data);
+    console.log("useLogsSubscription/fetchLogs: ", data);
 
     const logsWithRelations =
       data?.map((log: any) => ({
@@ -33,7 +33,7 @@ export function useLogsSubscription() {
         layers: log.log_layer?.map((ll: any) => ll.layer) ?? [],
       })) ?? [];
 
-    console.log("useLogsSubscription.fetchLogs: ", logsWithRelations);
+    console.log("useLogsSubscription/fetchLogs: ", logsWithRelations);
 
     setLogs(logsWithRelations);
     return logsWithRelations;
@@ -48,7 +48,7 @@ export function useLogsSubscription() {
         "postgres_changes",
         { event: "*", schema: "public", table: "log" },
         async () => {
-          console.log("[LOGS] log table changed");
+          console.log("useLogsSubscription: log table changed");
           await fetchLogs();
         }
       )
@@ -60,14 +60,14 @@ export function useLogsSubscription() {
         "postgres_changes",
         { event: "*", schema: "public", table: "log_layer" },
         async () => {
-          console.log("[LOGS] log_layer table changed");
+          console.log("useLogsSubscription: log_layer table changed");
           await fetchLogs();
         }
       )
       .subscribe();
 
     return () => {
-      console.log("[LOGS] Removing log and log_layer channels");
+      console.log("useLogsSubscription: Removing log and log_layer channels");
       supabase.removeChannel(logChannel);
       supabase.removeChannel(logLayerChannel);
     };

@@ -23,7 +23,7 @@ const Logs = ({ viewMode }: LogsProps) => {
   const { setSelectedItem } = useGlobalStore();
 
   const handleLogClick = (log: Log) => {
-    console.log("Log clicked:", log.id);
+    console.log("Logs.tsx/handleLogClick:", log.id);
     setSelectedItem(log.id, "selectlog");
   };
 

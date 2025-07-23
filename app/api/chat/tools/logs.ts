@@ -9,25 +9,22 @@ export const selectLogsTool = tool({
   parameters: z.object({}),
   execute: async () => {
     try {
+      console.log("selectLogsTool: Executing");
       const supabase = await createClient();
-
-      // Get the authenticated user
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
-
       if (userError) {
-        console.error("🔴 [LOGS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("selectLogsTool: Error getting user:", userError);
+        return `selectLogsTool: Authentication error: ${userError.message}`;
       }
-
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("selectLogsTool: No authenticated user found");
+        return `selectLogsTool: No authenticated user found.`;
       }
 
-      console.log("🟢 [LOGS] User data received:", { id: user.id });
-
+      console.log("selectLogsTool: User data received:", { id: user.id });
       const { data: logs, error: fetchError } = await supabase
         .from("log")
         .select(`
@@ -39,25 +36,25 @@ export const selectLogsTool = tool({
         .order("created_at", { ascending: false });
 
       if (fetchError) {
-        console.error("🔴 [LOGS] Error fetching logs:", fetchError);
-        return `❌ Failed to fetch logs: ${fetchError.message}`;
+        console.error("selectLogsTool: Error fetching logs:", fetchError);
+        return `selectLogsTool: Failed to fetch logs: ${fetchError.message}`;
       }
 
       if (!logs || logs.length === 0) {
-        return "📝 No logs found in your wardrobe";
+        console.log("selectLogsTool: No logs found in your wardrobe");
+        return "selectLogsTool: No logs found in your wardrobe";
       }
 
-      // Map layers for each log
       const logsWithLayers = logs.map((log: Tables<"log"> & { log_layer?: Array<{ layer: Tables<"layer"> }> }) => ({
         ...log,
         layers: log.log_layer?.map((ll: { layer: Tables<"layer"> }) => ll.layer) ?? [],
       }));
 
-      console.log("🟢 [LOGS] Logs fetched successfully:", logsWithLayers);
-      return `📓 Found ${logsWithLayers.length} log(s) in your wardrobe:\n${JSON.stringify(logsWithLayers, null, 2)}`;
+      console.log("selectLogsTool: Logs fetched successfully:", logsWithLayers);
+      return `selectLogsTool: Found ${logsWithLayers.length} log(s) in your wardrobe:\n${JSON.stringify(logsWithLayers, null, 2)}`;
     } catch (error: unknown) {
-      console.error("🔴 [LOGS] Failed to fetch logs:", error);
-      return `⚠️ Failed to fetch logs: ${
+      console.error("selectLogsTool: error:", error);
+      return `selectLogsTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -75,24 +72,24 @@ export const insertLogTool = tool({
   }),
   execute: async ({ feedback, comfort_level, date, weather_id, layer_ids }) => {
     try {
+      console.log("insertLogTool: Executing with:", { feedback, comfort_level, date, weather_id, layer_ids });
       const supabase = await createClient();
-
-      // Get the authenticated user
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
       if (userError) {
-        console.error("🔴 [LOGS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("insertLogTool: Error getting user:", userError);
+        return `insertLogTool: Authentication error: ${userError.message}`;
       }
 
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("insertLogTool: No authenticated user found");
+        return `insertLogTool: No authenticated user found.`;
       }
 
-      console.log("🟢 [LOGS] User data received:", { id: user.id });
+      console.log("insertLogTool: User data received:", { id: user.id });
 
       const insertData = {
         feedback: feedback || null,
@@ -102,7 +99,7 @@ export const insertLogTool = tool({
         user_id: user.id,
       };
 
-      console.log("🔵 [LOGS] Inserting log data:", insertData);
+      console.log("insertLogTool: Inserting log data:", insertData);
 
       const { data: newLog, error: createError } = await supabase
         .from("log")
@@ -111,11 +108,10 @@ export const insertLogTool = tool({
         .single();
 
       if (createError) {
-        console.error("🔴 [LOGS] Error creating log:", createError);
-        return `❌ Failed to create log: ${createError.message}`;
+        console.error("insertLogTool: Error creating log:", createError);
+        return `insertLogTool: Failed to create log: ${createError.message}`;
       }
 
-      // Insert into log_layer join table
       if (layer_ids && layer_ids.length > 0) {
         const logLayerRows = layer_ids.map((layer_id: string) => ({
           log_id: newLog.id,
@@ -123,17 +119,17 @@ export const insertLogTool = tool({
         }));
         const { error: joinError } = await supabase.from("log_layer").insert(logLayerRows);
         if (joinError) {
-          console.error("🔴 [LOGS] Error creating log_layer join rows:", joinError);
-          return `❌ Failed to link layers: ${joinError.message}`;
+            console.error("insertLogTool: Error creating log_layer join rows:", joinError);
+          return `insertLogTool: Failed to link layers: ${joinError.message}`;
         }
-        console.log("🟢 [LOGS] log_layer join rows inserted");
+        console.log("insertLogTool: log_layer join rows inserted");
       }
 
-      console.log("🟢 [LOGS] Log inserted successfully:", newLog);
-      return `✅ Successfully created log: ${JSON.stringify(newLog, null, 2)}`;
+      console.log("insertLogTool: Log inserted successfully:", newLog);
+      return `insertLogTool: Successfully created log: ${JSON.stringify(newLog, null, 2)}`;
     } catch (error: unknown) {
-      console.error("🔴 [LOGS] Failed to create log:", error);
-      return `⚠️ Failed to create log: ${
+      console.error("insertLogTool: error:", error);
+      return `insertLogTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -152,26 +148,25 @@ export const updateLogTool = tool({
   }),
   execute: async ({ id, feedback, comfort_level, date, weather_id }) => {
     try {
+      console.log("updateLogTool: Executing with:", { id, feedback, comfort_level, date, weather_id });
       const supabase = await createClient();
-
-      // Get the authenticated user
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
       if (userError) {
-        console.error("🔴 [LOGS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("updateLogTool: Error getting user:", userError);
+        return `updateLogTool: Authentication error: ${userError.message}`;
       }
 
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("updateLogTool: No authenticated user found");
+        return `updateLogTool: No authenticated user found.`;
       }
 
-      console.log("🟢 [LOGS] User data received:", { id: user.id });
+      console.log("updateLogTool: User data received:", { id: user.id });
 
-      // Build update data object with only provided fields
       const updateData: TablesUpdate<"log"> = {};
       if (feedback !== undefined) updateData.feedback = feedback;
       if (comfort_level !== undefined) updateData.comfort_level = comfort_level;
@@ -179,33 +174,35 @@ export const updateLogTool = tool({
       if (weather_id !== undefined) updateData.weather_id = weather_id;
 
       if (Object.keys(updateData).length === 0) {
-        return `❌ No fields provided to update. Please provide at least one field (feedback, comfort_level, date, or weather_id).`;
+        console.error("updateLogTool: No fields provided to update");
+        return `updateLogTool: No fields provided to update.`;
       }
 
-      console.log("🔵 [LOGS] Updating log data:", { id, updateData });
+      console.log("updateLogTool: Updating log data:", { id, updateData });
 
       const { data: updatedLog, error: updateError } = await supabase
         .from("log")
         .update(updateData)
         .eq("id", id)
-        .eq("user_id", user.id) // Ensure user can only update their own logs
+        .eq("user_id", user.id)
         .select()
         .single();
 
       if (updateError) {
-        console.error("🔴 [LOGS] Error updating log:", updateError);
-        return `❌ Failed to update log: ${updateError.message}`;
+        console.error("updateLogTool: Error updating log:", updateError);
+        return `updateLogTool: Failed to update log: ${updateError.message}`;
       }
 
       if (!updatedLog) {
-        return `❌ Log with ID ${id} not found or you don't have permission to update it.`;
+        console.error("updateLogTool: Log with ID ${id} not found or you don't have permission to update it.");
+        return `updateLogTool: Log with ID ${id} not found or you don't have permission to update it.`;
       }
 
-      console.log("🟢 [LOGS] Log updated successfully:", updatedLog);
-      return `✅ Successfully updated log: ${JSON.stringify(updatedLog, null, 2)}`;
+      console.log("updateLogTool: Log updated successfully:", updatedLog);
+      return `updateLogTool: Successfully updated log: ${JSON.stringify(updatedLog, null, 2)}`;
     } catch (error: unknown) {
-      console.error("🔴 [LOGS] Failed to update log:", error);
-      return `⚠️ Failed to update log: ${
+      console.error("updateLogTool: error:", error);
+      return `updateLogTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -219,25 +216,23 @@ export const deleteLogTool = tool({
   }),
   execute: async ({ id }) => {
     try {
+      console.log("deleteLogTool: Executing with:", { id });
       const supabase = await createClient();
-
-      console.log("🔵 [LOGS] Attempting to delete log with ID:", id);
-
       const { error: deleteError } = await supabase
         .from("log")
         .delete()
         .eq("id", id);
 
       if (deleteError) {
-        console.error("🔴 [LOGS] Error deleting log:", deleteError);
-        return `❌ Failed to delete log: ${deleteError.message}`;
+        console.error("deleteLogTool: Error deleting log:", deleteError);
+        return `deleteLogTool: Failed to delete log: ${deleteError.message}`;
       }
 
-      console.log("🟢 [LOGS] Log deleted successfully:", id);
-      return `✅ Successfully deleted log with ID: ${id}`;
+      console.log("deleteLogTool: Log deleted successfully:", id);
+      return `deleteLogTool: Successfully deleted log with ID: ${id}`;
     } catch (error: unknown) {
-      console.error("🔴 [LOGS] Failed to delete log:", error);
-      return `⚠️ Failed to delete log: ${
+      console.error("deleteLogTool: error:", error);
+      return `deleteLogTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -251,28 +246,27 @@ export const linkLogLayerTool = tool({
     layer_id: z.string().describe("ID of the layer to link to the log"),
   }),
   execute: async ({ log_id, layer_id }) => {
-    console.log(`[LOGS] Linking layer to log:`, { log_id, layer_id });
     try {
+      console.log("linkLogLayerTool: Executing with:", { log_id, layer_id });
       const supabase = await createClient();
 
-      // Get the authenticated user
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
       if (userError) {
-        console.error("🔴 [LOGS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("linkLogLayerTool: Error getting user:", userError);
+        return `linkLogLayerTool: Authentication error: ${userError.message}`;
       }
 
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("linkLogLayerTool: No authenticated user found");
+        return `linkLogLayerTool: No authenticated user found.`;
       }
 
-      console.log("🟢 [LOGS] User data received:", { id: user.id });
+      console.log("linkLogLayerTool: User data received:", { id: user.id });
 
-      // Verify that both the log and layer belong to the user
       const { data: log, error: logError } = await supabase
         .from("log")
         .select("id")
@@ -281,8 +275,8 @@ export const linkLogLayerTool = tool({
         .single();
 
       if (logError || !log) {
-        console.error("🔴 [LOGS] Error verifying log:", logError);
-        return `❌ Log with ID ${log_id} not found or you don't have permission to access it.`;
+        console.error("linkLogLayerTool: Error verifying log:", logError);
+        return `linkLogLayerTool: Log with ID ${log_id} not found or you don't have permission to access it.`;
       }
 
       const { data: layer, error: layerError } = await supabase
@@ -291,24 +285,24 @@ export const linkLogLayerTool = tool({
         .eq("id", layer_id)
         .eq("user_id", user.id)
         .single();
-      console.log("[LOGS] Layer fetch result:", { layer, layerError });
+      console.log("linkLogLayerTool: Layer fetch result:", { layer, layerError });
 
       if (layerError || !layer) {
-        console.error("🔴 [LOGS] Error verifying layer:", layerError);
-        return `❌ Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+        console.error("linkLogLayerTool: Error verifying layer:", layerError);
+        return `linkLogLayerTool: Layer with ID ${layer_id} not found or you don't have permission to access it.`;
       }
 
-      // Check if the link already exists
       const { data: existingLink, error: checkError } = await supabase
         .from("log_layer")
         .select("id")
         .eq("log_id", log_id)
         .eq("layer_id", layer_id)
         .single();
-      console.log("[LOGS] Existing link fetch result:", { existingLink, checkError });
+      console.log("linkLogLayerTool: Existing link fetch result:", { existingLink, checkError });
 
       if (existingLink) {
-        return `⚠️ Layer ${layer_id} is already linked to log ${log_id}.`;
+        console.error("linkLogLayerTool: Layer ${layer_id} is already linked to log ${log_id}.");
+        return `linkLogLayerTool: Layer ${layer_id} is already linked to log ${log_id}.`;
       }
 
       const { data: newLink, error: linkError } = await supabase
@@ -319,18 +313,18 @@ export const linkLogLayerTool = tool({
         })
         .select()
         .single();
-      console.log("[LOGS] New link result:", { newLink, linkError });
+      console.log("linkLogLayerTool: New link result:", { newLink, linkError });
 
       if (linkError) {
-        console.error("🔴 [LOGS] Error linking layer to log:", linkError);
-        return `❌ Failed to link layer to log: ${linkError.message}`;
+        console.error("linkLogLayerTool: Error linking layer to log:", linkError);
+        return `linkLogLayerTool: Failed to link layer to log: ${linkError.message}`;
       }
 
-      console.log("🟢 [LOGS] Layer linked to log successfully:", newLink);
-      return `✅ Successfully linked layer ${layer_id} to log ${log_id}`;
+      console.log("linkLogLayerTool: Layer linked to log successfully:", newLink);
+      return `linkLogLayerTool: Successfully linked layer ${layer_id} to log ${log_id}`;
     } catch (error: unknown) {
-      console.error("🔴 [LOGS] Failed to link layer to log:", error);
-      return `⚠️ Failed to link layer to log: ${
+      console.error("linkLogLayerTool: error:", error);
+      return `linkLogLayerTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }
@@ -347,24 +341,23 @@ export const unlinkLogLayerTool = tool({
     try {
       const supabase = await createClient();
 
-      // Get the authenticated user
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
       if (userError) {
-        console.error("🔴 [LOGS] Error getting user:", userError);
-        return `❌ Authentication error: ${userError.message}`;
+        console.error("unlinkLogLayerTool: Error getting user:", userError);
+        return `unlinkLogLayerTool: Authentication error: ${userError.message}`;
       }
 
       if (!user) {
-        return `❌ No authenticated user found. Please log in first.`;
+        console.error("unlinkLogLayerTool: No authenticated user found");
+        return `unlinkLogLayerTool: No authenticated user found.`;
       }
 
-      console.log("🟢 [LOGS] User data received:", { id: user.id });
+      console.log("unlinkLogLayerTool: User data received:", { id: user.id });
 
-      // Verify that both the log and layer belong to the user
       const { data: log, error: logError } = await supabase
         .from("log")
         .select("id")
@@ -373,8 +366,8 @@ export const unlinkLogLayerTool = tool({
         .single();
 
       if (logError || !log) {
-        console.error("🔴 [LOGS] Error verifying log:", logError);
-        return `❌ Log with ID ${log_id} not found or you don't have permission to access it.`;
+        console.error("unlinkLogLayerTool: Error verifying log:", logError);
+        return `unlinkLogLayerTool: Log with ID ${log_id} not found or you don't have permission to access it.`;
       }
 
       const { data: layer, error: layerError } = await supabase
@@ -385,11 +378,11 @@ export const unlinkLogLayerTool = tool({
         .single();
 
       if (layerError || !layer) {
-        console.error("🔴 [LOGS] Error verifying layer:", layerError);
-        return `❌ Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+        console.error("unlinkLogLayerTool: Error verifying layer:", layerError);
+        return `unlinkLogLayerTool: Layer with ID ${layer_id} not found or you don't have permission to access it.`;
       }
 
-      console.log("🔵 [LOGS] Unlinking layer from log:", { log_id, layer_id });
+      console.log("unlinkLogLayerTool: Unlinking layer from log:", { log_id, layer_id });
 
       const { error: unlinkError } = await supabase
         .from("log_layer")
@@ -398,14 +391,14 @@ export const unlinkLogLayerTool = tool({
         .eq("layer_id", layer_id);
 
       if (unlinkError) {
-        console.error("🔴 [LOGS] Error unlinking layer from log:", unlinkError);
-        return `❌ Failed to unlink layer from log: ${unlinkError.message}`;
+        console.error("unlinkLogLayerTool: Error unlinking layer from log:", unlinkError);
+        return `unlinkLogLayerTool: Failed to unlink layer from log: ${unlinkError.message}`;
       }
 
-      console.log("🟢 [LOGS] Layer unlinked from log successfully");
-      return `✅ Successfully unlinked layer ${layer_id} from log ${log_id}`;
+      console.log("unlinkLogLayerTool: Layer unlinked from log successfully");
+      return `unlinkLogLayerTool: Successfully unlinked layer ${layer_id} from log ${log_id}`;
     } catch (error: unknown) {
-      console.error("🔴 [LOGS] Failed to unlink layer from log:", error);
+      console.error("unlinkLogLayerTool: error:", error);
       return `⚠️ Failed to unlink layer from log: ${
         error instanceof Error ? error.message : String(error)
       }`;

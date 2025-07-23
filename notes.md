@@ -15,6 +15,7 @@ i wore my uniqlo heat tech, my my orange pants, my patagonia shell, and i got ho
 get rid of zustand?
 also log should have default date and location and should be set up to get weather via trigger   <--->
 chat should also insert log with a lat and lon
+simplify useglobalsubscription
 
 
 

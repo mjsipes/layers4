@@ -49,8 +49,8 @@ export const useLogStore = create<LogState>()(
             data: { user },
             error: userError,
           } = await supabase.auth.getUser();
-          if (userError) console.error("\ud83d\udd34 [LOGS] Error getting user:", userError);
-          else console.log("\ud83d\udfe2 [LOGS] User data:", { id: user?.id });
+          if (userError) console.error("logs_store/addLog: Error getting user:", userError);
+          else console.log("logs_store/addLog: User data:", { id: user?.id });
 
           /* 2. Insert log */
           const insertData = {
@@ -62,12 +62,12 @@ export const useLogStore = create<LogState>()(
             latitude: logData.lat ?? null,
             longitude: logData.lon ?? null,
           };
-          console.log("[LOGS] Inserting:", insertData);
+          console.log("logs_store/addLog: Inserting:", insertData);
 
           const { data: insertedLog, error } = await supabase.from("log").insert(insertData).select().single();
 
           if (error) throw error;
-          console.log("[LOGS] Log inserted successfully");
+          console.log("logs_store/addLog: Log inserted successfully");
 
           /* 3. Insert into log_layer join table */
           if (logData.layer_ids && logData.layer_ids.length > 0) {
@@ -77,17 +77,17 @@ export const useLogStore = create<LogState>()(
             }));
             const { error: joinError } = await supabase.from("log_layer").insert(logLayerRows);
             if (joinError) throw joinError;
-            console.log("[LOGS] log_layer join rows inserted");
+            console.log("logs_store/addLog: log_layer join rows inserted");
           }
         } catch (err) {
-          console.error(" [LOGS] Failed to add log:", err);
+          console.error("logs_store/addLog: Failed to add log:", err);
           throw err;
         }
       },
 
       deleteLog: async (logId) => {
         try {
-          console.log("🔵 [LOGS] Deleting log:", logId);
+          console.log("logs_store/deleteLog: Deleting log:", logId);
 
           const { data, error } = await supabase
             .from("log")
@@ -96,14 +96,14 @@ export const useLogStore = create<LogState>()(
             .select();
 
           if (error) throw error;
-          console.log("🟢 [LOGS] Deleted:", data);
+          console.log("logs_store/deleteLog: Deleted:", data);
         } catch (err) {
-          console.error("🔴 [LOGS] Failed to delete log:", err);
+          console.error("logs_store/deleteLog: Failed to delete log:", err);
           throw err;
         }
       },
     }),
-    { name: "📓 Log Store" }
+    { name: "logs-store" }
   )
 );
 

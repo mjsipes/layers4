@@ -22,7 +22,7 @@ const Layers = ({ viewMode }: LayersProps) => {
   const { setSelectedItem } = useGlobalStore();
 
   const handleLayerClick = (layer: Layer) => {
-    console.log("Layer clicked:", layer.id);
+    console.log("Layers.tsx/handleLayerClick:", layer.id);
     setSelectedItem(layer.id, "selectlayer");
   };
 

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const { latitude, longitude, date, unitGroup = "us" } = await req.json();
 
     if (!latitude || !longitude || !date) {
-      console.warn("⚠️ Missing parameters:", { latitude, longitude, date });
+      console.warn("weather/route.ts: Missing parameters:", { latitude, longitude, date });
       return NextResponse.json(
         { error: "Missing required parameters: latitude, longitude, date" },
         { status: 400 }
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!VISUAL_CROSSING_API_KEY) {
-      console.error("❌ Missing Visual Crossing API key");
+      console.error("weather/route.ts: Missing Visual Crossing API key");
       return NextResponse.json(
         { error: "Visual Crossing API key not configured" },
         { status: 500 }
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const roundedLat = round(latitude, 2);
     const roundedLon = round(longitude, 2);
 
-    console.log(`📍 Rounded location: (${roundedLat}, ${roundedLon}), date: ${date}`);
+    console.log(`weather/route.ts: Rounded location: (${roundedLat}, ${roundedLon}), date: ${date}`);
 
     const supabase = await createClient();
 
@@ -48,16 +48,16 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (fetchError) {
-      console.error("⚠️ Supabase fetch error:", fetchError.message);
+      console.error("weather/route.ts: Supabase fetch error:", fetchError.message);
     }
 
     if (existing) {
-      console.log("✅ Returning cached weather data from Supabase");
+      console.log("weather/route.ts: Returning cached weather data from Supabase");
       return NextResponse.json(existing.weather_data);
     }
 
     // Step 2: Fetch from Visual Crossing
-    console.log("🌐 Fetching new weather data from Visual Crossing API...");
+    console.log("weather/route.ts: Fetching new weather data from Visual Crossing API...");
 
     const weatherUrl = `${VISUAL_CROSSING_BASE_URL}/${roundedLat},${roundedLon}/${date}?unitGroup=${unitGroup}&key=${VISUAL_CROSSING_API_KEY}&contentType=json&include=days`;
 
@@ -77,9 +77,9 @@ export async function POST(req: NextRequest) {
     });
 
     if (insertError) {
-      console.error("⚠️ Supabase insert error:", insertError.message);
+      console.error("weather/route.ts: Supabase insert error:", insertError.message);
     } else {
-      console.log("📦 Weather data cached in Supabase");
+      console.log("weather/route.ts: Weather data cached in Supabase");
     }
 
     return NextResponse.json(weatherData);
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
       message = error.message;
     }
 
-    console.error("❌ API error:", message);
+    console.error("weather/route.ts: API error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

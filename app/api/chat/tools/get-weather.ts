@@ -8,11 +8,11 @@ export const getWeatherTool = tool({
     longitude: z.number().describe("The longitude of the location"),
   }),
   execute: async ({ latitude, longitude }) => {
-    console.log("🔵 [GLOBAL] getWeatherTool", { latitude, longitude });
+    console.log("getWeatherTool:", { latitude, longitude });
     const currentDate = new Date().toISOString().split("T")[0];
 
     try {
-      console.log("Fetching weather for:", {
+      console.log("getWeatherTool: fetching weather for:", {
         latitude,
         longitude,
         date: currentDate,
@@ -31,17 +31,13 @@ export const getWeatherTool = tool({
       );
 
       if (!response.ok) {
-        console.log("🔴 [GLOBAL] Error from weather API", response);
-        const errorText = await response.text();
-        return `❌ Error from weather API: ${response.status} - ${errorText}`;
+        return await response.text();
       }
 
       const weatherData = await response.json();
-      console.log("Weather data:", weatherData);
-      return `🌦️ Weather for ${currentDate} at (${latitude}, ${longitude}): ${JSON.stringify(
-        weatherData
-      )}`;
+      return weatherData;
     } catch (error: unknown) {
+      console.log("getWeatherTool: failed to fetch weather:", error);
       return `⚠️ Failed to fetch weather: ${
         error instanceof Error ? error.message : String(error)
       }`;

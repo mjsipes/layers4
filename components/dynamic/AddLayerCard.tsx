@@ -8,30 +8,25 @@ import { useLayerStore } from "@/stores/layers_store";
 
 const AddLayerCard = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [warmth, setWarmth] = useState([5]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [warmth, setWarmth] = useState(5);
   const { addLayer } = useLayerStore();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      const formData = new FormData(event.currentTarget);
-      const name = formData.get("name") as string;
-      const description = formData.get("description") as string;
-      
       await addLayer({
         name: name.trim(),
         description: description.trim() || undefined,
-        warmth: warmth[0],
+        warmth: warmth,
       });
-      
 
-      if (event.currentTarget) {
-        event.currentTarget.reset();
-        setWarmth([5]);
-      }
-      
+      setName("");
+      setDescription("");
+      setWarmth(5);
     } catch (error: unknown) {
       console.error("Error saving layer:", error);
     } finally {
@@ -53,9 +48,10 @@ const AddLayerCard = () => {
             <Input 
               id="layer-name" 
               name="name" 
-              // placeholder="Enter layer name..." 
               required 
               className="bg-background border-none"
+              value={name}
+              onChange={e => setName(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
@@ -63,15 +59,16 @@ const AddLayerCard = () => {
             <Input 
               id="layer-description" 
               name="description" 
-              // placeholder="Enter description..." 
               className="bg-background border-none"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
-            <Label>Warmth: {warmth[0]}/10</Label>
+            <Label>Warmth: {warmth}/10</Label>
             <Slider
-              value={warmth}
-              onValueChange={setWarmth}
+              value={[warmth]}
+              onValueChange={([val]) => setWarmth(val)}
               max={10}
               min={1}
               step={1}

@@ -2,26 +2,22 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
-// import { useOutfitsSubscription } from "@/hooks/useOutfitsSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
-import { useGlobalSubscription } from "@/hooks/useGlobalSubscription";
+import { useGlobalSubscription, useGeolocation, useWeather } from "@/hooks/useGlobalSubscription";
 
 const WeatherCard = () => {
+  useGeolocation();
+  useWeather();
   useLayersSubscription();
-  // useOutfitsSubscription();  
   useLogsSubscription();
   useGlobalSubscription();
 
   const date = useGlobalStore((state) => state.date);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
   const { weatherData } = useGlobalStore();
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  useEffect(() => {
-    console.log("Weather Data:", weatherData);
-  }, [weatherData]);
 
   useEffect(() => {
     const interval = setInterval(() => {

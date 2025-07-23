@@ -4,30 +4,28 @@ import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 
-// Geolocation functionality
-function useGeolocation() {
+export function useGeolocation() {
   const setLocation = useGlobalStore((state) => state.setLocation);
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      console.warn('Geolocation not supported');
+      console.log('useGeolocation: Geolocation not supported');
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log('useGeolocation: Location received:', position);
         setLocation(position.coords.latitude, position.coords.longitude);
       },
       (error) => {
-        console.error('Error getting location:', error);
+        console.error('useGeolocation: Error getting location:', error);
       },
       { timeout: 10000 }
     );
   }, [setLocation]);
 }
 
-// Weather functionality
-function useWeather() {
+export function useWeather() {
   const setWeatherData = useGlobalStore((state) => state.setWeatherData);
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
@@ -35,6 +33,7 @@ function useWeather() {
 
   useEffect(() => {
     const fetchWeather = async () => {
+      console.log('useWeather/fetchWeather:', { lat, lon, date });
       if (!lat || !lon || !date) return;
 
       try {
@@ -51,9 +50,10 @@ function useWeather() {
         });
 
         const data = await res.json();
+          console.log('useWeather/fetchWeather: Weather data received:', data);
         setWeatherData(data);
       } catch (err) {
-        console.error("Error fetching weather:", err);
+        console.error("useWeather/fetchWeather: Error fetching weather:", err);
       }
     };
 
@@ -61,27 +61,24 @@ function useWeather() {
   }, [lat, lon, date, setWeatherData]);
 }
 
-export { useGeolocation, useWeather };
 
 export function useGlobalSubscription() {
+
+
   const setSelectedItem = useGlobalStore((state) => state.setSelectedItem);
   const setLocation = useGlobalStore((state) => state.setLocation);
-  
-  // Initialize geolocation and weather
-  useGeolocation();
-  useWeather();
 
   useEffect(() => {
     const setupGlobalSubscription = async () => {
       try {
-        console.log("🔵 [GLOBAL] Initializing global subscription");
+        console.log("useGlobalSubscription: Initializing global subscription");
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser();
         
         if (userError || !user?.id) {
-          console.log("🟡 [GLOBAL] No authenticated user or error, skipping subscription");
+          console.log("useGlobalSubscription: No authenticated user or error, skipping subscription");
           return null;
         }
 
@@ -92,7 +89,7 @@ export function useGlobalSubscription() {
             "broadcast",
             { event: "display-item" },
             (payload) => {
-              console.log("🔵 [GLOBAL] Received display-item event", payload);
+              console.log("useGlobalSubscription: Received display-item event", payload);
               const { selectedItemId, selectedType } = payload.payload || {};
               setSelectedItem(selectedItemId, selectedType);
             }
@@ -101,7 +98,7 @@ export function useGlobalSubscription() {
             "broadcast",
             { event: "get-current-ui" },
             (payload) => {
-              console.log("🔵 [GLOBAL] Received get-current-ui event", payload);
+              console.log("useGlobalSubscription: Received get-current-ui event", payload);
               const currentState = useGlobalStore.getState();
               supabase.channel(channelName).send({
                 type: "broadcast",
@@ -118,7 +115,7 @@ export function useGlobalSubscription() {
             "broadcast",
             { event: "set-location" },
             (payload) => {
-              console.log("🔵 [GLOBAL] Received set-location event", payload);
+              console.log("useGlobalSubscription: Received set-location event", payload);
               const { lat, lon } = payload.payload || {};
               setLocation(lat, lon);
             }
@@ -127,9 +124,9 @@ export function useGlobalSubscription() {
             "broadcast",
             { event: "get-current-location" },
             (payload) => {
-              console.log("🔵 [GLOBAL] Received get-current-location event", payload);
+              console.log("useGlobalSubscription: Received get-current-location event", payload);
               const currentState = useGlobalStore.getState();
-              console.log("🔵 [GLOBAL] Current location:", { lat: currentState.lat, lon: currentState.lon });
+              console.log("useGlobalSubscription: Current location:", { lat: currentState.lat, lon: currentState.lon });
               supabase.channel(channelName).send({
                 type: "broadcast",
                 event: "location-state-response",
@@ -143,10 +140,10 @@ export function useGlobalSubscription() {
           )
           .subscribe();
 
-        console.log("🟢 [GLOBAL] Global subscription initialized:", channelName);
+        console.log("useGlobalSubscription: Global subscription initialized:", channelName);
         return channel;
       } catch (err) {
-        console.error("🔴 [GLOBAL] Init error:", err);
+        console.error("useGlobalSubscription: Init error:", err);
         return null;
       }
     };
@@ -159,7 +156,7 @@ export function useGlobalSubscription() {
 
     return () => {
       if (channel) {
-        console.log("🟡 [GLOBAL] Removing global channel");
+        console.log("useGlobalSubscription: Removing global channel");
         supabase.removeChannel(channel);
       }
     };

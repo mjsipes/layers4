@@ -59,7 +59,6 @@ export const useGlobalStore = create<GlobalState>()(
         
         // Global UI actions
         setSelectedItem: (itemId, type) => {
-          console.log("🔵 [GLOBAL] Setting selected item:", { itemId, type });
           set({ selectedItemId: itemId, selectedType: type });
         },
         setWardrobeViewMode: (mode) =>
@@ -88,6 +87,6 @@ export const useGlobalStore = create<GlobalState>()(
         }),
       }
     ),
-    { name: '🌐 Global Store' }
+    { name: 'global-store' }
   )
 ); 
