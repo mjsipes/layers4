@@ -6,6 +6,6 @@ export async function POST(req: NextRequest) {
     console.log("weather-webhook/route.ts echo POST:", body);
     return NextResponse.json(body);
   } catch (error) {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    return NextResponse.json({ error: error }, { status: 400 });
   }
 }
