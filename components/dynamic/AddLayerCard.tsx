@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { useLayerStore } from "@/stores/layers_store";
 
 const AddLayerCard = () => {
@@ -64,17 +63,7 @@ const AddLayerCard = () => {
               onChange={e => setDescription(e.target.value)}
             />
           </div>
-          {/* <div className="grid gap-2">
-            <Label>Warmth: {warmth}/10</Label>
-            <Slider
-              value={[warmth]}
-              onValueChange={([val]) => setWarmth(val)}
-              max={10}
-              min={1}
-              step={1}
-              className="w-full"
-            />
-          </div> */}
+
           <Button 
             type="submit" 
             disabled={isLoading}
