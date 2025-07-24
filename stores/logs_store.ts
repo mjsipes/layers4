@@ -26,6 +26,8 @@ type LogState = {
     layer_ids?: string[];
     lat?: number;
     lon?: number;
+    address?: string;
+    city?: string;
   }) => Promise<void>;
   deleteLog: (logId: string) => Promise<void>;
 };
@@ -61,6 +63,8 @@ export const useLogStore = create<LogState>()(
             user_id: user?.id ?? null,
             latitude: logData.lat ?? null,
             longitude: logData.lon ?? null,
+            address: logData.address ?? null,
+            city: logData.city ?? null,
           };
           console.log("logs_store/addLog: Inserting:", insertData);
 

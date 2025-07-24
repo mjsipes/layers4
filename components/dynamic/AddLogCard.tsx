@@ -23,10 +23,9 @@ import {
 } from "@/components/ui/multi-select";
 
 // TypeScript: Extend Window interface for Google Maps
-// @ts-ignore
 declare global {
   interface Window {
-    google: any;
+    google: unknown;
   }
 }
 
@@ -41,6 +40,7 @@ const AddLogCard = () => {
   const [feedback, setFeedback] = useState("");
   const addressFromStore = useGlobalStore((state) => state.address);
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
 
   const latFromStore = useGlobalStore((state) => state.lat);
   const lonFromStore = useGlobalStore((state) => state.lon);
@@ -55,26 +55,41 @@ const AddLogCard = () => {
     setAddress(addressFromStore || "");
   }, [latFromStore, lonFromStore, addressFromStore]);
 
+  // Extract city from Google Maps place object
+  function extractCityFromPlace(place: unknown) {
+    if (!place || !(place as { address_components?: unknown[] }).address_components) return "";
+    const addressComponents = (place as { address_components?: unknown[] }).address_components;
+    const cityComponent = addressComponents?.find((c) =>
+      (c as { types?: string[] }).types?.includes("locality")
+    );
+    return (cityComponent as { long_name?: string })?.long_name || "";
+  }
+
   // Google Places Autocomplete setup
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
     function initAutocomplete() {
       if (window.google && inputRef.current) {
-        const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
+        const autocomplete = new ((window.google as { maps?: { places?: { Autocomplete?: unknown } } }).maps?.places?.Autocomplete as (new (input: HTMLInputElement, opts: object) => unknown) ?? function() {})(inputRef.current, {
           types: ["geocode"],
         });
 
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          if (!place.geometry) return;
+        (autocomplete as unknown as { addListener: (event: string, handler: () => void) => void; getPlace?: () => unknown }).addListener("place_changed", () => {
+          const place = (autocomplete as unknown as { getPlace: () => unknown }).getPlace();
+          const placeObj = place as {
+            geometry?: { location?: { lat: () => number; lng: () => number } };
+            formatted_address?: string;
+          };
+          if (!placeObj.geometry || !placeObj.geometry.location) return;
 
-          const newLat = place.geometry.location.lat();
-          const newLon = place.geometry.location.lng();
+          const newLat = placeObj.geometry.location.lat();
+          const newLon = placeObj.geometry.location.lng();
 
           setLat(newLat);
           setLon(newLon);
-          setAddress(place.formatted_address || "");
+          setAddress(placeObj.formatted_address || "");
+          setCity(extractCityFromPlace(placeObj));
         });
 
         if (interval) clearInterval(interval);
@@ -129,6 +144,8 @@ const AddLogCard = () => {
         layer_ids: selectedLayers,
         lat: lat ?? undefined,
         lon: lon ?? undefined,
+        address: address || undefined,
+        city: city || undefined,
       });
 
       setFeedback("");
@@ -136,6 +153,7 @@ const AddLogCard = () => {
       setDate(new Date());
       setSelectedLayers([]);
       setAddress("");
+      setCity("");
     } catch (error: unknown) {
       console.error("Error saving log:", error);
     } finally {

@@ -49,6 +49,8 @@ export type Database = {
       }
       log: {
         Row: {
+          address: string | null
+          city: string | null
           comfort_level: number | null
           created_at: string
           date: string | null
@@ -60,6 +62,8 @@ export type Database = {
           weather_id: string | null
         }
         Insert: {
+          address?: string | null
+          city?: string | null
           comfort_level?: number | null
           created_at?: string
           date?: string | null
@@ -71,6 +75,8 @@ export type Database = {
           weather_id?: string | null
         }
         Update: {
+          address?: string | null
+          city?: string | null
           comfort_level?: number | null
           created_at?: string
           date?: string | null

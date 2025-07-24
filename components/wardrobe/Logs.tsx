@@ -166,12 +166,17 @@ const Logs = ({ viewMode }: LogsProps) => {
             <div className="mt-2 mb-4 flex flex-col gap-2 items-start">
               {(currentWeather?.temp) && (
                 <div className="p-1 rounded-lg bg-background  w-full">
-                  <div className="flex  gap-1 flex-wrap">
-                    <span className="font-bold text-blue-600 text-sm">
+                  <div className="flex gap-1 flex-wrap w-full">
+                    <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-blue-600">
                       {Math.round(currentWeather.temp)}°
                     </span>
-                    {currentWeather.tempmin !== undefined && (
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground ">
+                    {log.city && (
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
+                        {log.city}
+                      </span>
+                    )}
+                    {/* {currentWeather.tempmin !== undefined && (
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
                         L: {Math.round(currentWeather.tempmin)}°
                       </span>
                     )}
@@ -179,7 +184,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                       <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
                         H: {Math.round(currentWeather.tempmax)}°
                       </span>
-                    )}
+                    )} */}
                   </div>
                 </div>
               )}

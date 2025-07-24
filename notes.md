@@ -10,7 +10,7 @@ google lense/ image upload for app
 what did you wear today?
 what should i wear today?
 i wore my uniqlo heat tech, my my orange pants, my patagonia shell, and i got hot by the time i finished the day.
-
+address should flow around with lat/lon
 
 also log should have default date and location and should be set up to get weather via trigger   <--->
 chat should also insert log with a lat and lon

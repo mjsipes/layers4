@@ -96,6 +96,12 @@ const SelectLogCard = () => {
         <div className="mt-2 mb-4">
           <div className="p-3  rounded-lg bg-background border-border">
             <div className="space-y-3">
+              {/* Address Row - styled like weather description */}
+              {log.address && (
+                <div className="w-full overflow-hidden whitespace-nowrap border rounded-md bg-muted border-muted px-2 py-1 text-xs font-medium">
+                  {log.address}
+                </div>
+              )}
               {/* Temperature and Weather Stats Row */}
               <div className="grid grid-cols-2 gap-4">
                 {/* Temperature Column */}
