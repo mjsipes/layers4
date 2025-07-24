@@ -165,18 +165,18 @@ const Logs = ({ viewMode }: LogsProps) => {
             {/* Weather and Layers Info */}
             <div className="mt-2 mb-4 flex flex-col gap-2 items-start">
               {(currentWeather?.temp) && (
-                <div className="p-1 rounded-lg bg-background flex flex-col items-start gap-2 w-full">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-blue-600">
+                <div className="p-1 rounded-lg bg-background  w-full">
+                  <div className="flex  gap-1 flex-wrap">
+                    <span className="font-bold text-blue-600 text-sm">
                       {Math.round(currentWeather.temp)}°
                     </span>
                     {currentWeather.tempmin !== undefined && (
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-muted text-foreground">
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground ">
                         L: {Math.round(currentWeather.tempmin)}°
                       </span>
                     )}
                     {currentWeather.tempmax !== undefined && (
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-muted text-foreground">
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
                         H: {Math.round(currentWeather.tempmax)}°
                       </span>
                     )}
