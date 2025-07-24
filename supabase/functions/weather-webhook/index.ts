@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
         console.error("weather-webhook/index.ts error inserting weather record:", insertError);
       } else {
         console.log("weather-webhook/index.ts weather record inserted:", newWeather);
-        weather_id = newWeather.id;
+        weather_id = newWeather[0]?.id;
       }
     }
     //update log with weather_id
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
     if (updateError) {
       console.error("weather-webhook/index.ts error updating log:", updateError);
     } else {
-      console.log("weather-webhook/index.ts log updated with weather_id:", weather_id);
+      console.log("weather-webhook/index.ts log updated with weather_id:", updated);
     }
   } else {
     console.error("weather-webhook/index.ts missing required parameters:", { date, latitude, longitude });
