@@ -54,7 +54,8 @@ export type Database = {
           date: string | null
           feedback: string | null
           id: string
-          outfit_id: string | null
+          latitude: number | null
+          longitude: number | null
           user_id: string | null
           weather_id: string | null
         }
@@ -64,7 +65,8 @@ export type Database = {
           date?: string | null
           feedback?: string | null
           id?: string
-          outfit_id?: string | null
+          latitude?: number | null
+          longitude?: number | null
           user_id?: string | null
           weather_id?: string | null
         }
@@ -74,18 +76,12 @@ export type Database = {
           date?: string | null
           feedback?: string | null
           id?: string
-          outfit_id?: string | null
+          latitude?: number | null
+          longitude?: number | null
           user_id?: string | null
           weather_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "outfit_log_outfit_id_fkey"
-            columns: ["outfit_id"]
-            isOneToOne: false
-            referencedRelation: "outfit"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "outfit_log_weather_id_fkey"
             columns: ["weather_id"]

@@ -69,10 +69,12 @@ export const insertLogTool = tool({
     date: z.string().optional().describe("Date of the log entry (YYYY-MM-DD format)"),
     weather_id: z.string().optional().describe("ID of the weather data for this log"),
     layer_ids: z.array(z.string()).optional().describe("Array of layer IDs to link to this log"),
+    latitude: z.number().optional().describe("Latitude coordinate for the log location"),
+    longitude: z.number().optional().describe("Longitude coordinate for the log location"),
   }),
-  execute: async ({ feedback, comfort_level, date, weather_id, layer_ids }) => {
+  execute: async ({ feedback, comfort_level, date, weather_id, layer_ids, latitude, longitude }) => {
     try {
-      console.log("insertLogTool: Executing with:", { feedback, comfort_level, date, weather_id, layer_ids });
+      console.log("insertLogTool: Executing with:", { feedback, comfort_level, date, weather_id, layer_ids, latitude, longitude });
       const supabase = await createClient();
       const {
         data: { user },
@@ -96,6 +98,8 @@ export const insertLogTool = tool({
         comfort_level: comfort_level || null,
         date: date || null,
         weather_id: weather_id || null,
+        latitude: latitude || null,
+        longitude: longitude || null,
         user_id: user.id,
       };
 
@@ -144,11 +148,13 @@ export const updateLogTool = tool({
     comfort_level: z.number().min(1).max(10).optional().describe("New comfort level from 1-10"),
     date: z.string().optional().describe("New date of the log entry (YYYY-MM-DD format)"),
     weather_id: z.string().optional().describe("New weather ID"),
+    latitude: z.number().optional().describe("New latitude coordinate for the log location"),
+    longitude: z.number().optional().describe("New longitude coordinate for the log location"),
     // Optionally, you could add layer_ids here for updating layers
   }),
-  execute: async ({ id, feedback, comfort_level, date, weather_id }) => {
+  execute: async ({ id, feedback, comfort_level, date, weather_id, latitude, longitude }) => {
     try {
-      console.log("updateLogTool: Executing with:", { id, feedback, comfort_level, date, weather_id });
+      console.log("updateLogTool: Executing with:", { id, feedback, comfort_level, date, weather_id, latitude, longitude });
       const supabase = await createClient();
       const {
         data: { user },
@@ -172,6 +178,8 @@ export const updateLogTool = tool({
       if (comfort_level !== undefined) updateData.comfort_level = comfort_level;
       if (date !== undefined) updateData.date = date;
       if (weather_id !== undefined) updateData.weather_id = weather_id;
+      if (latitude !== undefined) updateData.latitude = latitude;
+      if (longitude !== undefined) updateData.longitude = longitude;
 
       if (Object.keys(updateData).length === 0) {
         console.error("updateLogTool: No fields provided to update");
