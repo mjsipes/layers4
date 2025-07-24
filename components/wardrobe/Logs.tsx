@@ -60,9 +60,9 @@ const Logs = ({ viewMode }: LogsProps) => {
         <Table className="table-fixed w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-2/12">Date</TableHead>
+              <TableHead className="w-3/12">Date</TableHead>
               <TableHead className="w-2/12">Weather</TableHead>
-              <TableHead className="w-6/12">Layers</TableHead>
+              <TableHead className="w-5/12">Layers</TableHead>
               <TableHead className="w-2/12 text-center">Comfort</TableHead>
             </TableRow>
           </TableHeader>
