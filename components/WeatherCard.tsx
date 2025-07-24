@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
-import { useGlobalSubscription, useGeolocation, useWeather } from "@/hooks/useGlobalSubscription";
+import { useGlobalSubscription, useGeolocation, useWeather, useCity } from "@/hooks/useGlobalSubscription";
 
 const WeatherCard = () => {
   useGeolocation();
@@ -11,8 +11,10 @@ const WeatherCard = () => {
   useLayersSubscription();
   useLogsSubscription();
   useGlobalSubscription();
+  useCity();
 
   const date = useGlobalStore((state) => state.date);
+  const city = useGlobalStore((state) => state.city);
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
   const { weatherData } = useGlobalStore();
@@ -40,6 +42,7 @@ const WeatherCard = () => {
     <div className="w-full h-full flex flex-col p-4 gap-4 justify-between">
       {/* Location & Time row */}
       <div className="grid grid-cols-4 gap-2">
+        {/* <span className="badge truncate col-span-2">City: {city || "--"}</span> */}
         <span className="badge truncate">Lat: {lat?.toFixed(2) || "--"}</span>
         <span className="badge truncate">Lon: {lon?.toFixed(2) || "--"}</span>
         <span className="badge truncate">{date.toDateString()}</span>

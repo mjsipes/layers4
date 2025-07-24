@@ -29,8 +29,8 @@ export function useLayersSubscription() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "layer" },
-        async () => {
-          console.log("useLayersSubscription: Subscription triggered");
+        async (payload) => {
+          console.log("useLayersSubscription: layer table changed", payload);
           await fetchLayers();
         }
       )

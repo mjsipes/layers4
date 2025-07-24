@@ -47,8 +47,8 @@ export function useLogsSubscription() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "log" },
-        async () => {
-          console.log("useLogsSubscription: log table changed");
+        async (payload) => {
+          console.log("useLogsSubscription: log table changed", payload);
           await fetchLogs();
         }
       )
@@ -59,8 +59,8 @@ export function useLogsSubscription() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "log_layer" },
-        async () => {
-          console.log("useLogsSubscription: log_layer table changed");
+        async (payload) => {
+          console.log("useLogsSubscription: log_layer table changed", payload);
           await fetchLogs();
         }
       )

@@ -19,6 +19,7 @@ type GlobalState = {
   selectedType: SelectedItemType;
   wardrobeViewMode: ViewMode;
   wardrobeActiveTab: WardrobeTab;
+  city: string | null;
   
   // Weather state
   date: Date;
@@ -35,6 +36,7 @@ type GlobalState = {
   setLocation: (lat: number, lon: number) => void;
   setWeatherData: (data: any) => void;
   clearWeather: () => void;
+  setCity: (city: string | null) => void;
 };
 
 /* ------------------------------------------------------------------ */
@@ -50,6 +52,7 @@ export const useGlobalStore = create<GlobalState>()(
         selectedType: "addlog",
         wardrobeViewMode: "grid",
         wardrobeActiveTab: "layers",
+        city: null,
         
         // Weather state
         date: new Date(),
@@ -77,6 +80,7 @@ export const useGlobalStore = create<GlobalState>()(
         },
         setWeatherData: (data) => set({ weatherData: data }),
         clearWeather: () => set({ weatherData: null }),
+        setCity: (city) => set({ city }),
       }),
       {
         name: 'layers-global-state', // localStorage key
