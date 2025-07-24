@@ -64,30 +64,28 @@ export function useWeather() {
 export function useCity() {
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
-  const setCity = useGlobalStore((state) => state.setCity);
+  const setAddress = useGlobalStore((state) => state.setAddress);
 
   useEffect(() => {
     if (!lat || !lon) return;
 
-    const fetchCity = async () => {
+    const fetchAddress = async () => {
       try {
         const res = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
         );
         const data = await res.json();
-        const city = data.results[0]?.address_components?.find((c: any) =>
-          c.types.includes("locality")
-        )?.long_name || null;
-        setCity(city);
-        console.log("useCity: Resolved city:", city);
+        const address = data.results?.[0]?.formatted_address || null;
+        setAddress(address);
+        console.log("useCity: Resolved address:", address);
       } catch (err) {
-        setCity(null);
-        console.error("useCity: Error fetching city:", err);
+        setAddress(null);
+        console.error("useCity: Error fetching address:", err);
       }
     };
 
-    fetchCity();
-  }, [lat, lon, setCity]);
+    fetchAddress();
+  }, [lat, lon, setAddress]);
 }
 
 

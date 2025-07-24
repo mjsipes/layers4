@@ -14,9 +14,9 @@ const WeatherCard = () => {
   useCity();
 
   const date = useGlobalStore((state) => state.date);
-  // const city = useGlobalStore((state) => state.city);
-  const lat = useGlobalStore((state) => state.lat);
-  const lon = useGlobalStore((state) => state.lon);
+  const address = useGlobalStore((state) => state.address);
+  // const lat = useGlobalStore((state) => state.lat);
+  // const lon = useGlobalStore((state) => state.lon);
   const { weatherData } = useGlobalStore();
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -42,9 +42,9 @@ const WeatherCard = () => {
     <div className="w-full h-full flex flex-col p-4 gap-4 justify-between">
       {/* Location & Time row */}
       <div className="grid grid-cols-4 gap-2">
-        {/* <span className="badge truncate col-span-2">City: {city || "--"}</span> */}
-        <span className="badge truncate">Lat: {lat?.toFixed(2) || "--"}</span>
-        <span className="badge truncate">Lon: {lon?.toFixed(2) || "--"}</span>
+        <span className="badge truncate col-span-2">{address || "--"}</span>
+        {/* <span className="badge truncate">Lat: {lat?.toFixed(2) || "--"}</span>
+        <span className="badge truncate">Lon: {lon?.toFixed(2) || "--"}</span> */}
         <span className="badge truncate">{date.toDateString()}</span>
         <span className="badge truncate">{currentTime.toLocaleTimeString()}</span>
       </div>
