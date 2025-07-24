@@ -20,6 +20,7 @@ interface LayersProps {
 const Layers = ({ viewMode }: LayersProps) => {
   const { layers } = useLayerStore();
   const { setSelectedItem } = useGlobalStore();
+  const { selectedItemId, selectedType } = useGlobalStore();
 
   const handleLayerClick = (layer: Layer) => {
     console.log("Layers.tsx/handleLayerClick:", layer.id);
@@ -72,7 +73,7 @@ const Layers = ({ viewMode }: LayersProps) => {
       {layers.map((layer) => (
         <div
           key={layer.id}
-          className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
+          className={`relative p-4 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${selectedType === 'selectlayer' && selectedItemId === layer.id ? 'border-blue-500' : ''}`}
           onClick={() => handleLayerClick(layer)}
         >
           <div className="absolute top-3 right-3">

@@ -21,17 +21,14 @@ interface LogsProps {
 const Logs = ({ viewMode }: LogsProps) => {
   const { logs } = useLogStore();
   const { setSelectedItem } = useGlobalStore();
+  const { selectedItemId, selectedType } = useGlobalStore();
 
   const handleLogClick = (log: Log) => {
     console.log("Logs.tsx/handleLogClick:", log.id);
     setSelectedItem(log.id, "selectlog");
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const isFocused = (_item: unknown) => {
-    // You can implement focus logic here if needed
-    return false;
-  };
+
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
@@ -78,7 +75,6 @@ const Logs = ({ viewMode }: LogsProps) => {
               return (
                 <TableRow
                   key={log.id}
-                  data-state={isFocused(log) ? "selected" : undefined}
                   className="hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
                   onClick={() => {
                     handleLogClick(log);
@@ -97,7 +93,6 @@ const Logs = ({ viewMode }: LogsProps) => {
                     </div>
                   </TableCell>
                   <TableCell className="truncate p-1">
-                    <div className="p-3 rounded-lg bg-background">
                       <div className="flex gap-1 flex-wrap">
                         {log.layers && 
                           log.layers.map((layer) => (
@@ -114,7 +109,6 @@ const Logs = ({ viewMode }: LogsProps) => {
                             </span>
                           ))
                      }
-                      </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-center">
@@ -145,16 +139,17 @@ const Logs = ({ viewMode }: LogsProps) => {
         return (
           <div
             key={log.id}
-            className="relative p-4 border rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary"
+            // Add conditional class for blue border if selected
+            className={`relative p-4 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${selectedType === 'selectlog' && selectedItemId === log.id ? 'border-blue-500' : ''}`}
             onClick={() => {
               handleLogClick(log);
             }}
           >
-            <div className="absolute top-3 right-3">
+            {/* <div className="absolute top-3 right-3">
               <Badge variant="default">
                 {log.comfort_level || '-'}
               </Badge>
-            </div>
+            </div> */}
             
             <div className="mb-3 pr-12">
               <h3 className="text-sm font-semibold text-primary leading-tight">
