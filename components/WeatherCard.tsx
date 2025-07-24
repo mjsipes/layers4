@@ -14,7 +14,7 @@ const WeatherCard = () => {
   useCity();
 
   const date = useGlobalStore((state) => state.date);
-  const city = useGlobalStore((state) => state.city);
+  // const city = useGlobalStore((state) => state.city);
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
   const { weatherData } = useGlobalStore();
