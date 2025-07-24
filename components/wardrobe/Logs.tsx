@@ -97,24 +97,24 @@ const Logs = ({ viewMode }: LogsProps) => {
                     </div>
                   </TableCell>
                   <TableCell className="truncate p-1">
-                    <div className="flex gap-1 flex-wrap">
-                      {log.layers && log.layers.length > 0 ? (
-                        log.layers.map((layer) => (
-                          <span
-                            key={layer.id}
-                            className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedItem(layer.id, "selectlayer");
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {layer?.name || "Unnamed Layer"}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-muted-foreground">-</span>
-                      )}
+                    <div className="p-3 rounded-lg bg-background">
+                      <div className="flex gap-1 flex-wrap">
+                        {log.layers && 
+                          log.layers.map((layer) => (
+                            <span
+                              key={layer.id}
+                              className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedItem(layer.id, "selectlayer");
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {layer?.name || "Unnamed Layer"}
+                            </span>
+                          ))
+                     }
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-center">
@@ -163,27 +163,45 @@ const Logs = ({ viewMode }: LogsProps) => {
             </div>
 
             {/* Weather and Layers Info */}
-            <div className="mt-2 mb-4">
-              <div className="flex gap-1 flex-wrap">
-                {(currentWeather?.temp) && (
-                  <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground">
-                    {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
-                  </span>
-                )}
-                {log.layers && log.layers.length > 0 && log.layers.map((layer) => (
-                  <span
-                    key={layer.id}
-                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground hover:bg-primary hover:text-primary-foreground"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedItem(layer.id, "selectlayer");
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {layer.name || "Unnamed Layer"}
-                  </span>
-                ))}
-              </div>
+            <div className="mt-2 mb-4 flex flex-col gap-2 items-start">
+              {(currentWeather?.temp) && (
+                <div className="p-1 rounded-lg bg-background flex flex-col items-start gap-2 w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-blue-600">
+                      {Math.round(currentWeather.temp)}°
+                    </span>
+                    {currentWeather.tempmin !== undefined && (
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-muted text-foreground">
+                        L: {Math.round(currentWeather.tempmin)}°
+                      </span>
+                    )}
+                    {currentWeather.tempmax !== undefined && (
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-muted text-foreground">
+                        H: {Math.round(currentWeather.tempmax)}°
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              {log.layers && log.layers.length > 0 && (
+                <div className="p-1 rounded-lg bg-background w-full">
+                  <div className="flex gap-1 flex-wrap">
+                    {log.layers.map((layer) => (
+                      <span
+                        key={layer.id}
+                        className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedItem(layer.id, "selectlayer");
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {layer.name || "Unnamed Layer"}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="mt-auto">
