@@ -49,7 +49,7 @@ const Layers = ({ viewMode }: LayersProps) => {
           {layers.map((layer) => (
             <TableRow
               key={layer.id}
-              className="hover:bg-muted/50 cursor-pointer"
+              className={`${selectedType === 'selectlayer' && selectedItemId === layer.id ? 'bg-muted/80 cursor-pointer' : 'hover:bg-muted/50 cursor-pointer'}`}
               onClick={() => handleLayerClick(layer)}
             >
               <TableCell className="font-medium truncate">

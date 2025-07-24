@@ -5,16 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLogStore } from "@/stores/logs_store";
-import type { Layer } from "@/stores/layers_store";
+import { useLayerStore } from "@/stores/layers_store";
+import { useLayersSubscription } from "@/hooks/useLayersSubscription";
+import {
+  MultiSelector,
+  MultiSelectorInput,
+  MultiSelectorContent,
+  MultiSelectorList,
+  MultiSelectorItem,
+} from "@/components/ui/multi-select";
 
 const SelectLogCard = () => {
-  const { selectedItemId, setSelectedItem } = useGlobalStore();
-  const { logs, deleteLog } = useLogStore();
-
-  const handleLayerClick = (layer: Layer) => {
-    console.log("SelectLogCard/handleLayerClick:", layer.id);
-    setSelectedItem(layer.id, "selectlayer");
-  };
+  const { selectedItemId } = useGlobalStore();
+  const { logs, deleteLog, updateLog, linkLayerToLog, unlinkLayerFromLog } = useLogStore();
+  const { layers } = useLayerStore();
+  useLayersSubscription();
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
@@ -28,7 +33,18 @@ const SelectLogCard = () => {
   };
 
   const log = logs.find(l => l.id === selectedItemId);
-  console.log("SelectLogCard.log: ", log);
+  // Move all hooks above this guard
+  const [saving, setSaving] = React.useState(false);
+  const [feedback, setFeedback] = React.useState(log?.feedback || "");
+  React.useEffect(() => {
+    setFeedback(log?.feedback || "");
+  }, [log?.feedback, log?.id]);
+
+  // For multi-select
+  const [selectedLayerIds, setSelectedLayerIds] = React.useState<string[]>(log?.layers?.map(l => l.id) || []);
+  React.useEffect(() => {
+    setSelectedLayerIds(log?.layers?.map(l => l.id) || []);
+  }, [log?.layers, log?.id]);
 
   if (!log) {
     return null;
@@ -77,9 +93,37 @@ const SelectLogCard = () => {
 
   const weatherInfo = getWeatherInfo();
 
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFeedback(e.target.value);
+  };
+
+  const handleFeedbackBlur = async () => {
+    if (feedback !== (log.feedback || "")) {
+      setSaving(true);
+      try {
+        await updateLog(log.id, { feedback });
+      } finally {
+        setSaving(false);
+      }
+    }
+  };
+
+  const handleLayersChange = async (newIds: string[]) => {
+    // Find added and removed
+    const prev = new Set(selectedLayerIds);
+    const next = new Set(newIds);
+    for (const id of newIds) {
+      if (!prev.has(id)) await linkLayerToLog(log.id, id);
+    }
+    for (const id of selectedLayerIds) {
+      if (!next.has(id)) await unlinkLayerFromLog(log.id, id);
+    }
+    setSelectedLayerIds(newIds);
+  };
+
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
-      <div className="absolute top-3 right-3">
+      <div className="absolute top-4 right-4">
         <Badge variant="default" className="text-sm">
           {log.comfort_level || "-"}
         </Badge>
@@ -93,7 +137,7 @@ const SelectLogCard = () => {
 
       {/* Weather Information Card */}
       {weatherInfo && (
-        <div className="mt-2 mb-4">
+        <div className="mt-2 mb-2">
           <div className="p-3  rounded-lg bg-background border-border">
             <div className="space-y-3">
               {/* Address Row - styled like weather description */}
@@ -156,35 +200,55 @@ const SelectLogCard = () => {
       )}
 
       {/* Layers Card */}
-      {log.layers && log.layers.length > 0 && (
-        <div className="mt-2 mb-4">
-          <div className="p-3 rounded-lg bg-background ">
-            <div className="space-y-2">
-
-              <div className="flex gap-1 flex-wrap">
-                {log.layers.map((layer) => (
-                  <span
-                    key={layer.id}
-                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground cursor-pointer transition-all duration-200 hover:bg-primary hover:text-primary-foreground"
-                    onClick={() => handleLayerClick(layer)}
+      <div className="mt-2 mb-2">
+        <MultiSelector
+          values={selectedLayerIds}
+          onValuesChange={handleLayersChange}
+          loop={false}
+          className="text-sm"
+        >
+          <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
+            {selectedLayerIds.map((id) => {
+              const label = layers.find((l) => l.id === id)?.name || id;
+              return (
+                <span key={id} className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs">
+                  {label}
+                  <button
+                    type="button"
+                    className="ml-1 text-muted-foreground hover:text-destructive"
+                    onClick={() => handleLayersChange(selectedLayerIds.filter((v) => v !== id))}
+                    aria-label={`Remove ${label}`}
                   >
-                    {layer.name || "Unnamed Layer"}
-                  </span>
-                ))}
-              </div>
-            </div>
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+            <MultiSelectorInput />
           </div>
-        </div>
-      )}
+          <MultiSelectorContent>
+            <MultiSelectorList>
+              {layers.map((layer) => (
+                <MultiSelectorItem key={layer.id} value={layer.id}>
+                  {layer.name || "Unnamed Layer"}
+                </MultiSelectorItem>
+              ))}
+            </MultiSelectorList>
+          </MultiSelectorContent>
+        </MultiSelector>
+      </div>
 
       {/* Feedback */}
-      {log.feedback && (
-        <div className="mt-2 mb-4">
-          <p className="text-base text-foreground leading-relaxed">
-            {log.feedback}
-          </p>
-        </div>
-      )}
+      <div className="mt-2 mb-2">
+        <textarea
+          className="w-full border rounded-md p-2 text-base bg-background border-none"
+          value={feedback}
+          onChange={handleFeedbackChange}
+          onBlur={handleFeedbackBlur}
+          rows={3}
+          disabled={saving}
+        />
+      </div>
 
       <div className="mt-auto">
         <Button

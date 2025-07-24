@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { createClient } from "@/lib/supabase/client";
 import { Tables } from "@/lib/supabase/database.types";
+import { useLayerStore } from "@/stores/layers_store";
 
 const supabase = createClient();
 
@@ -30,6 +31,9 @@ type LogState = {
     city?: string;
   }) => Promise<void>;
   deleteLog: (logId: string) => Promise<void>;
+  updateLog: (logId: string, updates: Partial<Omit<Log, 'id'>>) => Promise<void>;
+  linkLayerToLog: (logId: string, layerId: string) => Promise<void>;
+  unlinkLayerFromLog: (logId: string, layerId: string) => Promise<void>;
 };
 
 /* ------------------------------------------------------------------ */
@@ -103,6 +107,87 @@ export const useLogStore = create<LogState>()(
           console.log("logs_store/deleteLog: Deleted:", data);
         } catch (err) {
           console.error("logs_store/deleteLog: Failed to delete log:", err);
+          throw err;
+        }
+      },
+
+      updateLog: async (logId, updates) => {
+        try {
+          console.log("logs_store/updateLog: Updating log:", logId, updates);
+          const { data, error } = await supabase
+            .from("log")
+            .update(updates)
+            .eq("id", logId)
+            .select()
+            .single();
+          if (error) throw error;
+          set((state) => ({
+            logs: state.logs.map((log) =>
+              log.id === logId ? { ...log, ...updates } : log
+            ),
+          }));
+          console.log("logs_store/updateLog: Updated:", data);
+        } catch (err) {
+          console.error("logs_store/updateLog: Failed to update log:", err);
+          throw err;
+        }
+      },
+
+      linkLayerToLog: async (logId, layerId) => {
+        try {
+          console.log("logs_store/linkLayerToLog: Linking layer to log:", logId, layerId);
+          const { data, error } = await supabase
+            .from("log_layer")
+            .insert({ log_id: logId, layer_id: layerId })
+            .select()
+            .single();
+          if (error) throw error;
+          // Get the full layer object from the global layers store
+          const allLayers = useLayerStore.getState().layers;
+          const fullLayer = allLayers.find((l) => l.id === layerId) || {
+            id: layerId,
+            name: null,
+            description: null,
+            warmth: null,
+            user_id: null,
+            created_at: '',
+            top: null,
+            bottom: null
+          };
+          set((state) => ({
+            logs: state.logs.map((log) =>
+              log.id === logId && log.layers
+                ? { ...log, layers: [...log.layers, fullLayer] }
+                : log
+            ),
+          }));
+          console.log("logs_store/linkLayerToLog: Linked:", data);
+        } catch (err) {
+          console.error("logs_store/linkLayerToLog: Failed to link layer:", err);
+          throw err;
+        }
+      },
+
+      unlinkLayerFromLog: async (logId, layerId) => {
+        try {
+          console.log("logs_store/unlinkLayerFromLog: Unlinking layer from log:", logId, layerId);
+          const { data, error } = await supabase
+            .from("log_layer")
+            .delete()
+            .eq("log_id", logId)
+            .eq("layer_id", layerId)
+            .select();
+          if (error) throw error;
+          set((state) => ({
+            logs: state.logs.map((log) =>
+              log.id === logId && log.layers
+                ? { ...log, layers: log.layers.filter((layer) => layer.id !== layerId) }
+                : log
+            ),
+          }));
+          console.log("logs_store/unlinkLayerFromLog: Unlinked:", data);
+        } catch (err) {
+          console.error("logs_store/unlinkLayerFromLog: Failed to unlink layer:", err);
           throw err;
         }
       },

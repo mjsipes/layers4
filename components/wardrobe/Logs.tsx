@@ -75,7 +75,7 @@ const Logs = ({ viewMode }: LogsProps) => {
               return (
                 <TableRow
                   key={log.id}
-                  className="hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
+                  className={`${selectedType === 'selectlog' && selectedItemId === log.id ? 'bg-muted/80 cursor-pointer' : 'hover:bg-muted/50 cursor-pointer'}`}
                   onClick={() => {
                     handleLogClick(log);
                   }}

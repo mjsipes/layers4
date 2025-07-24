@@ -21,6 +21,7 @@ type LayerState = {
     warmth?: number;
   }) => Promise<void>;
   deleteLayer: (layerId: string) => Promise<void>;
+  updateLayer?: (layerId: string, updates: Partial<Omit<Layer, 'id'>>) => Promise<void>;
 };
 
 /* ------------------------------------------------------------------ */
@@ -81,6 +82,28 @@ export const useLayerStore = create<LayerState>()(
           console.log("layers-store/deleteLayer: Deleted:", data);
         } catch (err) {
           console.error("layers-store/deleteLayer: Failed to delete layer:", err);
+          throw err;
+        }
+      },
+
+      updateLayer: async (layerId, updates) => {
+        try {
+          console.log("layers-store/updateLayer: Updating layer:", layerId, updates);
+          const { data, error } = await supabase
+            .from("layer")
+            .update(updates)
+            .eq("id", layerId)
+            .select()
+            .single();
+          if (error) throw error;
+          set((state) => ({
+            layers: state.layers.map((layer) =>
+              layer.id === layerId ? { ...layer, ...updates } : layer
+            ),
+          }));
+          console.log("layers-store/updateLayer: Updated:", data);
+        } catch (err) {
+          console.error("layers-store/updateLayer: Failed to update layer:", err);
           throw err;
         }
       },

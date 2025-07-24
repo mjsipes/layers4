@@ -233,7 +233,7 @@ const AddLogCard = () => {
               values={selectedLayers}
               onValuesChange={setSelectedLayers}
               loop={false}
-              className="text-sm p-1"
+              className="text-sm"
             >
               <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
                 {selectedLayers.map((id) => {
