@@ -44,12 +44,7 @@ const Logs = ({ viewMode }: LogsProps) => {
     });
   };
 
-  const getComfortColor = (comfort: number | null) => {
-    if (!comfort) return 'secondary';
-    if (comfort >= 8) return 'default';
-    if (comfort >= 6) return 'secondary';
-    return 'default';
-  };
+
 
   if (logs.length === 0) {
     return (
@@ -94,11 +89,9 @@ const Logs = ({ viewMode }: LogsProps) => {
                   </TableCell>
                   <TableCell className="truncate">
                     <div className="flex gap-1 flex-wrap">
-                      {(currentWeather?.temp || currentWeather?.description) && (
+                      {(currentWeather?.temp) && (
                         <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground">
                           {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
-                          {currentWeather?.temp && currentWeather?.description && ' & '}
-                          {currentWeather?.description && currentWeather.description.split(' ')[0]}
                         </span>
                       )}
                     </div>
@@ -125,7 +118,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                     </div>
                   </TableCell>
                   <TableCell className="text-center">
-                    <Badge variant={getComfortColor(log.comfort_level)}>
+                    <Badge variant="default">
                       {log.comfort_level || '-'}
                     </Badge>
                   </TableCell>
@@ -158,7 +151,7 @@ const Logs = ({ viewMode }: LogsProps) => {
             }}
           >
             <div className="absolute top-3 right-3">
-              <Badge variant={getComfortColor(log.comfort_level)}>
+              <Badge variant="default">
                 {log.comfort_level || '-'}
               </Badge>
             </div>
@@ -172,11 +165,9 @@ const Logs = ({ viewMode }: LogsProps) => {
             {/* Weather and Layers Info */}
             <div className="mt-2 mb-4">
               <div className="flex gap-1 flex-wrap">
-                {(currentWeather?.temp || currentWeather?.description) && (
+                {(currentWeather?.temp) && (
                   <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-background text-foreground">
                     {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
-                    {currentWeather?.temp && currentWeather?.description && ' & '}
-                    {currentWeather?.description && currentWeather.description.split(' ')[0]}
                   </span>
                 )}
                 {log.layers && log.layers.length > 0 && log.layers.map((layer) => (

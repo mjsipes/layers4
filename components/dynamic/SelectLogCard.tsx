@@ -5,10 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLogStore } from "@/stores/logs_store";
+import type { Layer } from "@/stores/layers_store";
 
 const SelectLogCard = () => {
-  const { selectedItemId } = useGlobalStore();
+  const { selectedItemId, setSelectedItem } = useGlobalStore();
   const { logs, deleteLog } = useLogStore();
+
+  const handleLayerClick = (layer: Layer) => {
+    console.log("SelectLogCard/handleLayerClick:", layer.id);
+    setSelectedItem(layer.id, "selectlayer");
+  };
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
@@ -148,14 +154,13 @@ const SelectLogCard = () => {
         <div className="mt-2 mb-4">
           <div className="p-3 rounded-lg bg-background ">
             <div className="space-y-2">
-              <div className="font-semibold text-primary text-base">
-                Layers
-              </div>
+
               <div className="flex gap-1 flex-wrap">
                 {log.layers.map((layer) => (
                   <span
                     key={layer.id}
-                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground"
+                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground cursor-pointer transition-all duration-200 hover:bg-primary hover:text-primary-foreground"
+                    onClick={() => handleLayerClick(layer)}
                   >
                     {layer.name || "Unnamed Layer"}
                   </span>

@@ -2,8 +2,8 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 
 **TODO:**
-select cards: should be able to update everything
-
+get rid of comfort, make selectcards editable
+make add log super approachable. either somethign completely new or a what are you wearing today card as the starter.
 change lat and lon to real location / make weather card able to look at other places weather... then add a history button
 google lense/ image upload for app
 
