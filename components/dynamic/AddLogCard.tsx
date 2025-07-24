@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,8 +11,6 @@ import {
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
-
-
 import { useLayerStore } from "@/stores/layers_store";
 import { useGlobalStore } from "@/stores/global_store";
 
@@ -24,6 +22,13 @@ import {
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
 
+// TypeScript: Extend Window interface for Google Maps
+// @ts-ignore
+declare global {
+  interface Window {
+    google: any;
+  }
+}
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,8 +39,81 @@ const AddLogCard = () => {
   const { layers } = useLayerStore();
   const [selectedLayers, setSelectedLayers] = useState<string[]>([]);
   const [feedback, setFeedback] = useState("");
-  const lat = useGlobalStore((state) => state.lat);
-  const lon = useGlobalStore((state) => state.lon);
+  const addressFromStore = useGlobalStore((state) => state.address);
+  const [address, setAddress] = useState("");
+
+  const latFromStore = useGlobalStore((state) => state.lat);
+  const lonFromStore = useGlobalStore((state) => state.lon);
+  const [lat, setLat] = useState<number | null>(latFromStore);
+  const [lon, setLon] = useState<number | null>(lonFromStore);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setLat(latFromStore);
+    setLon(lonFromStore);
+    setAddress(addressFromStore || "");
+  }, [latFromStore, lonFromStore, addressFromStore]);
+
+  // Google Places Autocomplete setup
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    function initAutocomplete() {
+      if (window.google && inputRef.current) {
+        const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
+          types: ["geocode"],
+        });
+
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) return;
+
+          const newLat = place.geometry.location.lat();
+          const newLon = place.geometry.location.lng();
+
+          setLat(newLat);
+          setLon(newLon);
+          setAddress(place.formatted_address || "");
+        });
+
+        if (interval) clearInterval(interval);
+      }
+    }
+
+    if (!window.google) {
+      interval = setInterval(() => {
+        if (window.google) {
+          initAutocomplete();
+        }
+      }, 100);
+    } else {
+      initAutocomplete();
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [inputRef]);
+
+  // More robust handler to prevent form submission/tab when Google dropdown is open
+  const handleAddressKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const pacContainers = document.querySelectorAll('.pac-container');
+    let isDropdownOpen = false;
+    pacContainers.forEach((container) => {
+      if (
+        container instanceof HTMLElement &&
+        container.offsetParent !== null &&
+        container.childElementCount > 0
+      ) {
+        isDropdownOpen = true;
+      }
+    });
+    if (isDropdownOpen && (e.key === 'Enter' || e.key === 'Tab')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -57,6 +135,7 @@ const AddLogCard = () => {
       setComfortLevel(5);
       setDate(new Date());
       setSelectedLayers([]);
+      setAddress("");
     } catch (error: unknown) {
       console.error("Error saving log:", error);
     } finally {
@@ -66,7 +145,6 @@ const AddLogCard = () => {
 
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
-      {/* Header */}
       <div className="mb-4">
         <h3 className="text-2xl font-semibold text-blue-600 leading-tight ">
           Add Log
@@ -74,24 +152,35 @@ const AddLogCard = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          {/* date input */}
-          <div className="grid gap-2 mb-4 ">
+          {/* Autocomplete Address Input */}
+          <div className="grid gap-2 mb-4">
+            <Label htmlFor="log-address">Location</Label>
+            <Input
+              id="log-address"
+              name="address"
+              ref={inputRef}
+              placeholder="Start typing address..."
+              className="bg-background shadow-none border-none"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              onKeyDownCapture={handleAddressKeyDown}
+            />
+          </div>
+          {/* Date Picker */}
+          <div className="grid gap-2 mb-4">
             <Label htmlFor="log-date">Date</Label>
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   id="log-date"
-                  className="w-full justify-between font-normal bg-background shadow-none border-none"
+                  className="w-full justify-between font-normal bg-background shadow-none border-none hover:bg-background"
                 >
                   {date ? date.toLocaleDateString() : "Select date"}
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="start"
-              >
+              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={date}
@@ -104,9 +193,10 @@ const AddLogCard = () => {
               </PopoverContent>
             </Popover>
           </div>
-          {/* feedback and comfort */}
-          <div className="grid gap-2 mb-4 ">
-            {/* feedback */}
+
+
+          {/* Feedback */}
+          <div className="grid gap-2 mb-4">
             <Label htmlFor="log-feedback">Feedback</Label>
             <Input
               id="log-feedback"
@@ -114,10 +204,11 @@ const AddLogCard = () => {
               placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
               className="bg-background shadow-none border-none"
               value={feedback}
-              onChange={e => setFeedback(e.target.value)}
+              onChange={(e) => setFeedback(e.target.value)}
             />
           </div>
-          {/* layer multi-select */}
+
+          {/* Layer Multi-Select */}
           <div className="grid mb-2">
             <Label>Link Layers</Label>
             <MultiSelector
@@ -130,7 +221,7 @@ const AddLogCard = () => {
                 {selectedLayers.map((id) => {
                   const label = layers.find((l) => l.id === id)?.name || id;
                   return (
-                    <span key={id} className="inline-flex items-center px-2 py-1 rounded-xl bg-secondary text-xs">
+                    <span key={id} className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs">
                       {label}
                       <button
                         type="button"
@@ -156,18 +247,7 @@ const AddLogCard = () => {
               </MultiSelectorContent>
             </MultiSelector>
           </div>
-          {/* comfort */}
-          {/* <div className="grid gap-2">
-            <Label>Comfort: {comfortLevel}/10</Label>
-            <Slider
-              value={[comfortLevel]}
-              onValueChange={([val]) => setComfortLevel(val)}
-              max={10}
-              min={1}
-              step={1}
-              className="w-full"
-            />
-          </div> */}
+
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Saving..." : "Add Log"}
           </Button>
