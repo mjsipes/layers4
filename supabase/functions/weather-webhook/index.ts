@@ -8,6 +8,11 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 console.log("Hello from Functions!")
 
+const VISUAL_CROSSING_API_KEY = Deno.env.get("VISUAL_CROSSING_API_KEY");
+const VISUAL_CROSSING_BASE_URL =
+  "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline";
+
+
 function round(num: number, decimals: number): number {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
@@ -17,11 +22,9 @@ Deno.serve(async (req) => {
   console.log("weather-webhook/index.ts echo POST:", payload);
   const id = payload.record.id;
   const date = payload.record.date;
-  const user_id = payload.record.user_id;
-  const feedback = payload.record.feedback;
   const latitude = payload.record.latitude;
   const longitude = payload.record.longitude;
-  const weather_id = payload.record.weather_id;
+  let weather_id = payload.record.weather_id;
   console.log("weather-webhook/index.ts webhook triggered for log:", id, "on", date,  "at", latitude, longitude, "with weather:", weather_id);
 
   if (date && latitude && longitude){
@@ -39,7 +42,7 @@ Deno.serve(async (req) => {
     const roundedLon = round(longitude, 2);
     const { data: existing, error: fetchError } = await supabase
     .from("weather")
-    .select("weather_data")
+    .select("*")
     .eq("latitude", roundedLat)
     .eq("longitude", roundedLon)
     .eq("date", date)
@@ -47,9 +50,38 @@ Deno.serve(async (req) => {
 
     if (existing) {
       console.log("weather-webhook/index.ts weather already exists for this log:", existing);
+      weather_id = existing.id;
     } else {
       console.log("weather-webhook/index.ts weather does not exist for this log");
+      //create weather record
+      const weatherUrl = `${VISUAL_CROSSING_BASE_URL}/${roundedLat},${roundedLon}/${date}?unitGroup=us&key=${VISUAL_CROSSING_API_KEY}&contentType=json&include=days`;
+      const response = await fetch(weatherUrl);
+      const weatherData = await response.json();
+      console.log("weather-webhook/index.ts weather data:", weatherData);
+      //insert weather record
+             const { data: newWeather, error: insertError } = await supabase
+       .from("weather")
+       .insert({ latitude: roundedLat, longitude: roundedLon, date: date, weather_data: weatherData })
+       .select();
+      if (insertError) {
+        console.error("weather-webhook/index.ts error inserting weather record:", insertError);
+      } else {
+        console.log("weather-webhook/index.ts weather record inserted:", newWeather);
+        weather_id = newWeather.id;
+      }
     }
+    //update log with weather_id
+    const { data: updated, error: updateError } = await supabase
+    .from("log")
+    .update({ weather_id: weather_id })
+    .eq("id", id);
+    if (updateError) {
+      console.error("weather-webhook/index.ts error updating log:", updateError);
+    } else {
+      console.log("weather-webhook/index.ts log updated with weather_id:", weather_id);
+    }
+  } else {
+    console.error("weather-webhook/index.ts missing required parameters:", { date, latitude, longitude });
   }
 
 
