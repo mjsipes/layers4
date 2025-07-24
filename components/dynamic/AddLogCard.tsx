@@ -68,22 +68,22 @@ const AddLogCard = () => {
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
-      <div className="mb-6 ">
+      <div className="mb-4">
         <h3 className="text-2xl font-semibold text-blue-600 leading-tight ">
           Add Log
         </h3>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col">
           {/* date input */}
-          <div className="grid gap-2">
+          <div className="grid gap-2 mb-4 ">
             <Label htmlFor="log-date">Date</Label>
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   id="log-date"
-                  className="w-full justify-between font-normal bg-background shadow-none"
+                  className="w-full justify-between font-normal bg-background shadow-none border-none"
                 >
                   {date ? date.toLocaleDateString() : "Select date"}
                   <ChevronDownIcon />
@@ -106,7 +106,7 @@ const AddLogCard = () => {
             </Popover>
           </div>
           {/* feedback and comfort */}
-          <div className="grid gap-2">
+          <div className="grid gap-2 mb-4 ">
             {/* feedback */}
             <Label htmlFor="log-feedback">Feedback</Label>
             <Input
@@ -119,18 +119,19 @@ const AddLogCard = () => {
             />
           </div>
           {/* layer multi-select */}
-          <div className="grid ">
+          <div className="grid mb-2">
             <Label>Link Layers</Label>
             <MultiSelector
               values={selectedLayers}
               onValuesChange={setSelectedLayers}
               loop={false}
+              className="text-sm p-1"
             >
-              <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background">
+              <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
                 {selectedLayers.map((id) => {
                   const label = layers.find((l) => l.id === id)?.name || id;
                   return (
-                    <span key={id} className="inline-flex items-center px-2 py-1 rounded-xl bg-secondary text-xs mr-1 mb-1">
+                    <span key={id} className="inline-flex items-center px-2 py-1 rounded-xl bg-secondary text-xs">
                       {label}
                       <button
                         type="button"
@@ -157,7 +158,7 @@ const AddLogCard = () => {
             </MultiSelector>
           </div>
           {/* comfort */}
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label>Comfort: {comfortLevel}/10</Label>
             <Slider
               value={[comfortLevel]}
@@ -167,7 +168,7 @@ const AddLogCard = () => {
               step={1}
               className="w-full"
             />
-          </div>
+          </div> */}
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Saving..." : "Add Log"}
           </Button>

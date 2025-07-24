@@ -37,12 +37,12 @@ const AddLayerCard = () => {
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h3 className="text-2xl font-semibold text-blue-600 leading-tight">Add Layer</h3>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <div className="grid gap-2">
             <Label htmlFor="layer-name">Layer Name</Label>
             <Input 
@@ -64,7 +64,7 @@ const AddLayerCard = () => {
               onChange={e => setDescription(e.target.value)}
             />
           </div>
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label>Warmth: {warmth}/10</Label>
             <Slider
               value={[warmth]}
@@ -74,7 +74,7 @@ const AddLayerCard = () => {
               step={1}
               className="w-full"
             />
-          </div>
+          </div> */}
           <Button 
             type="submit" 
             disabled={isLoading}
