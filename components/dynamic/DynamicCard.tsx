@@ -8,6 +8,7 @@ import { useGlobalStore } from "@/stores/global_store";
 import { useLayerStore } from "@/stores/layers_store";
 import { useLogStore } from "@/stores/logs_store";
 import AddLogCard from "@/components/dynamic/AddLogCard";
+import AddLayerCard from "@/components/dynamic/AddLayerCard";
 
 const DynamicCard = () => {
   const { selectedType, setSelectedItem, lat, lon, address, date } = useGlobalStore();
@@ -34,9 +35,8 @@ const DynamicCard = () => {
 
   const renderActiveCard = () => {
     switch (selectedType) {
-      // Remove addlayer case
-      // case "addlayer":
-      //   return <AddLayerCard />;
+      case "addlayer":
+        return <AddLayerCard />;
       case "addlog":
         return <AddLogCard />;
       case "selectlayer":
@@ -76,8 +76,16 @@ const DynamicCard = () => {
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
+          onClick={() => setSelectedItem(null, "addlayer")}
+        >
+          <Plus size={14} className="mr-1" />
+          Layer
+        </button>
+        <button 
+          className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
           onClick={handleAddLayer}
         >
+          <Plus size={14} className="mr-1" />
           <Plus size={14} className="mr-1" />
           Layer
         </button>
