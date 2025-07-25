@@ -165,9 +165,9 @@ const Logs = ({ viewMode }: LogsProps) => {
                     <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-blue-600">
                       {Math.round(currentWeather.temp)}°
                     </span>
-                    {log.city && (
+                    {log.address && (
                       <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
-                        {log.city}
+                        {log.address}
                       </span>
                     )}
                     {/* {currentWeather.tempmin !== undefined && (

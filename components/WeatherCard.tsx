@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
-import { useGlobalSubscription, useGeolocation, useWeather, useCity } from "@/hooks/useGlobalSubscription";
+import { useGlobalSubscription, useGeolocation, useWeather, useAddress } from "@/hooks/useGlobalSubscription";
 
 const WeatherCard = () => {
   useGeolocation();
@@ -11,7 +11,7 @@ const WeatherCard = () => {
   useLayersSubscription();
   useLogsSubscription();
   useGlobalSubscription();
-  useCity();
+  useAddress();
 
   const date = useGlobalStore((state) => state.date);
   const address = useGlobalStore((state) => state.address);

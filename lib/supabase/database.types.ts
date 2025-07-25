@@ -50,7 +50,6 @@ export type Database = {
       log: {
         Row: {
           address: string | null
-          city: string | null
           comfort_level: number | null
           created_at: string
           date: string | null
@@ -63,7 +62,6 @@ export type Database = {
         }
         Insert: {
           address?: string | null
-          city?: string | null
           comfort_level?: number | null
           created_at?: string
           date?: string | null
@@ -76,7 +74,6 @@ export type Database = {
         }
         Update: {
           address?: string | null
-          city?: string | null
           comfort_level?: number | null
           created_at?: string
           date?: string | null

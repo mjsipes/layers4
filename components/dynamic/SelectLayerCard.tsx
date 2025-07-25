@@ -23,7 +23,7 @@ const SelectLayerCard = () => {
   }, [layer?.description, layer?.id]);
 
   if (!layer) {
-    return null;
+    return "null layer right now";
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +60,7 @@ const SelectLayerCard = () => {
           value={name}
           onChange={handleNameChange}
           onBlur={handleNameBlur}
+          placeholder="layer name"
         />
       </div>
 
@@ -70,6 +71,7 @@ const SelectLayerCard = () => {
           onChange={handleDescChange}
           onBlur={handleDescBlur}
           rows={3}
+          placeholder="layer description"
         />
       </div>
 

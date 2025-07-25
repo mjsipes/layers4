@@ -28,8 +28,7 @@ type LogState = {
     lat?: number;
     lon?: number;
     address?: string;
-    city?: string;
-  }) => Promise<void>;
+  }) => Promise<string>;
   deleteLog: (logId: string) => Promise<void>;
   updateLog: (logId: string, updates: Partial<Omit<Log, 'id'>>) => Promise<void>;
   linkLayerToLog: (logId: string, layerId: string) => Promise<void>;
@@ -68,7 +67,6 @@ export const useLogStore = create<LogState>()(
             latitude: logData.lat ?? null,
             longitude: logData.lon ?? null,
             address: logData.address ?? null,
-            city: logData.city ?? null,
           };
           console.log("logs_store/addLog: Inserting:", insertData);
 
@@ -87,6 +85,7 @@ export const useLogStore = create<LogState>()(
             if (joinError) throw joinError;
             console.log("logs_store/addLog: log_layer join rows inserted");
           }
+          return insertedLog.id;
         } catch (err) {
           console.error("logs_store/addLog: Failed to add log:", err);
           throw err;

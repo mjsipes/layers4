@@ -61,7 +61,7 @@ export function useWeather() {
   }, [lat, lon, date, setWeatherData]);
 }
 
-export function useCity() {
+export function useAddress() {
   const lat = useGlobalStore((state) => state.lat);
   const lon = useGlobalStore((state) => state.lon);
   const setAddress = useGlobalStore((state) => state.setAddress);
@@ -77,10 +77,10 @@ export function useCity() {
         const data = await res.json();
         const address = data.results?.[0]?.formatted_address || null;
         setAddress(address);
-        console.log("useCity: Resolved address:", address);
+        console.log("useAddress: Resolved address:", address);
       } catch (err) {
         setAddress(null);
-        console.error("useCity: Error fetching address:", err);
+        console.error("useAddress: Error fetching address:", err);
       }
     };
 

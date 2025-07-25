@@ -19,7 +19,7 @@ type LayerState = {
     name: string;
     description?: string;
     warmth?: number;
-  }) => Promise<void>;
+  }) => Promise<string>;
   deleteLayer: (layerId: string) => Promise<void>;
   updateLayer?: (layerId: string, updates: Partial<Omit<Layer, 'id'>>) => Promise<void>;
 };
@@ -62,6 +62,9 @@ export const useLayerStore = create<LayerState>()(
 
           if (insertErr) throw insertErr;
           console.log("layers-store/addLayer: Layer inserted:", data);
+          
+          // Return the created layer's ID
+          return data.id;
         } catch (err) {
           console.error("layers-store/addLayer: Failed to add layer:", err);
           throw err;

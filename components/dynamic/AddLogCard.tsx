@@ -145,7 +145,6 @@ const AddLogCard = () => {
         lat: lat ?? undefined,
         lon: lon ?? undefined,
         address: address || undefined,
-        city: city || undefined,
       });
 
       setFeedback("");
