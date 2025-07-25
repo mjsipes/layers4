@@ -2,13 +2,13 @@
 import React from "react";
 import { Plus, Star } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import SelectLayerCard from "@/components/dynamic/SelectLayerCard";
-import SelectLogCard from "@/components/dynamic/SelectLogCard";
+import SelectLayerCard from "@/components/Layer";
+import SelectLogCard from "@/components/Log";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLayerStore } from "@/stores/layers_store";
 import { useLogStore } from "@/stores/logs_store";
-import AddLogCard from "@/components/dynamic/AddLogCard";
-import AddLayerCard from "@/components/dynamic/AddLayerCard";
+import AddLogCard from "@/components/AddLog";
+import AddLayerCard from "@/components/AddLayer";
 
 const DynamicCard = () => {
   const { selectedType, setSelectedItem, lat, lon, address, date } = useGlobalStore();

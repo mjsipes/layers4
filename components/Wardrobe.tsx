@@ -2,10 +2,10 @@
 import React from "react";
 import { Grid, List } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Layers from "@/components/wardrobe/Layers";
+import Layers from "@/components/Layers";
 // import Outfits from "@/components/wardrobe/Outfits";
 
-import Logs from "@/components/wardrobe/Logs";
+import Logs from "@/components/Logs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGlobalStore } from "@/stores/global_store";
 

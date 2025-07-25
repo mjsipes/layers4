@@ -7,9 +7,9 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import WeatherCard from "@/components/WeatherCard";
-import WardobeCard from "@/components/wardrobe/WardobeCard";
+import WardobeCard from "@/components/Wardrobe";
 import Chat from "@/components/Chat";
-import DynamicCard from "@/components/dynamic/DynamicCard";
+import DynamicCard from "@/components/DynamicCard";
 import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardPage() {
