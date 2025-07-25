@@ -203,7 +203,7 @@ const AddLogCard = () => {
         name="address"
         ref={inputRef}
         placeholder="start typing address..."
-        className="bg-background shadow-none border-none w-full mb-4"
+        className="bg-background shadow-none border-none w-full mb-2"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
         onKeyDownCapture={handleAddressKeyDown}
