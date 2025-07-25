@@ -6,10 +6,10 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import WeatherCard from "@/components/WeatherCard";
+import WeatherCard from "@/components/Weather";
 import WardobeCard from "@/components/Wardrobe";
 import Chat from "@/components/Chat";
-import DynamicCard from "@/components/DynamicCard";
+import DynamicCard from "@/components/Dynamic";
 import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardPage() {

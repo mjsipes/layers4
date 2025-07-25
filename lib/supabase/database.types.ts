@@ -130,30 +130,6 @@ export type Database = {
           },
         ]
       }
-      outfit: {
-        Row: {
-          created_at: string
-          id: string
-          name: string | null
-          total_warmth: number | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name?: string | null
-          total_warmth?: number | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string | null
-          total_warmth?: number | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null

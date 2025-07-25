@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import { useLogStore } from '@/stores/logs_store'
 import { useGlobalStore } from "@/stores/global_store";
 import type { Log } from '@/stores/logs_store'
 
+
 interface LogsProps {
   viewMode: 'table' | 'grid';
 }
@@ -22,6 +23,10 @@ const Logs = ({ viewMode }: LogsProps) => {
   const { logs } = useLogStore();
   const { setSelectedItem } = useGlobalStore();
   const { selectedItemId, selectedType } = useGlobalStore();
+
+  useEffect(() => {
+    console.log("Logs.tsx/selectedItemId:", selectedItemId);
+  }, [selectedItemId]);
 
   const handleLogClick = (log: Log) => {
     console.log("Logs.tsx/handleLogClick:", log.id);

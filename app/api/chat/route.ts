@@ -1,10 +1,10 @@
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
-import { getWeatherTool } from "./tools/get-weather";
-import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./tools/layers";
-import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool } from "./tools/logs";
-import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./tools/global";
-import { getDateTool } from "./tools/get-date";
+import { getWeatherTool } from "./get-weather-tool";
+import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./layer-tools";
+import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool } from "./log-tools";
+import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./global-tools";
+import { getDateTool } from "./get-date-tool";
 
 export const maxDuration = 30;
 
