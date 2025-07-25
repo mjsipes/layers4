@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -21,7 +20,6 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
-import { Textarea } from "@/components/ui/textarea";
 
 // TypeScript: Extend Window interface for Google Maps
 declare global {
@@ -41,7 +39,6 @@ const AddLogCard = () => {
   const [feedback, setFeedback] = useState("");
   const addressFromStore = useGlobalStore((state) => state.address);
   const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
 
   const latFromStore = useGlobalStore((state) => state.lat);
   const lonFromStore = useGlobalStore((state) => state.lon);
@@ -56,15 +53,7 @@ const AddLogCard = () => {
     setAddress(addressFromStore || "");
   }, [latFromStore, lonFromStore, addressFromStore]);
 
-  // Extract city from Google Maps place object
-  function extractCityFromPlace(place: unknown) {
-    if (!place || !(place as { address_components?: unknown[] }).address_components) return "";
-    const addressComponents = (place as { address_components?: unknown[] }).address_components;
-    const cityComponent = addressComponents?.find((c) =>
-      (c as { types?: string[] }).types?.includes("locality")
-    );
-    return (cityComponent as { long_name?: string })?.long_name || "";
-  }
+
 
   // Google Places Autocomplete setup
   useEffect(() => {
@@ -90,7 +79,6 @@ const AddLogCard = () => {
           setLat(newLat);
           setLon(newLon);
           setAddress(placeObj.formatted_address || "");
-          setCity(extractCityFromPlace(placeObj));
         });
 
         if (interval) clearInterval(interval);
@@ -153,7 +141,6 @@ const AddLogCard = () => {
       setDate(new Date());
       setSelectedLayers([]);
       setAddress("");
-      setCity("");
     } catch (error: unknown) {
       console.error("Error saving log:", error);
     } finally {

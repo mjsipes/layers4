@@ -8,14 +8,14 @@ const AddLayerCard = () => {
   const { addLayer } = useLayerStore();
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [warmth, setWarmth] = useState(5);
+  // const [warmth, setWarmth] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await addLayer({ name, description: desc, warmth });
+      await addLayer({ name, description: desc });
       // setName("");
       // setDesc("");
       // setWarmth(5);
@@ -31,7 +31,7 @@ const AddLayerCard = () => {
     >
       <div className="absolute top-4 right-4">
         <Badge variant="default" className="text-sm">
-          {warmth}
+          {/* {warmth} */}
         </Badge>
       </div>
       <div className="mb-3 pr-12">

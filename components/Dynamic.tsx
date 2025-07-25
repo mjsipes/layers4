@@ -5,33 +5,33 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import SelectLayerCard from "@/components/Layer";
 import SelectLogCard from "@/components/Log";
 import { useGlobalStore } from "@/stores/global_store";
-import { useLayerStore } from "@/stores/layers_store";
-import { useLogStore } from "@/stores/logs_store";
+// import { useLayerStore } from "@/stores/layers_store";
+// import { useLogStore } from "@/stores/logs_store";
 import AddLogCard from "@/components/AddLog";
 import AddLayerCard from "@/components/AddLayer";
 
 const DynamicCard = () => {
-  const { selectedType, setSelectedItem, lat, lon, address, date } = useGlobalStore();
-  const { addLayer } = useLayerStore();
-  const { addLog } = useLogStore();
+  const { selectedType, setSelectedItem } = useGlobalStore();
+      // const { addLayer } = useLayerStore();
+      // const { addLog } = useLogStore();
 
-  const handleAddLayer = async () => {
-    setSelectedItem(null, "selectlayer");
-    const name = "";
-    const description = "";
-    const warmth = 5;
-    addLayer({ name, description, warmth });
-  };
+  // const handleAddLayer = async () => {
+  //   setSelectedItem(null, "selectlayer");
+  //   const name = "";
+  //   const description = "";
+  //   const warmth = 5;
+  //   addLayer({ name, description, warmth });
+  // };
 
-  const handleAddLog = async () => {
-    setSelectedItem(null, "addlog");
-    addLog({
-      lat: lat ?? undefined,
-      lon: lon ?? undefined,
-      address: address ?? undefined,
-      date: date ? date.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
-    });
-  };
+  // const handleAddLog = async () => {
+  //   setSelectedItem(null, "addlog");
+  //   addLog({
+  //     lat: lat ?? undefined,
+  //     lon: lon ?? undefined,
+  //     address: address ?? undefined,
+  //     date: date ? date.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+  //   });
+  // };
 
   const renderActiveCard = () => {
     switch (selectedType) {
