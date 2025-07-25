@@ -61,6 +61,15 @@ export function useLogsSubscription() {
               setSelectedItem(newLogId, "selectlog");
             }
           }
+          else if (payload?.eventType === "DELETE") {
+            console.log("useLogsSubscription: log table deleted");
+            const logs = useLogStore.getState().logs;
+            if (logs.length > 0) {
+              setSelectedItem(logs[0].id, "selectlog");
+            } else {
+              setSelectedItem(null, "selectlog");
+            }
+          }
         }
       )
       .subscribe();

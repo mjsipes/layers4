@@ -42,6 +42,13 @@ export function useLayersSubscription() {
             if (newLayerId) {
               setSelectedItem(newLayerId, "selectlayer");
             }
+          } else if (payload?.eventType === "DELETE") {
+            const layers = useLayerStore.getState().layers;
+            if (layers.length > 0) {
+              setSelectedItem(layers[layers.length - 1].id, "selectlayer");
+            } else {
+              setSelectedItem(null, "selectlayer");
+            }
           }
         }
       )

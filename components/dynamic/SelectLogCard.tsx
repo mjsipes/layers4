@@ -282,7 +282,7 @@ const SelectLogCard = () => {
       />
 
       {/* Weather Information Card */}
-      {weatherDay ? (
+      {weatherDay && (
         <div className="mb-2">
           <div className="p-3 rounded-lg bg-background border-border">
             <div className="space-y-3">
@@ -335,32 +335,7 @@ const SelectLogCard = () => {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="mb-2">
-          <div className="p-3 rounded-lg bg-background border-border animate-pulse">
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col justify-start">
-                  <div className="flex items-start gap-1">
-                    <span className="h-10 w-16 bg-muted rounded" />
-                    <span className="h-6 w-4 bg-muted rounded" />
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <span className="h-4 w-10 bg-muted rounded" />
-                    <span className="h-4 w-10 bg-muted rounded" />
-                  </div>
-                </div>
-                <div className="flex flex-col justify-around gap-2">
-                  <span className="h-4 w-20 bg-muted rounded" />
-                  <span className="h-4 w-20 bg-muted rounded" />
-                  <span className="h-4 w-20 bg-muted rounded" />
-                </div>
-              </div>
-              <div className="h-6 w-full bg-muted rounded" />
-            </div>
-          </div>
-        </div>
-      )}
+      ) }
 
       {/* Layers Card */}
       <div className="mt-2 mb-2">
