@@ -7,39 +7,29 @@ import SelectLogCard from "@/components/dynamic/SelectLogCard";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLayerStore } from "@/stores/layers_store";
 import { useLogStore } from "@/stores/logs_store";
+import AddLogCard from "@/components/dynamic/AddLogCard";
 
 const DynamicCard = () => {
-  const { selectedType, setSelectedItem } = useGlobalStore();
+  const { selectedType, setSelectedItem, lat, lon, address, date } = useGlobalStore();
   const { addLayer } = useLayerStore();
   const { addLog } = useLogStore();
 
   const handleAddLayer = async () => {
-    // Immediately show the editable interface (optimistic UI)
     setSelectedItem(null, "selectlayer");
-    
-    // Create a new empty layer (with minimal defaults)
     const name = "";
     const description = "";
     const warmth = 5;
-    try {
-      // Insert the new layer and get its ID
-      const newLayerId = await addLayer({ name, description, warmth });
-      // Set the new layer as selected
-      setSelectedItem(newLayerId, "selectlayer");
-    } catch (e) {
-      // Optionally handle error
-      console.error("Failed to add layer", e);
-    }
+    addLayer({ name, description, warmth });
   };
 
   const handleAddLog = async () => {
-    // Create a new log with minimal/default values
-    try {
-      const newLogId = await addLog({});
-      setSelectedItem(newLogId, "selectlog");
-    } catch (e) {
-      console.error("Failed to add log", e);
-    }
+    setSelectedItem(null, "addlog");
+    addLog({
+      lat: lat ?? undefined,
+      lon: lon ?? undefined,
+      address: address ?? undefined,
+      date: date ? date.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+    });
   };
 
   const renderActiveCard = () => {
@@ -47,7 +37,8 @@ const DynamicCard = () => {
       // Remove addlayer case
       // case "addlayer":
       //   return <AddLayerCard />;
-      // Remove addlog case: no longer show AddLogCard
+      case "addlog":
+        return <AddLogCard />;
       case "selectlayer":
         return <SelectLayerCard />;
       // case "selectoutfit":
@@ -78,7 +69,7 @@ const DynamicCard = () => {
         </button>
         <button 
           className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={handleAddLog}
+          onClick={() => setSelectedItem(null, "addlog")}
         >
           <Plus size={14} className="mr-1" />
           Log

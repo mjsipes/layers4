@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useLayerStore } from "@/stores/layers_store";
 import { createClient } from "@/lib/supabase/client";
+import { useGlobalStore } from "@/stores/global_store";
 
 const supabase = createClient();
 
 export function useLayersSubscription() {
   const setLayers = useLayerStore((state) => state.setLayers);
+  const setSelectedItem = useGlobalStore((state) => state.setSelectedItem);
 
   // Fetch all layers and update the store
   const fetchLayers = async () => {
@@ -32,6 +34,15 @@ export function useLayersSubscription() {
         async (payload) => {
           console.log("useLayersSubscription: layer table changed", payload);
           await fetchLayers();
+          if (
+            payload?.eventType === "INSERT" ||
+            payload?.eventType === "UPDATE"
+          ) {
+            const newLayerId = payload?.new?.id;
+            if (newLayerId) {
+              setSelectedItem(newLayerId, "selectlayer");
+            }
+          }
         }
       )
       .subscribe();

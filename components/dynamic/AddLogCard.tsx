@@ -21,6 +21,7 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
+import { Textarea } from "@/components/ui/textarea";
 
 // TypeScript: Extend Window interface for Google Maps
 declare global {
@@ -160,117 +161,107 @@ const AddLogCard = () => {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
-      <div className="mb-4">
-        <h3 className="text-2xl font-semibold text-blue-600 leading-tight ">
-          Add Log
-        </h3>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col">
-          {/* Autocomplete Address Input */}
-          <div className="grid gap-2 mb-4">
-            <Label htmlFor="log-address">Location</Label>
-            <Input
-              id="log-address"
-              name="address"
-              ref={inputRef}
-              placeholder="Start typing address..."
-              className="bg-background shadow-none border-none"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              onKeyDownCapture={handleAddressKeyDown}
-            />
-          </div>
-          {/* Date Picker */}
-          <div className="grid gap-2 mb-4">
-            <Label htmlFor="log-date">Date</Label>
-            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="log-date"
-                  className="w-full justify-between font-normal bg-background shadow-none border-none hover:bg-background"
-                >
-                  {date ? date.toLocaleDateString() : "Select date"}
-                  <ChevronDownIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  captionLayout="dropdown"
-                  onSelect={(selectedDate) => {
-                    setDate(selectedDate);
-                    setDatePickerOpen(false);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-
-          {/* Feedback */}
-          <div className="grid gap-2 mb-4">
-            <Label htmlFor="log-feedback">Feedback</Label>
-            <Input
-              id="log-feedback"
-              name="feedback"
-              placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
-              className="bg-background shadow-none border-none"
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-            />
-          </div>
-
-          {/* Layer Multi-Select */}
-          <div className="grid mb-2">
-            <Label>Link Layers</Label>
-            <MultiSelector
-              values={selectedLayers}
-              onValuesChange={setSelectedLayers}
-              loop={false}
-              className="text-sm"
+    <form
+      className="relative p-4 border rounded-lg bg-secondary border-secondary m-4"
+      onSubmit={handleSubmit}
+    >
+      {/* Date Picker */}
+      <div>
+        <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              id="log-date"
+              className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-blue-600 leading-tight mb-4"
             >
-              <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
-                {selectedLayers.map((id) => {
-                  const label = layers.find((l) => l.id === id)?.name || id;
-                  return (
-                    <span key={id} className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs">
-                      {label}
-                      <button
-                        type="button"
-                        className="ml-1 text-muted-foreground hover:text-destructive"
-                        onClick={() => setSelectedLayers(selectedLayers.filter((v) => v !== id))}
-                        aria-label={`Remove ${label}`}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  );
-                })}
-                <MultiSelectorInput />
-              </div>
-              <MultiSelectorContent>
-                <MultiSelectorList>
-                  {layers.map((layer) => (
-                    <MultiSelectorItem key={layer.id} value={layer.id}>
-                      {layer.name || "Unnamed Layer"}
-                    </MultiSelectorItem>
-                  ))}
-                </MultiSelectorList>
-              </MultiSelectorContent>
-            </MultiSelector>
-          </div>
-
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? "Saving..." : "Add Log"}
-          </Button>
+              {date ? formatDate(date.toISOString().slice(0, 10)) : "Select date"}
+              <ChevronDownIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              captionLayout="dropdown"
+              onSelect={(selectedDate) => {
+                setDate(selectedDate);
+                setDatePickerOpen(false);
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      {/* Location Picker */}
+      <Input
+        id="log-address"
+        name="address"
+        ref={inputRef}
+        placeholder="start typing address..."
+        className="bg-background shadow-none border-none w-full mb-4"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        onKeyDownCapture={handleAddressKeyDown}
+      />
+      {/* Layer Multi-Select */}
+      <MultiSelector
+        values={selectedLayers}
+        onValuesChange={setSelectedLayers}
+        loop={false}
+        className="text-sm mb-2"
+      >
+        <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
+          {selectedLayers.map((id) => {
+            const label = layers.find((l) => l.id === id)?.name || id;
+            return (
+              <span key={id} className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs">
+                {label}
+                <button
+                  type="button"
+                  className="ml-1 text-muted-foreground hover:text-destructive"
+                  onClick={() => setSelectedLayers(selectedLayers.filter((v) => v !== id))}
+                  aria-label={`Remove ${label}`}
+                >
+                  ×
+                </button>
+              </span>
+            );
+          })}
+          <MultiSelectorInput
+          //  placeholder="select layers..."
+           />
         </div>
-      </form>
-    </div>
+        <MultiSelectorContent>
+          <MultiSelectorList>
+            {layers.map((layer) => (
+              <MultiSelectorItem key={layer.id} value={layer.id}>
+                {layer.name || "Unnamed Layer"}
+              </MultiSelectorItem>
+            ))}
+          </MultiSelectorList>
+        </MultiSelectorContent>
+      </MultiSelector>
+      {/* Feedback */}
+      <textarea
+        id="log-feedback"
+        name="feedback"
+        placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
+        className="w-full border rounded-md p-2 text-base bg-background border-none mb-4"
+        value={feedback}
+        onChange={(e) => setFeedback(e.target.value)}
+        rows={3}
+        disabled={isLoading}
+      />
+      {/* Submit Button */}
+      <Button type="submit" disabled={isLoading} className="w-full mt-2">
+        {isLoading ? "Saving..." : "Add Log"}
+      </Button>
+    </form>
   );
 };
 

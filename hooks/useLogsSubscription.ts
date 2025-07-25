@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useLogStore } from "@/stores/logs_store";
 import { createClient } from "@/lib/supabase/client";
+import { useGlobalStore } from "@/stores/global_store";
 
 const supabase = createClient();
 
 export function useLogsSubscription() {
   const setLogs = useLogStore((state) => state.setLogs);
+  const setSelectedItem = useGlobalStore((state) => state.setSelectedItem);
 
   // Fetch all logs and update the store
   const fetchLogs = async () => {
@@ -50,6 +52,15 @@ export function useLogsSubscription() {
         async (payload) => {
           console.log("useLogsSubscription: log table changed", payload);
           await fetchLogs();
+          if (
+            payload?.eventType === "INSERT" ||
+            payload?.eventType === "UPDATE"
+          ) {
+            const newLogId = payload?.new?.id;
+            if (newLogId) {
+              setSelectedItem(newLogId, "selectlog");
+            }
+          }
         }
       )
       .subscribe();
@@ -62,6 +73,15 @@ export function useLogsSubscription() {
         async (payload) => {
           console.log("useLogsSubscription: log_layer table changed", payload);
           await fetchLogs();
+          // if (
+          //   payload?.eventType === "INSERT" ||
+          //   payload?.eventType === "UPDATE"
+          // ) {
+          //   const newLogId = payload?.new?.log_id;
+          //   if (newLogId) {
+          //     setSelectedItem(newLogId, "selectlog");
+          //   }
+          // }
         }
       )
       .subscribe();
