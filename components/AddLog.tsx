@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -12,6 +11,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { useLogStore } from "@/stores/logs_store";
 import { useLayerStore } from "@/stores/layers_store";
 import { useGlobalStore } from "@/stores/global_store";
+import Autocomplete from "react-google-autocomplete";
 
 import {
   MultiSelector,
@@ -20,13 +20,6 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
-
-// TypeScript: Extend Window interface for Google Maps
-declare global {
-  interface Window {
-    google: unknown;
-  }
-}
 
 const AddLogCard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +30,7 @@ const AddLogCard = () => {
   const { layers } = useLayerStore();
   const [selectedLayers, setSelectedLayers] = useState<string[]>([]);
   const [feedback, setFeedback] = useState("");
+  
   const addressFromStore = useGlobalStore((state) => state.address);
   const [address, setAddress] = useState("");
 
@@ -45,79 +39,11 @@ const AddLogCard = () => {
   const [lat, setLat] = useState<number | null>(latFromStore);
   const [lon, setLon] = useState<number | null>(lonFromStore);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     setLat(latFromStore);
     setLon(lonFromStore);
     setAddress(addressFromStore || "");
   }, [latFromStore, lonFromStore, addressFromStore]);
-
-
-
-  // Google Places Autocomplete setup
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-
-    function initAutocomplete() {
-      if (window.google && inputRef.current) {
-        const autocomplete = new ((window.google as { maps?: { places?: { Autocomplete?: unknown } } }).maps?.places?.Autocomplete as (new (input: HTMLInputElement, opts: object) => unknown) ?? function() {})(inputRef.current, {
-          types: ["geocode"],
-        });
-
-        (autocomplete as unknown as { addListener: (event: string, handler: () => void) => void; getPlace?: () => unknown }).addListener("place_changed", () => {
-          const place = (autocomplete as unknown as { getPlace: () => unknown }).getPlace();
-          const placeObj = place as {
-            geometry?: { location?: { lat: () => number; lng: () => number } };
-            formatted_address?: string;
-          };
-          if (!placeObj.geometry || !placeObj.geometry.location) return;
-
-          const newLat = placeObj.geometry.location.lat();
-          const newLon = placeObj.geometry.location.lng();
-
-          setLat(newLat);
-          setLon(newLon);
-          setAddress(placeObj.formatted_address || "");
-        });
-
-        if (interval) clearInterval(interval);
-      }
-    }
-
-    if (!window.google) {
-      interval = setInterval(() => {
-        if (window.google) {
-          initAutocomplete();
-        }
-      }, 100);
-    } else {
-      initAutocomplete();
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [inputRef]);
-
-  // More robust handler to prevent form submission/tab when Google dropdown is open
-  const handleAddressKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const pacContainers = document.querySelectorAll('.pac-container');
-    let isDropdownOpen = false;
-    pacContainers.forEach((container) => {
-      if (
-        container instanceof HTMLElement &&
-        container.offsetParent !== null &&
-        container.childElementCount > 0
-      ) {
-        isDropdownOpen = true;
-      }
-    });
-    if (isDropdownOpen && (e.key === 'Enter' || e.key === 'Tab')) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -184,17 +110,25 @@ const AddLogCard = () => {
           </PopoverContent>
         </Popover>
       </div>
-      {/* Location Picker */}
-      <Input
-        id="log-address"
-        name="address"
-        ref={inputRef}
+      
+      {/* Location Picker - Simplified! */}
+      <Autocomplete
+        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
         placeholder="start typing address..."
-        className="bg-background shadow-none border-none w-full mb-2"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        onKeyDownCapture={handleAddressKeyDown}
+        className="bg-background shadow-none border-none w-full mb-2 p-2 rounded-md ring-1 ring-muted"
+        defaultValue={address}
+        onPlaceSelected={(place) => {
+          if (place.geometry) {
+            setLat(place.geometry.location.lat());
+            setLon(place.geometry.location.lng());
+            setAddress(place.formatted_address || "");
+          }
+        }}
+        options={{
+          types: ["geocode"],
+        }}
       />
+
       {/* Layer Multi-Select */}
       <MultiSelector
         values={selectedLayers}
@@ -233,6 +167,7 @@ const AddLogCard = () => {
           </MultiSelectorList>
         </MultiSelectorContent>
       </MultiSelector>
+      
       {/* Feedback */}
       <textarea
         id="log-feedback"
@@ -244,6 +179,7 @@ const AddLogCard = () => {
         rows={3}
         disabled={isLoading}
       />
+      
       {/* Submit Button */}
       <Button type="submit" disabled={isLoading} className="w-full mt-2">
         {isLoading ? "Saving..." : "Add Log"}

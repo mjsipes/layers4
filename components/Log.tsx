@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -13,6 +12,7 @@ import { Trash2 } from "lucide-react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLogStore } from "@/stores/logs_store";
 import { useLayerStore } from "@/stores/layers_store";
+import Autocomplete from "react-google-autocomplete";
 import {
   MultiSelector,
   MultiSelectorInput,
@@ -20,13 +20,6 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
-
-// TypeScript: Extend Window interface for Google Maps
-declare global {
-  interface Window {
-    google: unknown;
-  }
-}
 
 const SelectLogCard = () => {
   const { selectedItemId, address: globalAddress, lat: globalLat, lon: globalLon } = useGlobalStore();
@@ -41,7 +34,6 @@ const SelectLogCard = () => {
   const [address, setAddress] = React.useState("");
   const [lat, setLat] = React.useState<number | null>(null);
   const [lon, setLon] = React.useState<number | null>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const [saving, setSaving] = React.useState(false);
   
   const log = logs.find((l) => l.id === selectedItemId);
@@ -57,7 +49,6 @@ const SelectLogCard = () => {
       day: "numeric",
     });
   };
-
 
   React.useEffect(() => {
     if (log) {
@@ -75,86 +66,6 @@ const SelectLogCard = () => {
   React.useEffect(() => {
     setFeedback(log?.feedback || "");
   }, [log?.feedback, log?.id]);
-
-
-
-
-  // Google Places Autocomplete setup
-  React.useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-
-    function initAutocomplete() {
-      if (window.google && inputRef.current) {
-        const autocomplete = new (((
-          window.google as { maps?: { places?: { Autocomplete?: unknown } } }
-        ).maps?.places?.Autocomplete as new (
-          input: HTMLInputElement,
-          opts: object
-        ) => unknown) ?? function () {})(inputRef.current, {
-          types: ["geocode"],
-        });
-
-        (
-          autocomplete as unknown as {
-            addListener: (event: string, handler: () => void) => void;
-            getPlace?: () => unknown;
-          }
-        ).addListener("place_changed", () => {
-          const place = (
-            autocomplete as unknown as { getPlace: () => unknown }
-          ).getPlace();
-          const placeObj = place as {
-            geometry?: { location?: { lat: () => number; lng: () => number } };
-            formatted_address?: string;
-          };
-          if (!placeObj.geometry || !placeObj.geometry.location) return;
-
-          const newLat = placeObj.geometry.location.lat();
-          const newLon = placeObj.geometry.location.lng();
-
-          setLat(newLat);
-          setLon(newLon);
-          setAddress(placeObj.formatted_address || "");
-
-          // Immediately update the log with new address, lat, lon
-          if (log) {
-            console.log("SelectLogCard.initAutocomplete: ", placeObj.formatted_address, newLat, newLon);
-            updateLog(log.id, {
-              address: placeObj.formatted_address || "",
-              latitude: newLat,
-              longitude: newLon,
-            });
-          }
-        });
-
-        if (interval) clearInterval(interval);
-      }
-    }
-
-    if (!window.google) {
-      interval = setInterval(() => {
-        if (window.google) {
-          initAutocomplete();
-        }
-      }, 100);
-    } else {
-      initAutocomplete();
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [inputRef]);
-
-  // More robust handler to prevent form submission/tab when Google dropdown is open
-  const handleAddressKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === "Enter" || e.key === "Tab") && document.activeElement === e.currentTarget) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
-  
-
 
   // For multi-select
   const [selectedLayerIds, setSelectedLayerIds] = React.useState<string[]>(
@@ -210,8 +121,29 @@ const SelectLogCard = () => {
     }
   };
 
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
+  const handlePlaceSelected = async (place: any) => {
+    if (place.geometry) {
+      const newLat = place.geometry.location.lat();
+      const newLon = place.geometry.location.lng();
+      const newAddress = place.formatted_address || "";
+      
+      setLat(newLat);
+      setLon(newLon);
+      setAddress(newAddress);
+
+      // Immediately update the log with new address, lat, lon
+      console.log("SelectLogCard.handlePlaceSelected: ", newAddress, newLat, newLon);
+      setSaving(true);
+      try {
+        await updateLog(log.id, {
+          address: newAddress,
+          latitude: newLat,
+          longitude: newLon,
+        });
+      } finally {
+        setSaving(false);
+      }
+    }
   };
 
   const handleAddressBlur = async () => {
@@ -268,17 +200,17 @@ const SelectLogCard = () => {
         </Popover>
       </div>
 
-      {/* Location Picker */}
-      <Input
-        id="log-address"
-        name="address"
-        ref={inputRef}
+      {/* Location Picker - Simplified! */}
+      <Autocomplete
+        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
         placeholder="start typing address..."
-        className="bg-background shadow-none border-none w-full mb-4"
-        value={address}
-        onChange={handleAddressChange}
+        className="bg-background shadow-none border-none w-full mb-4 p-2 rounded-md ring-1 ring-muted"
+        defaultValue={address}
+        onPlaceSelected={handlePlaceSelected}
         onBlur={handleAddressBlur}
-        onKeyDownCapture={handleAddressKeyDown}
+        options={{
+          types: ["geocode"],
+        }}
       />
 
       {/* Weather Information Card */}

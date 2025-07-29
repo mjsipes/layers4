@@ -29,7 +29,7 @@ google lense/ image upload for app
 what should i wear today?
 i wore my uniqlo heat tech, my my orange pants, my patagonia shell, and i got hot by the time i finished the day.
 
-
+little things: blue border around chips in grid dissapeared. weather card is not perfectly set at fixed pixels. is google api key safe to expose through the browser?
 
 
 login with google:
