@@ -37,6 +37,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
     data,
@@ -46,9 +47,25 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       columnFilters,
+      globalFilter,
+    },
+    globalFilterFn: (row, columnId, filterValue) => {
+      const value = row.getValue(columnId);
+      const searchValue = filterValue.toLowerCase();
+      
+      if (typeof value === "string") {
+        return value.toLowerCase().includes(searchValue);
+      }
+      
+      if (typeof value === "number") {
+        return value.toString().includes(searchValue);
+      }
+      
+      return false;
     },
   });
 
@@ -56,11 +73,9 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter email..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
+          placeholder="Filter by email or amount..."
+          value={globalFilter}
+          onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
       </div>

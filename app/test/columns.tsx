@@ -78,6 +78,10 @@ export const columns: ColumnDef<Payment>[] = [
               </Button>
             )
           },
+        filterFn: (row, id, value) => {
+            const email = row.getValue(id) as string;
+            return email.toLowerCase().includes(value.toLowerCase());
+        },
     },
     {
         accessorKey: "amount",
@@ -90,6 +94,12 @@ export const columns: ColumnDef<Payment>[] = [
             }).format(amount);
             
             return <div className="text-right font-medium">{formatted}</div>;
+        },
+        filterFn: (row, id, value) => {
+            const amount = row.getValue(id) as number;
+            const filterValue = parseFloat(value);
+            if (isNaN(filterValue)) return true;
+            return amount.toString().includes(filterValue.toString());
         },
     },
 ];
