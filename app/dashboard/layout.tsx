@@ -1,5 +1,4 @@
 import { Navbar } from "@/components/ui/navbar";
-import Script from "next/script";
 
 export default function ProtectedLayout({
   children,
