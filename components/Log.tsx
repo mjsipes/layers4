@@ -269,6 +269,27 @@ const SelectLogCard = () => {
         </div>
       ) }
 
+      {/* Weather Recommendations Card */}
+      {log.recommendedLayers && log.recommendedLayers.length > 0 && (
+        <div className="mb-2">
+          <div className="p-3 rounded-lg bg-background border-border">
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-primary">Weather Recommendations</h3>
+              <div className="flex flex-wrap gap-1">
+                {log.recommendedLayers.map((layer) => (
+                  <span
+                    key={layer.id}
+                    className="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 text-blue-800 text-xs font-medium"
+                  >
+                    {layer.name || "Unnamed Layer"}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Layers Card */}
       <div className="mt-2 mb-2">
         <MultiSelector
