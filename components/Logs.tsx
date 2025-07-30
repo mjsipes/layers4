@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
+import { Input } from "@/components/ui/input"
 import { useLogStore } from '@/stores/logs_store'
 import { useGlobalStore } from "@/stores/global_store";
 import type { Log } from '@/stores/logs_store'
@@ -22,6 +23,8 @@ import {
   useReactTable,
   getSortedRowModel,
   SortingState,
+  ColumnFiltersState,
+  getFilteredRowModel,
 } from "@tanstack/react-table";
 
 interface LogsProps {
@@ -33,6 +36,8 @@ const Logs = ({ viewMode }: LogsProps) => {
   const { setSelectedItem } = useGlobalStore();
   const { selectedItemId, selectedType } = useGlobalStore();
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   useEffect(() => {
     console.log("Logs.tsx/selectedItemId:", selectedItemId);
@@ -69,6 +74,20 @@ const Logs = ({ viewMode }: LogsProps) => {
     if (!dateStr) return new Date(0);
     const [year, month, day] = dateStr.split('-');
     return new Date(Number(year), Number(month) - 1, Number(day));
+  };
+
+  const getLogDescription = (log: Log) => {
+    return log.feedback || '';
+  };
+
+  const getWeatherValue = (log: Log) => {
+    const weatherData = log.weather?.weather_data 
+      ? (typeof log.weather.weather_data === 'string' 
+          ? JSON.parse(log.weather.weather_data) 
+          : log.weather.weather_data)
+      : null;
+    const currentWeather = weatherData?.days?.[0];
+    return currentWeather?.temp ? `${currentWeather.temp}°` : '';
   };
 
   const columns: ColumnDef<Log>[] = [
@@ -207,13 +226,36 @@ const Logs = ({ viewMode }: LogsProps) => {
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
+      columnFilters,
+      globalFilter,
+    },
+    globalFilterFn: (row, columnId, filterValue) => {
+      const log = row.original;
+      const searchValue = filterValue.toLowerCase();
+      
+      // Search in description (feedback)
+      const description = getLogDescription(log).toLowerCase();
+      if (description.includes(searchValue)) return true;
+      
+      // Search in formatted date
+      const formattedDate = formatDate(log.date || log.created_at);
+      if (formattedDate.toLowerCase().includes(searchValue)) return true;
+      
+      // Search in weather value
+      const weatherValue = getWeatherValue(log).toLowerCase();
+      if (weatherValue.includes(searchValue)) return true;
+      
+      return false;
     },
   });
 
-  // Get sorted data for both table and grid views
-  const sortedLogs = table.getRowModel().rows.map(row => row.original);
+  // Get filtered and sorted data for both table and grid views
+  const filteredAndSortedLogs = table.getRowModel().rows.map(row => row.original);
 
   if (logs.length === 0) {
     return (
@@ -225,8 +267,17 @@ const Logs = ({ viewMode }: LogsProps) => {
 
   if (viewMode === 'table') {
     return (
-      <ScrollArea>
-        <Table className="table-fixed w-full">
+      <div>
+        <div className="flex items-center py-4">
+          <Input
+            placeholder="Search logs by description, date, or temperature..."
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="max-w-sm"
+          />
+        </div>
+        <ScrollArea>
+          <Table className="table-fixed w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -283,6 +334,7 @@ const Logs = ({ viewMode }: LogsProps) => {
           </TableBody>
         </Table>
       </ScrollArea>
+      </div>
     );
   }
 
@@ -290,42 +342,39 @@ const Logs = ({ viewMode }: LogsProps) => {
   return (
     <div>
       <div className="mb-4">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-2/12">
-                <div className="flex items-center gap-2">
-                  <Button
-                    className="p-1 hover:bg-primary hover:text-primary-foreground"
-                    variant="ghost"
-                    onClick={() => table.getColumn("date")?.toggleSorting(table.getColumn("date")?.getIsSorted() === "asc")}
-                  >
-                    <span>Date</span>
-                    <ArrowUpDown className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableHead>
-              <TableHead className="w-2/12">
-                <div className="flex items-center gap-2">
-                  <Button
-                    className="p-1 hover:bg-primary hover:text-primary-foreground"
-                    variant="ghost"
-                    onClick={() => table.getColumn("weather")?.toggleSorting(table.getColumn("weather")?.getIsSorted() === "asc")}
-                  >
-                    <span>Temp</span>
-                    <ArrowUpDown className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableHead>
-              <TableHead className="w-8/12">
-                {/* Empty space for future search bar */}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-        </Table>
+        <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
+          <div className="col-span-2">
+            <Button
+              className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
+              variant="ghost"
+              onClick={() => table.getColumn("date")?.toggleSorting(table.getColumn("date")?.getIsSorted() === "asc")}
+            >
+              <span>Date</span>
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="col-span-2">
+            <Button
+              className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
+              variant="ghost"
+              onClick={() => table.getColumn("weather")?.toggleSorting(table.getColumn("weather")?.getIsSorted() === "asc")}
+            >
+              <span>Temp</span>
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="col-span-8 flex items-center justify-end">
+            <Input
+              placeholder="Search logs..."
+              value={globalFilter}
+              onChange={(event) => setGlobalFilter(event.target.value)}
+              className="max-w-sm h-8"
+            />
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sortedLogs.map((log) => {
+        {filteredAndSortedLogs.map((log) => {
         const weatherData = log.weather?.weather_data 
           ? (typeof log.weather.weather_data === 'string' 
               ? JSON.parse(log.weather.weather_data) 
