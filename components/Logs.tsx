@@ -31,6 +31,66 @@ interface LogsProps {
   viewMode: "table" | "grid";
 }
 
+// ========================================
+// SORT AND FILTER BAR
+// ========================================
+const SortFilterBar = ({ 
+  table, 
+  globalFilter, 
+  setGlobalFilter 
+}: { 
+  table: any; 
+  globalFilter: string; 
+  setGlobalFilter: (value: string) => void; 
+}) => (
+  <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
+    <div className="col-span-2">
+      <Button
+        className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
+        variant="ghost"
+        onClick={() =>
+          table
+            .getColumn("date")
+            ?.toggleSorting(
+              table.getColumn("date")?.getIsSorted() === "asc"
+            )
+        }
+      >
+        <span>Date</span>
+        <ArrowUpDown className="h-4 w-4" />
+      </Button>
+    </div>
+    <div className="col-span-2">
+      <Button
+        className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
+        variant="ghost"
+        onClick={() =>
+          table
+            .getColumn("weather")
+            ?.toggleSorting(
+              table.getColumn("weather")?.getIsSorted() === "asc"
+            )
+        }
+      >
+        <span>Temp</span>
+        <ArrowUpDown className="h-4 w-4" />
+      </Button>
+    </div>
+    <div className="col-span-8 flex items-center justify-end">
+      <Input
+        placeholder="Search logs by description, date, or temperature..."
+        value={globalFilter}
+        onChange={(event) => setGlobalFilter(event.target.value)}
+        className="max-w-sm h-8"
+      />
+    </div>
+  </div>
+);
+
+// ========================================
+// LOGS COMPONENT
+// ========================================
+
 const Logs = ({ viewMode }: LogsProps) => {
   const { logs } = useLogStore();
   const { setSelectedItem } = useGlobalStore();
@@ -76,10 +136,6 @@ const Logs = ({ viewMode }: LogsProps) => {
     return new Date(Number(year), Number(month) - 1, Number(day));
   };
 
-  const getLogDescription = (log: Log) => {
-    return log.feedback || "";
-  };
-
   const getWeatherValue = (log: Log) => {
     const weatherData = log.weather?.weather_data
       ? typeof log.weather.weather_data === "string"
@@ -89,6 +145,10 @@ const Logs = ({ viewMode }: LogsProps) => {
     const currentWeather = weatherData?.days?.[0];
     return currentWeather?.temp ? `${currentWeather.temp}°` : "";
   };
+
+  // ========================================
+  // COLUMNS
+  // ========================================
 
   const columns: ColumnDef<Log>[] = [
     {
@@ -221,6 +281,10 @@ const Logs = ({ viewMode }: LogsProps) => {
     },
   ];
 
+  // ========================================
+  // TABLE
+  // ========================================
+
   const table = useReactTable({
     data: logs,
     columns,
@@ -240,7 +304,7 @@ const Logs = ({ viewMode }: LogsProps) => {
       const searchValue = filterValue.toLowerCase();
 
       // Search in description (feedback)
-      const description = getLogDescription(log).toLowerCase();
+      const description = log.feedback || ""
       if (description.includes(searchValue)) return true;
 
       // Search in formatted date
@@ -255,10 +319,14 @@ const Logs = ({ viewMode }: LogsProps) => {
     },
   });
 
-  // Get filtered and sorted data for both table and grid views
+
   const filteredAndSortedLogs = table
     .getRowModel()
     .rows.map((row) => row.original);
+
+  // ========================================
+  // NO LOGS FOUND
+  // ========================================
 
   if (logs.length === 0) {
     return (
@@ -268,52 +336,17 @@ const Logs = ({ viewMode }: LogsProps) => {
     );
   }
 
+  // ========================================
+  // TABLE VIEW
+  // ========================================
   if (viewMode === "table") {
     return (
       <div>
-        <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
-          {/* <div className="col-span-4"></div> */}
-          <div className="col-span-2">
-            <Button
-              className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
-              variant="ghost"
-              onClick={() =>
-                table
-                  .getColumn("date")
-                  ?.toggleSorting(
-                    table.getColumn("date")?.getIsSorted() === "asc"
-                  )
-              }
-            >
-              <span>Date</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="col-span-2">
-            <Button
-              className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
-              variant="ghost"
-              onClick={() =>
-                table
-                  .getColumn("weather")
-                  ?.toggleSorting(
-                    table.getColumn("weather")?.getIsSorted() === "asc"
-                  )
-              }
-            >
-              <span>Temp</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="col-span-8 flex items-center justify-end">
-            <Input
-              placeholder="Search logs by description, date, or temperature..."
-              value={globalFilter}
-              onChange={(event) => setGlobalFilter(event.target.value)}
-              className="max-w-sm h-8"
-            />
-          </div>
-        </div>
+        <SortFilterBar 
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
         <ScrollArea>
           <Table className="table-fixed w-full">
             <TableBody>
@@ -368,52 +401,17 @@ const Logs = ({ viewMode }: LogsProps) => {
     );
   }
 
-  // Grid view
+  // ========================================
+  // GRID VIEW
+  // ========================================
   return (
     <div>
       <div className="mb-4">
-        <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
-          <div className="col-span-2">
-            <Button
-              className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
-              variant="ghost"
-              onClick={() =>
-                table
-                  .getColumn("date")
-                  ?.toggleSorting(
-                    table.getColumn("date")?.getIsSorted() === "asc"
-                  )
-              }
-            >
-              <span>Date</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="col-span-2">
-            <Button
-              className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
-              variant="ghost"
-              onClick={() =>
-                table
-                  .getColumn("weather")
-                  ?.toggleSorting(
-                    table.getColumn("weather")?.getIsSorted() === "asc"
-                  )
-              }
-            >
-              <span>Temp</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="col-span-8 flex items-center justify-end">
-            <Input
-              placeholder="Search logs by description, date, or temperature..."
-              value={globalFilter}
-              onChange={(event) => setGlobalFilter(event.target.value)}
-              className="max-w-sm h-8"
-            />
-          </div>
-        </div>
+        <SortFilterBar 
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredAndSortedLogs.map((log) => {

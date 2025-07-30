@@ -12,7 +12,10 @@ export function useLayersSubscription() {
   // Fetch all layers and update the store
   const fetchLayers = async () => {
     console.log("useLayersSubscription/fetchLayers: Fetching layers");
-    const { data, error } = await supabase.from("layer").select("*");
+    const { data, error } = await supabase
+      .from("layer")
+      .select("*")
+      .order("name", { ascending: true });
     if (error) {
       console.error("useLayersSubscription/fetchLayers: ", error);
       setLayers([]);
