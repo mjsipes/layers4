@@ -317,6 +317,9 @@ const Logs = ({ viewMode }: LogsProps) => {
                   </Button>
                 </div>
               </TableHead>
+              <TableHead className="w-8/12">
+                {/* Empty space for future search bar */}
+              </TableHead>
             </TableRow>
           </TableHeader>
         </Table>

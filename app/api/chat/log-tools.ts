@@ -412,4 +412,75 @@ export const unlinkLogLayerTool = tool({
       }`;
     }
   },
+});
+
+export const semanticSearchLogTool = tool({
+  description: "Search for logs using semantic similarity. Takes a query and finds the most similar logs in the user's history. Optionally accepts match_threshold (0-1, default 0.78) and match_count (default 5) to control search sensitivity and number of results.",
+  parameters: z.object({
+    query: z.string().describe("The search query to find similar logs"),
+    match_threshold: z.number().min(0).max(1).optional().describe("Similarity threshold from 0-1 (default: 0.78). Higher values = more strict matching."),
+    match_count: z.number().min(1).max(20).optional().describe("Number of results to return (default: 5, max: 20)"),
+  }),
+  execute: async ({ query, match_threshold = 0.78, match_count = 5 }) => {
+    try {
+      console.log("semanticSearchLogTool: Executing with:", { query, match_threshold, match_count });
+      
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError) {
+        console.error("semanticSearchLogTool: Error getting user:", userError);
+        return `semanticSearchLogTool: Authentication error: ${userError.message}`;
+      }
+      if (!user) {
+        console.error("semanticSearchLogTool: no authenticated user found");
+        return `semanticSearchLogTool: No authenticated user found.`;
+      }
+      console.log("semanticSearchLogTool: User data received:", { id: user.id });
+
+      // Initialize embedding pipeline
+      console.log("semanticSearchLogTool: Initializing embedding pipeline...");
+      const { pipeline } = await import('@xenova/transformers');
+      const generateEmbedding = await pipeline('feature-extraction', 'Supabase/gte-small');
+      
+      // Generate embedding for the query
+      console.log("semanticSearchLogTool: Generating embedding for query:", query);
+      const output = await generateEmbedding(query, {
+        pooling: 'mean',
+        normalize: true,
+      });
+      const embedding = Array.from(output.data) as number[];
+      console.log("semanticSearchLogTool: Generated embedding with", embedding.length, "dimensions");
+
+      // Call the RPC function to find similar logs
+      console.log("semanticSearchLogTool: Calling match_log RPC function...");
+      const { data: matches, error: matchError } = await supabase.rpc('match_log', {
+        query_embedding: embedding,
+        match_threshold,
+        match_count,
+      });
+
+      if (matchError) {
+        console.error("semanticSearchLogTool: Error matching logs:", matchError);
+        return `semanticSearchLogTool: Failed to find similar logs: ${matchError.message}`;
+      }
+
+      console.log("semanticSearchLogTool: Found", matches?.length || 0, "matches");
+      console.log("semanticSearchLogTool: Matches:", matches);
+      
+      if (!matches || matches.length === 0) {
+        return `semanticSearchLogTool: No similar logs found for query "${query}". Try a different search term or lower the match_threshold.`;
+      }
+
+      return `semanticSearchLogTool: Found ${matches.length} similar logs for "${query}":\n${JSON.stringify(matches, null, 2)}`;
+
+    } catch (error: unknown) {
+      console.error("semanticSearchLogTool: error:", error);
+      return `semanticSearchLogTool: error: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
 }); 
