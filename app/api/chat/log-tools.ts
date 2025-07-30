@@ -30,6 +30,7 @@ export const selectLogsTool = tool({
         .select(`
           *,
           log_layer:log_layer(*, layer:layer_id(*)),
+          log_layer_recs:log_layer_recs(*, layer:layer_id(*)),
           weather:weather_id (*)
         `)
         .eq("user_id", user.id)
@@ -45,9 +46,13 @@ export const selectLogsTool = tool({
         return "selectLogsTool: No logs found in your wardrobe";
       }
 
-      const logsWithLayers = logs.map((log: Tables<"log"> & { log_layer?: Array<{ layer: Tables<"layer"> }> }) => ({
+      const logsWithLayers = logs.map((log: Tables<"log"> & { 
+        log_layer?: Array<{ layer: Tables<"layer"> }>,
+        log_layer_recs?: Array<{ layer: Tables<"layer"> }>
+      }) => ({
         ...log,
         layers: log.log_layer?.map((ll: { layer: Tables<"layer"> }) => ll.layer) ?? [],
+        recommendedLayers: log.log_layer_recs?.map((llr: { layer: Tables<"layer"> }) => llr.layer) ?? [],
       }));
 
       console.log("selectLogsTool: Logs fetched successfully:", logsWithLayers);
@@ -408,6 +413,173 @@ export const unlinkLogLayerTool = tool({
     } catch (error: unknown) {
       console.error("unlinkLogLayerTool: error:", error);
       return `⚠️ Failed to unlink layer from log: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+}); 
+
+export const linkLogLayerRecTool = tool({
+  description: "Link a layer to a log as a recommendation by creating a record in the log_layer_recs join table. Use this when the user wants to add a layer recommendation to a log.",
+  parameters: z.object({
+    log_id: z.string().describe("ID of the log to link the layer recommendation to"),
+    layer_id: z.string().describe("ID of the layer to link as a recommendation to the log"),
+  }),
+  execute: async ({ log_id, layer_id }) => {
+    try {
+      console.log("linkLogLayerRecTool: Executing with:", { log_id, layer_id });
+      const supabase = await createClient();
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("linkLogLayerRecTool: Error getting user:", userError);
+        return `linkLogLayerRecTool: Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        console.error("linkLogLayerRecTool: No authenticated user found");
+        return `linkLogLayerRecTool: No authenticated user found.`;
+      }
+
+      console.log("linkLogLayerRecTool: User data received:", { id: user.id });
+
+      const { data: log, error: logError } = await supabase
+        .from("log")
+        .select("id")
+        .eq("id", log_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (logError || !log) {
+        console.error("linkLogLayerRecTool: Error verifying log:", logError);
+        return `linkLogLayerRecTool: Log with ID ${log_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: layer, error: layerError } = await supabase
+        .from("layer")
+        .select("id")
+        .eq("id", layer_id)
+        .eq("user_id", user.id)
+        .single();
+      console.log("linkLogLayerRecTool: Layer fetch result:", { layer, layerError });
+
+      if (layerError || !layer) {
+        console.error("linkLogLayerRecTool: Error verifying layer:", layerError);
+        return `linkLogLayerRecTool: Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: existingLink, error: checkError } = await supabase
+        .from("log_layer_recs")
+        .select("id")
+        .eq("log_id", log_id)
+        .eq("layer_id", layer_id)
+        .single();
+      console.log("linkLogLayerRecTool: Existing link fetch result:", { existingLink, checkError });
+
+      if (existingLink) {
+        console.error("linkLogLayerRecTool: Layer ${layer_id} is already linked as a recommendation to log ${log_id}.");
+        return `linkLogLayerRecTool: Layer ${layer_id} is already linked as a recommendation to log ${log_id}.`;
+      }
+
+      const { data: newLink, error: linkError } = await supabase
+        .from("log_layer_recs")
+        .insert({
+          log_id: log_id,
+          layer_id: layer_id,
+        })
+        .select()
+        .single();
+      console.log("linkLogLayerRecTool: New link result:", { newLink, linkError });
+
+      if (linkError) {
+        console.error("linkLogLayerRecTool: Error linking layer recommendation to log:", linkError);
+        return `linkLogLayerRecTool: Failed to link layer recommendation to log: ${linkError.message}`;
+      }
+
+      console.log("linkLogLayerRecTool: Layer recommendation linked to log successfully:", newLink);
+      return `linkLogLayerRecTool: Successfully linked layer ${layer_id} as a recommendation to log ${log_id}`;
+    } catch (error: unknown) {
+      console.error("linkLogLayerRecTool: error:", error);
+      return `linkLogLayerRecTool: error: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});
+
+export const unlinkLogLayerRecTool = tool({
+  description: "Unlink a layer recommendation from a log by removing the record from the log_layer_recs join table. Use this when the user wants to remove a layer recommendation from a log.",
+  parameters: z.object({
+    log_id: z.string().describe("ID of the log to unlink the layer recommendation from"),
+    layer_id: z.string().describe("ID of the layer recommendation to unlink from the log"),
+  }),
+  execute: async ({ log_id, layer_id }) => {
+    try {
+      const supabase = await createClient();
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("unlinkLogLayerRecTool: Error getting user:", userError);
+        return `unlinkLogLayerRecTool: Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        console.error("unlinkLogLayerRecTool: No authenticated user found");
+        return `unlinkLogLayerRecTool: No authenticated user found.`;
+      }
+
+      console.log("unlinkLogLayerRecTool: User data received:", { id: user.id });
+
+      const { data: log, error: logError } = await supabase
+        .from("log")
+        .select("id")
+        .eq("id", log_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (logError || !log) {
+        console.error("unlinkLogLayerRecTool: Error verifying log:", logError);
+        return `unlinkLogLayerRecTool: Log with ID ${log_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: layer, error: layerError } = await supabase
+        .from("layer")
+        .select("id")
+        .eq("id", layer_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (layerError || !layer) {
+        console.error("unlinkLogLayerRecTool: Error verifying layer:", layerError);
+        return `unlinkLogLayerRecTool: Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+      }
+
+      console.log("unlinkLogLayerRecTool: Unlinking layer recommendation from log:", { log_id, layer_id });
+
+      const { error: unlinkError } = await supabase
+        .from("log_layer_recs")
+        .delete()
+        .eq("log_id", log_id)
+        .eq("layer_id", layer_id);
+
+      if (unlinkError) {
+        console.error("unlinkLogLayerRecTool: Error unlinking layer recommendation from log:", unlinkError);
+        return `unlinkLogLayerRecTool: Failed to unlink layer recommendation from log: ${unlinkError.message}`;
+      }
+
+      console.log("unlinkLogLayerRecTool: Layer recommendation unlinked from log successfully");
+      return `unlinkLogLayerRecTool: Successfully unlinked layer ${layer_id} recommendation from log ${log_id}`;
+    } catch (error: unknown) {
+      console.error("unlinkLogLayerRecTool: error:", error);
+      return `⚠️ Failed to unlink layer recommendation from log: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }

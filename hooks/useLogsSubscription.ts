@@ -16,6 +16,7 @@ export function useLogsSubscription() {
       .select(`
         *,
         log_layer:log_layer(*, layer:layer_id(*)),
+        log_layer_recs:log_layer_recs(*, layer:layer_id(*)),
         weather:weather_id (*)
       `)
       .order("date", { ascending: false })
@@ -33,6 +34,7 @@ export function useLogsSubscription() {
       data?.map((log: any) => ({
         ...log,
         layers: log.log_layer?.map((ll: any) => ll.layer) ?? [],
+        recommendedLayers: log.log_layer_recs?.map((llr: any) => llr.layer) ?? [],
       })) ?? [];
 
     console.log("useLogsSubscription/fetchLogs: ", logsWithRelations);
@@ -95,10 +97,23 @@ export function useLogsSubscription() {
       )
       .subscribe();
 
+    const logLayerRecsChannel = supabase
+      .channel("log-layer-recs-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "log_layer_recs" },
+        async (payload) => {
+          console.log("useLogsSubscription: log_layer_recs table changed", payload);
+          await fetchLogs();
+        }
+      )
+      .subscribe();
+
     return () => {
-      console.log("useLogsSubscription: Removing log and log_layer channels");
+      console.log("useLogsSubscription: Removing log, log_layer, and log_layer_recs channels");
       supabase.removeChannel(logChannel);
       supabase.removeChannel(logLayerChannel);
+      supabase.removeChannel(logLayerRecsChannel);
     };
   }, []);
 } 
