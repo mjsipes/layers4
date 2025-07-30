@@ -2,6 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { TablesUpdate } from "@/lib/supabase/database.types";
+import { pipeline } from '@xenova/transformers';
 
 export const selectLayersTool = tool({
   description: "Get all layers from the database for the authenticated user",
@@ -187,6 +188,75 @@ export const deleteLayerTool = tool({
     } catch (error: unknown) {
       console.error("deleteLayerTool: error:", error);
       return `deleteLayerTool: error: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});
+
+export const semanticSearchLayerTool = tool({
+  description: "Search for layers using semantic similarity. Takes a query and finds the most similar layers in the user's wardrobe. Optionally accepts match_threshold (0-1, default 0.78) and match_count (default 5) to control search sensitivity and number of results.",
+  parameters: z.object({
+    query: z.string().describe("The search query to find similar layers"),
+    match_threshold: z.number().min(0).max(1).optional().describe("Similarity threshold from 0-1 (default: 0.78). Higher values = more strict matching."),
+    match_count: z.number().min(1).max(20).optional().describe("Number of results to return (default: 5, max: 20)"),
+  }),
+  execute: async ({ query, match_threshold = 0.78, match_count = 5 }) => {
+    try {
+      console.log("semanticSearchLayerTool: Executing with:", { query, match_threshold, match_count });
+      
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError) {
+        console.error("semanticSearchLayerTool: Error getting user:", userError);
+        return `semanticSearchLayerTool: Authentication error: ${userError.message}`;
+      }
+      if (!user) {
+        console.error("semanticSearchLayerTool: no authenticated user found");
+        return `semanticSearchLayerTool: No authenticated user found.`;
+      }
+      console.log("semanticSearchLayerTool: User data received:", { id: user.id });
+
+      // Initialize embedding pipeline
+      console.log("semanticSearchLayerTool: Initializing embedding pipeline...");
+      const generateEmbedding = await pipeline('feature-extraction', 'Supabase/gte-small');
+      
+      // Generate embedding for the query
+      console.log("semanticSearchLayerTool: Generating embedding for query:", query);
+      const output = await generateEmbedding(query, {
+        pooling: 'mean',
+        normalize: true,
+      });
+      const embedding = Array.from(output.data) as number[];
+      console.log("semanticSearchLayerTool: Generated embedding with", embedding.length, "dimensions");
+
+      // Call the RPC function to find similar layers
+      console.log("semanticSearchLayerTool: Calling match_layer RPC function...");
+      const { data: matches, error: matchError } = await supabase.rpc('match_layer', {
+        query_embedding: embedding,
+        match_threshold,
+        match_count,
+      });
+
+      if (matchError) {
+        console.error("semanticSearchLayerTool: Error matching layers:", matchError);
+        return `semanticSearchLayerTool: Failed to find similar layers: ${matchError.message}`;
+      }
+
+      console.log("semanticSearchLayerTool: Found", matches?.length || 0, "matches");
+      
+      if (!matches || matches.length === 0) {
+        return `semanticSearchLayerTool: No similar layers found for query "${query}". Try a different search term or lower the match_threshold.`;
+      }
+
+      return `semanticSearchLayerTool: Found ${matches.length} similar layers for "${query}":\n${JSON.stringify(matches, null, 2)}`;
+
+    } catch (error: unknown) {
+      console.error("semanticSearchLayerTool: error:", error);
+      return `semanticSearchLayerTool: error: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }

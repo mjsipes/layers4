@@ -19,6 +19,7 @@ export type Database = {
           bottom: boolean | null
           created_at: string
           description: string | null
+          embedding: string | null
           id: string
           name: string | null
           top: boolean | null
@@ -29,6 +30,7 @@ export type Database = {
           bottom?: boolean | null
           created_at?: string
           description?: string | null
+          embedding?: string | null
           id?: string
           name?: string | null
           top?: boolean | null
@@ -39,6 +41,7 @@ export type Database = {
           bottom?: boolean | null
           created_at?: string
           description?: string | null
+          embedding?: string | null
           id?: string
           name?: string | null
           top?: boolean | null
@@ -53,6 +56,7 @@ export type Database = {
           comfort_level: number | null
           created_at: string
           date: string | null
+          embedding: string | null
           feedback: string | null
           id: string
           latitude: number | null
@@ -65,6 +69,7 @@ export type Database = {
           comfort_level?: number | null
           created_at?: string
           date?: string | null
+          embedding?: string | null
           feedback?: string | null
           id?: string
           latitude?: number | null
@@ -77,6 +82,7 @@ export type Database = {
           comfort_level?: number | null
           created_at?: string
           date?: string | null
+          embedding?: string | null
           feedback?: string | null
           id?: string
           latitude?: number | null
@@ -255,6 +261,44 @@ export type Database = {
           too_cold_count: number
           temp_range_low: number
           temp_range_high: number
+        }[]
+      }
+      match_layer: {
+        Args: {
+          query_embedding: string
+          match_threshold: number
+          match_count: number
+        }
+        Returns: {
+          bottom: boolean | null
+          created_at: string
+          description: string | null
+          embedding: string | null
+          id: string
+          name: string | null
+          top: boolean | null
+          user_id: string | null
+          warmth: number | null
+        }[]
+      }
+      match_log: {
+        Args: {
+          query_embedding: string
+          match_threshold: number
+          match_count: number
+        }
+        Returns: {
+          address: string | null
+          comfort_level: number | null
+          created_at: string
+          date: string | null
+          embedding: string | null
+          feedback: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          user_id: string | null
+          weather_id: string | null
         }[]
       }
     }
