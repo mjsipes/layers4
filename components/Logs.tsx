@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -10,10 +10,19 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
+import { ArrowUpDown } from "lucide-react"
 import { useLogStore } from '@/stores/logs_store'
 import { useGlobalStore } from "@/stores/global_store";
 import type { Log } from '@/stores/logs_store'
-
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getSortedRowModel,
+  SortingState,
+} from "@tanstack/react-table";
 
 interface LogsProps {
   viewMode: 'table' | 'grid';
@@ -23,6 +32,7 @@ const Logs = ({ viewMode }: LogsProps) => {
   const { logs } = useLogStore();
   const { setSelectedItem } = useGlobalStore();
   const { selectedItemId, selectedType } = useGlobalStore();
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   useEffect(() => {
     console.log("Logs.tsx/selectedItemId:", selectedItemId);
@@ -32,8 +42,6 @@ const Logs = ({ viewMode }: LogsProps) => {
     console.log("Logs.tsx/handleLogClick:", log.id);
     setSelectedItem(log.id, "selectlog");
   };
-
-
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
@@ -46,7 +54,166 @@ const Logs = ({ viewMode }: LogsProps) => {
     });
   };
 
+  const getWeatherTemp = (log: Log) => {
+    const weatherData = log.weather?.weather_data 
+      ? (typeof log.weather.weather_data === 'string' 
+          ? JSON.parse(log.weather.weather_data) 
+          : log.weather.weather_data)
+      : null;
+    const currentWeather = weatherData?.days?.[0];
+    return currentWeather?.temp || 0;
+  };
 
+  const getDateValue = (log: Log) => {
+    const dateStr = log.date || log.created_at;
+    if (!dateStr) return new Date(0);
+    const [year, month, day] = dateStr.split('-');
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  };
+
+  const columns: ColumnDef<Log>[] = [
+    {
+      accessorKey: "date",
+      header: ({ column }) => {
+        return (
+          <div className="flex items-center gap-2">
+            <Button
+              className="p-1 hover:bg-primary hover:text-primary-foreground"
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+              <span>Date</span>
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+      },
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
+          <div 
+            className="font-medium truncate cursor-pointer"
+            onClick={() => handleLogClick(log)}
+          >
+            {log.date ? formatDate(log.date) : formatDate(log.created_at)}
+          </div>
+        );
+      },
+      sortingFn: (rowA, rowB) => {
+        const dateA = getDateValue(rowA.original);
+        const dateB = getDateValue(rowB.original);
+        return dateA.getTime() - dateB.getTime();
+      },
+    },
+    {
+      accessorKey: "weather",
+      header: ({ column }) => {
+        return (
+          <div className="flex items-center gap-2">
+            <Button
+              className="p-1 hover:bg-primary hover:text-primary-foreground"
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+              <span>Temp</span>
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+      },
+      cell: ({ row }) => {
+        const log = row.original;
+        const weatherData = log.weather?.weather_data 
+          ? (typeof log.weather.weather_data === 'string' 
+              ? JSON.parse(log.weather.weather_data) 
+              : log.weather.weather_data)
+          : null;
+        const currentWeather = weatherData?.days?.[0];
+        
+        return (
+          <div 
+            className="truncate cursor-pointer"
+            onClick={() => handleLogClick(log)}
+          >
+            <div className="flex gap-1 flex-wrap">
+              {(currentWeather?.temp) && (
+                <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground">
+                  {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      },
+      sortingFn: (rowA, rowB) => {
+        const tempA = getWeatherTemp(rowA.original);
+        const tempB = getWeatherTemp(rowB.original);
+        return tempA - tempB;
+      },
+    },
+    {
+      accessorKey: "layers",
+      header: () => <div>Layers</div>,
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
+          <div 
+            className="truncate p-1 cursor-pointer"
+            onClick={() => handleLogClick(log)}
+          >
+            <div className="flex gap-1 flex-wrap">
+              {log.layers && 
+                log.layers.map((layer) => (
+                  <span
+                    key={layer.id}
+                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedItem(layer.id, "selectlayer");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {layer?.name || "Unnamed Layer"}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "comfort_level",
+      header: () => <div className="text-center">Comfort</div>,
+      cell: ({ row }) => {
+        const log = row.original;
+        return (
+          <div 
+            className="text-center cursor-pointer"
+            onClick={() => handleLogClick(log)}
+          >
+            <Badge variant="default">
+              {log.comfort_level || '-'}
+            </Badge>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data: logs,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
+  // Get sorted data for both table and grid views
+  const sortedLogs = table.getRowModel().rows.map(row => row.original);
 
   if (logs.length === 0) {
     return (
@@ -61,69 +228,58 @@ const Logs = ({ viewMode }: LogsProps) => {
       <ScrollArea>
         <Table className="table-fixed w-full">
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-3/12">Date</TableHead>
-              <TableHead className="w-2/12">Weather</TableHead>
-              <TableHead className="w-5/12">Layers</TableHead>
-              <TableHead className="w-2/12 text-center">Comfort</TableHead>
-            </TableRow>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead 
+                      key={header.id} 
+                      className={
+                        header.id === "date" ? "w-2/12" :
+                        header.id === "weather" ? "w-2/12" :
+                        header.id === "layers" ? "w-6/12" :
+                        header.id === "comfort_level" ? "w-2/12 text-center" : ""
+                      }
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
-            {logs.map((log) => {
-              const weatherData = log.weather?.weather_data 
-                ? (typeof log.weather.weather_data === 'string' 
-                    ? JSON.parse(log.weather.weather_data) 
-                    : log.weather.weather_data)
-                : null;
-              const currentWeather = weatherData?.days?.[0];
-              
-              return (
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
-                  key={log.id}
-                  className={`${selectedType === 'selectlog' && selectedItemId === log.id ? 'bg-muted/80 cursor-pointer' : 'hover:bg-muted/50 cursor-pointer'}`}
-                  onClick={() => {
-                    handleLogClick(log);
-                  }}
+                  key={row.id}
+                  className={`${selectedType === 'selectlog' && selectedItemId === row.original.id ? 'bg-muted/80' : 'hover:bg-muted/50'}`}
                 >
-                  <TableCell className="font-medium truncate">
-                    {log.date ? formatDate(log.date) : formatDate(log.created_at)}
-                  </TableCell>
-                  <TableCell className="truncate">
-                    <div className="flex gap-1 flex-wrap">
-                      {(currentWeather?.temp) && (
-                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground">
-                          {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
-                        </span>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="truncate p-1">
-                      <div className="flex gap-1 flex-wrap">
-                        {log.layers && 
-                          log.layers.map((layer) => (
-                            <span
-                              key={layer.id}
-                              className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedItem(layer.id, "selectlayer");
-                              }}
-                              style={{ cursor: "pointer" }}
-                            >
-                              {layer?.name || "Unnamed Layer"}
-                            </span>
-                          ))
-                     }
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge variant="default">
-                      {log.comfort_level || '-'}
-                    </Badge>
-                  </TableCell>
+                    </TableCell>
+                  ))}
                 </TableRow>
-              );
-            })}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </ScrollArea>
@@ -132,8 +288,41 @@ const Logs = ({ viewMode }: LogsProps) => {
 
   // Grid view
   return (
-    <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-      {logs.map((log) => {
+    <div>
+      <div className="mb-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-2/12">
+                <div className="flex items-center gap-2">
+                  <Button
+                    className="p-1 hover:bg-primary hover:text-primary-foreground"
+                    variant="ghost"
+                    onClick={() => table.getColumn("date")?.toggleSorting(table.getColumn("date")?.getIsSorted() === "asc")}
+                  >
+                    <span>Date</span>
+                    <ArrowUpDown className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableHead>
+              <TableHead className="w-2/12">
+                <div className="flex items-center gap-2">
+                  <Button
+                    className="p-1 hover:bg-primary hover:text-primary-foreground"
+                    variant="ghost"
+                    onClick={() => table.getColumn("weather")?.toggleSorting(table.getColumn("weather")?.getIsSorted() === "asc")}
+                  >
+                    <span>Temp</span>
+                    <ArrowUpDown className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+        </Table>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sortedLogs.map((log) => {
         const weatherData = log.weather?.weather_data 
           ? (typeof log.weather.weather_data === 'string' 
               ? JSON.parse(log.weather.weather_data) 
@@ -162,8 +351,8 @@ const Logs = ({ viewMode }: LogsProps) => {
               </h3>
             </div>
 
-            {/* Weather and Layers Info */}
-            <div className="mt-2 mb-4 flex flex-col gap-2 items-start">
+             {/* Weather and Layers Info */}
+             <div className="mt-2 mb-4 flex flex-col gap-2 items-start">
               {(currentWeather?.temp) && (
                 <div className="p-1 rounded-lg bg-background  w-full">
                   <div className="flex gap-1 flex-wrap w-full">
@@ -175,16 +364,6 @@ const Logs = ({ viewMode }: LogsProps) => {
                         {log.address.slice(0, 10)}...
                       </span>
                     )}
-                    {/* {currentWeather.tempmin !== undefined && (
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
-                        L: {Math.round(currentWeather.tempmin)}°
-                      </span>
-                    )}
-                    {currentWeather.tempmax !== undefined && (
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
-                        H: {Math.round(currentWeather.tempmax)}°
-                      </span>
-                    )} */}
                   </div>
                 </div>
               )}
@@ -217,6 +396,7 @@ const Logs = ({ viewMode }: LogsProps) => {
           </div>
         );
       })}
+      </div>
     </div>
   );
 };
