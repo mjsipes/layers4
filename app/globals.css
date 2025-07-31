@@ -1,7 +1,8 @@
 @tailwind base;
+
+@custom-variant dark (&:is(.dark *));
 @tailwind components;
 @tailwind utilities;
-
 
 @layer base {
   :root {
@@ -72,5 +73,14 @@
 @layer components {
   .badge {
     @apply inline-flex items-center rounded-md px-2 py-1 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
