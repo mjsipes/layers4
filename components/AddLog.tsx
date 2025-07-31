@@ -118,7 +118,7 @@ const AddLogCard = () => {
         className="bg-background shadow-none border-none w-full mb-2 p-2 rounded-md ring-1 ring-muted h-9"
         defaultValue={address}
         onPlaceSelected={(place) => {
-          if (place.geometry) {
+          if (place.geometry && place.geometry.location) {
             setLat(place.geometry.location.lat());
             setLon(place.geometry.location.lng());
             setAddress(place.formatted_address || "");
