@@ -74,10 +74,7 @@ const AddLogCard = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+
 
   return (
     <form
@@ -93,7 +90,7 @@ const AddLogCard = () => {
               id="log-date"
               className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-blue-600 leading-tight mb-4"
             >
-              {date ? formatDate(date.toISOString().slice(0, 10)) : "Select date"}
+              {date ? date.toLocaleDateString() : "Select date"}
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>

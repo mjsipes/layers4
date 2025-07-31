@@ -45,16 +45,7 @@ const SelectLogCard = () => {
   const log = logs.find((l) => l.id === selectedItemId);
   const [feedback, setFeedback] = React.useState(log?.feedback || "");
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "";
-    const [year, month, day] = dateString.split("-");
-    const localDate = new Date(Number(year), Number(month) - 1, Number(day));
-    return localDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+
 
   React.useEffect(() => {
     if (log) {
@@ -205,9 +196,7 @@ const SelectLogCard = () => {
                 id="log-date"
                 className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
               >
-                {date
-                  ? formatDate(date.toISOString().slice(0, 10))
-                  : "Select date"}
+                {date ? date.toLocaleDateString() : "Select date"}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
