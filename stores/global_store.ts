@@ -9,7 +9,7 @@ const supabase = createClient();
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
 
-type SelectedItemType = "selectlayer" | "selectlog" | "addlayer" | "addlog" | "recommendations";
+type SelectedItemType = "selectlayer" | "selectlog" | "addlayer" | "addlog" | "home";
 type ViewMode = "table" | "grid";
 type WardrobeTab = "layers" | "logs";
 
@@ -49,7 +49,7 @@ export const useGlobalStore = create<GlobalState>()(
       (set, get) => ({
         // Global UI state
         selectedItemId: null,
-        selectedType: "addlog",
+        selectedType: "home",
         wardrobeViewMode: "grid",
         wardrobeActiveTab: "layers",
         address: null,

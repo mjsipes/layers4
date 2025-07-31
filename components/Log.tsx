@@ -342,7 +342,7 @@ const SelectLogCard = () => {
                       )
                     }
                     aria-label={`Remove ${label}`}
-                  >
+                  />
                     {label}
                     <button
                       type="button"

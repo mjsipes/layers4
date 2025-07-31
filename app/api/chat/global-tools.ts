@@ -18,7 +18,7 @@ export const displayUITool = tool({
         "addlayer",
         "addoutfit",
         "addlog",
-        "recommendations",
+        "home",
       ])
       .describe(
         "Type of item to display: 'selectlayer' for layers, 'selectoutfit' for outfits, 'selectlog' for logs, or 'add*' for adding new items"
