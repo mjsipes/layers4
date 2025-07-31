@@ -70,7 +70,7 @@ const DynamicCard = () => {
             <div className="w-full h-[240px] overflow-hidden">
               <WeatherCard />
             </div>
-            <div className="w-full h-[100px] overflow-hidden border-y">
+            <div className="w-full h-[200px] overflow-hidden border-y">
               <RecommendationCard />
             </div>
           </TabsContent>

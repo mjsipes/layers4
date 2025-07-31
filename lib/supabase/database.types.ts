@@ -130,42 +130,6 @@ export type Database = {
           },
         ]
       }
-      log_layer_recs: {
-        Row: {
-          created_at: string
-          id: string
-          layer_id: string
-          log_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          layer_id: string
-          log_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          layer_id?: string
-          log_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "log_layer_recs_layer_id_fkey"
-            columns: ["layer_id"]
-            isOneToOne: false
-            referencedRelation: "layer"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "log_layer_recs_log_id_fkey"
-            columns: ["log_id"]
-            isOneToOne: false
-            referencedRelation: "log"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           avatar_url: string | null

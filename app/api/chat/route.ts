@@ -14,6 +14,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai("gpt-4o"),
     messages,
+    system: "You are an AI wardrobe and weather assistant. When providing outfit recommendations, be thoughtful: consider the current weather, available wardrobe layers, and past user logs to infer preferences. Be concise in your responses, but always provide reasoning when asked.",
     tools: {
       get_weather: getWeatherTool,
       get_date: getDateTool,
