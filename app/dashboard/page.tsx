@@ -30,7 +30,6 @@ export default async function DashboardPage() {
           <div className="flex flex-col h-full items-center border-r">
 
             <DynamicCard />
-            <WeatherCard />
           </div>
           <WardobeCard />
         </div>

@@ -10,8 +10,19 @@ import { useGlobalStore } from "@/stores/global_store";
 // import { useLogStore } from "@/stores/logs_store";
 import AddLogCard from "@/components/AddLog";
 import AddLayerCard from "@/components/AddLayer";
+import WeatherCard from "@/components/Weather";
+import { useLayersSubscription } from "@/hooks/useLayersSubscription";
+import { useLogsSubscription } from "@/hooks/useLogsSubscription";
+import { useGlobalSubscription, useGeolocation, useWeather, useAddress } from "@/hooks/useGlobalSubscription";
+
 
 const DynamicCard = () => {
+  useGeolocation();
+  useWeather();
+  useLayersSubscription();
+  useLogsSubscription();
+  useGlobalSubscription();
+  useAddress();
   const { selectedType, setSelectedItem } = useGlobalStore();
 
 
@@ -42,9 +53,8 @@ const DynamicCard = () => {
         </div>
         <ScrollArea className="h-[calc(100vh-9rem)] px-4">
           <TabsContent value="recommendations">
-            <div className="p-4 text-center text-muted-foreground">
-              Recommendations coming soon...
-            </div>
+          <WeatherCard />
+
           </TabsContent>
           <TabsContent value="addlog">
             <AddLogCard />
