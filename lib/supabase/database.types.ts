@@ -19,7 +19,6 @@ export type Database = {
           bottom: boolean | null
           created_at: string
           description: string | null
-          embedding: string | null
           id: string
           name: string | null
           top: boolean | null
@@ -30,7 +29,6 @@ export type Database = {
           bottom?: boolean | null
           created_at?: string
           description?: string | null
-          embedding?: string | null
           id?: string
           name?: string | null
           top?: boolean | null
@@ -41,7 +39,6 @@ export type Database = {
           bottom?: boolean | null
           created_at?: string
           description?: string | null
-          embedding?: string | null
           id?: string
           name?: string | null
           top?: boolean | null
@@ -56,7 +53,6 @@ export type Database = {
           comfort_level: number | null
           created_at: string
           date: string | null
-          embedding: string | null
           feedback: string | null
           id: string
           latitude: number | null
@@ -69,7 +65,6 @@ export type Database = {
           comfort_level?: number | null
           created_at?: string
           date?: string | null
-          embedding?: string | null
           feedback?: string | null
           id?: string
           latitude?: number | null
@@ -82,7 +77,6 @@ export type Database = {
           comfort_level?: number | null
           created_at?: string
           date?: string | null
-          embedding?: string | null
           feedback?: string | null
           id?: string
           latitude?: number | null
@@ -132,6 +126,42 @@ export type Database = {
             columns: ["layer_id"]
             isOneToOne: false
             referencedRelation: "layer"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      log_layer_recs: {
+        Row: {
+          created_at: string
+          id: string
+          layer_id: string
+          log_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          layer_id: string
+          log_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          layer_id?: string
+          log_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "log_layer_recs_layer_id_fkey"
+            columns: ["layer_id"]
+            isOneToOne: false
+            referencedRelation: "layer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "log_layer_recs_log_id_fkey"
+            columns: ["log_id"]
+            isOneToOne: false
+            referencedRelation: "log"
             referencedColumns: ["id"]
           },
         ]
@@ -273,7 +303,6 @@ export type Database = {
           bottom: boolean | null
           created_at: string
           description: string | null
-          embedding: string | null
           id: string
           name: string | null
           top: boolean | null
@@ -292,7 +321,6 @@ export type Database = {
           comfort_level: number | null
           created_at: string
           date: string | null
-          embedding: string | null
           feedback: string | null
           id: string
           latitude: number | null

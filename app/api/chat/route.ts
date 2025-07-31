@@ -2,7 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { getWeatherTool } from "./get-weather-tool";
 import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool, semanticSearchLayerTool} from "./layer-tools";
-import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool, semanticSearchLogTool } from "./log-tools";
+import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool, linkLogLayerRecTool, unlinkLogLayerRecTool } from "./log-tools";
 import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./global-tools";
 import { getDateTool } from "./get-date-tool";
 
@@ -28,7 +28,8 @@ export async function POST(req: Request) {
       update_log: updateLogTool,
       link_log_layer: linkLogLayerTool,
       unlink_log_layer: unlinkLogLayerTool,
-      semantic_search_log: semanticSearchLogTool,
+      link_log_layer_rec: linkLogLayerRecTool,
+      unlink_log_layer_rec: unlinkLogLayerRecTool,
       display_ui: displayUITool,
       set_location: setLocationTool,
       get_location: getLocationTool,

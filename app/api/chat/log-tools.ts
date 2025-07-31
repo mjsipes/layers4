@@ -30,6 +30,7 @@ export const selectLogsTool = tool({
         .select(`
           *,
           log_layer:log_layer(*, layer:layer_id(*)),
+          log_layer_recs:log_layer_recs(*, layer:layer_id(*)),
           weather:weather_id (*)
         `)
         .eq("user_id", user.id)
@@ -45,9 +46,13 @@ export const selectLogsTool = tool({
         return "selectLogsTool: No logs found in your wardrobe";
       }
 
-      const logsWithLayers = logs.map((log: Tables<"log"> & { log_layer?: Array<{ layer: Tables<"layer"> }> }) => ({
+      const logsWithLayers = logs.map((log: Tables<"log"> & { 
+        log_layer?: Array<{ layer: Tables<"layer"> }>,
+        log_layer_recs?: Array<{ layer: Tables<"layer"> }>
+      }) => ({
         ...log,
         layers: log.log_layer?.map((ll: { layer: Tables<"layer"> }) => ll.layer) ?? [],
+        recommendedLayers: log.log_layer_recs?.map((llr: { layer: Tables<"layer"> }) => llr.layer) ?? [],
       }));
 
       console.log("selectLogsTool: Logs fetched successfully:", logsWithLayers);
@@ -412,73 +417,169 @@ export const unlinkLogLayerTool = tool({
       }`;
     }
   },
+
+}); 
+
+export const linkLogLayerRecTool = tool({
+  description: "Link a layer to a log as a recommendation by creating a record in the log_layer_recs join table. Use this when the user wants to add a layer recommendation to a log.",
+  parameters: z.object({
+    log_id: z.string().describe("ID of the log to link the layer recommendation to"),
+    layer_id: z.string().describe("ID of the layer to link as a recommendation to the log"),
+  }),
+  execute: async ({ log_id, layer_id }) => {
+    try {
+      console.log("linkLogLayerRecTool: Executing with:", { log_id, layer_id });
+      const supabase = await createClient();
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("linkLogLayerRecTool: Error getting user:", userError);
+        return `linkLogLayerRecTool: Authentication error: ${userError.message}`;
+      }
+
+      if (!user) {
+        console.error("linkLogLayerRecTool: No authenticated user found");
+        return `linkLogLayerRecTool: No authenticated user found.`;
+      }
+
+      console.log("linkLogLayerRecTool: User data received:", { id: user.id });
+
+      const { data: log, error: logError } = await supabase
+        .from("log")
+        .select("id")
+        .eq("id", log_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (logError || !log) {
+        console.error("linkLogLayerRecTool: Error verifying log:", logError);
+        return `linkLogLayerRecTool: Log with ID ${log_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: layer, error: layerError } = await supabase
+        .from("layer")
+        .select("id")
+        .eq("id", layer_id)
+        .eq("user_id", user.id)
+        .single();
+      console.log("linkLogLayerRecTool: Layer fetch result:", { layer, layerError });
+
+      if (layerError || !layer) {
+        console.error("linkLogLayerRecTool: Error verifying layer:", layerError);
+        return `linkLogLayerRecTool: Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+      }
+
+      const { data: existingLink, error: checkError } = await supabase
+        .from("log_layer_recs")
+        .select("id")
+        .eq("log_id", log_id)
+        .eq("layer_id", layer_id)
+        .single();
+      console.log("linkLogLayerRecTool: Existing link fetch result:", { existingLink, checkError });
+
+      if (existingLink) {
+        console.error("linkLogLayerRecTool: Layer ${layer_id} is already linked as a recommendation to log ${log_id}.");
+        return `linkLogLayerRecTool: Layer ${layer_id} is already linked as a recommendation to log ${log_id}.`;
+      }
+
+      const { data: newLink, error: linkError } = await supabase
+        .from("log_layer_recs")
+        .insert({
+          log_id: log_id,
+          layer_id: layer_id,
+        })
+        .select()
+        .single();
+      console.log("linkLogLayerRecTool: New link result:", { newLink, linkError });
+
+      if (linkError) {
+        console.error("linkLogLayerRecTool: Error linking layer recommendation to log:", linkError);
+        return `linkLogLayerRecTool: Failed to link layer recommendation to log: ${linkError.message}`;
+      }
+
+      console.log("linkLogLayerRecTool: Layer recommendation linked to log successfully:", newLink);
+      return `linkLogLayerRecTool: Successfully linked layer ${layer_id} as a recommendation to log ${log_id}`;
+    } catch (error: unknown) {
+      console.error("linkLogLayerRecTool: error:", error);
+      return `linkLogLayerRecTool: error: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
 });
 
-export const semanticSearchLogTool = tool({
-  description: "Search for logs using semantic similarity. Takes a query and finds the most similar logs in the user's history. Optionally accepts match_threshold (0-1, default 0.78) and match_count (default 5) to control search sensitivity and number of results.",
+export const unlinkLogLayerRecTool = tool({
+  description: "Unlink a layer recommendation from a log by removing the record from the log_layer_recs join table. Use this when the user wants to remove a layer recommendation from a log.",
   parameters: z.object({
-    query: z.string().describe("The search query to find similar logs"),
-    match_threshold: z.number().min(0).max(1).optional().describe("Similarity threshold from 0-1 (default: 0.78). Higher values = more strict matching."),
-    match_count: z.number().min(1).max(20).optional().describe("Number of results to return (default: 5, max: 20)"),
+    log_id: z.string().describe("ID of the log to unlink the layer recommendation from"),
+    layer_id: z.string().describe("ID of the layer recommendation to unlink from the log"),
   }),
-  execute: async ({ query, match_threshold = 0.78, match_count = 5 }) => {
+  execute: async ({ log_id, layer_id }) => {
     try {
-      console.log("semanticSearchLogTool: Executing with:", { query, match_threshold, match_count });
-      
       const supabase = await createClient();
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
+
       if (userError) {
-        console.error("semanticSearchLogTool: Error getting user:", userError);
-        return `semanticSearchLogTool: Authentication error: ${userError.message}`;
+        console.error("unlinkLogLayerRecTool: Error getting user:", userError);
+        return `unlinkLogLayerRecTool: Authentication error: ${userError.message}`;
       }
+
       if (!user) {
-        console.error("semanticSearchLogTool: no authenticated user found");
-        return `semanticSearchLogTool: No authenticated user found.`;
-      }
-      console.log("semanticSearchLogTool: User data received:", { id: user.id });
-
-      // Initialize embedding pipeline
-      console.log("semanticSearchLogTool: Initializing embedding pipeline...");
-      const { pipeline } = await import('@xenova/transformers');
-      const generateEmbedding = await pipeline('feature-extraction', 'Supabase/gte-small');
-      
-      // Generate embedding for the query
-      console.log("semanticSearchLogTool: Generating embedding for query:", query);
-      const output = await generateEmbedding(query, {
-        pooling: 'mean',
-        normalize: true,
-      });
-      const embedding = Array.from(output.data) as number[];
-      console.log("semanticSearchLogTool: Generated embedding with", embedding.length, "dimensions");
-
-      // Call the RPC function to find similar logs
-      console.log("semanticSearchLogTool: Calling match_log RPC function...");
-      const { data: matches, error: matchError } = await supabase.rpc('match_log', {
-        query_embedding: embedding,
-        match_threshold,
-        match_count,
-      });
-
-      if (matchError) {
-        console.error("semanticSearchLogTool: Error matching logs:", matchError);
-        return `semanticSearchLogTool: Failed to find similar logs: ${matchError.message}`;
+        console.error("unlinkLogLayerRecTool: No authenticated user found");
+        return `unlinkLogLayerRecTool: No authenticated user found.`;
       }
 
-      console.log("semanticSearchLogTool: Found", matches?.length || 0, "matches");
-      console.log("semanticSearchLogTool: Matches:", matches);
-      
-      if (!matches || matches.length === 0) {
-        return `semanticSearchLogTool: No similar logs found for query "${query}". Try a different search term or lower the match_threshold.`;
+      console.log("unlinkLogLayerRecTool: User data received:", { id: user.id });
+
+      const { data: log, error: logError } = await supabase
+        .from("log")
+        .select("id")
+        .eq("id", log_id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (logError || !log) {
+        console.error("unlinkLogLayerRecTool: Error verifying log:", logError);
+        return `unlinkLogLayerRecTool: Log with ID ${log_id} not found or you don't have permission to access it.`;
       }
 
-      return `semanticSearchLogTool: Found ${matches.length} similar logs for "${query}":\n${JSON.stringify(matches, null, 2)}`;
+      const { data: layer, error: layerError } = await supabase
+        .from("layer")
+        .select("id")
+        .eq("id", layer_id)
+        .eq("user_id", user.id)
+        .single();
 
+      if (layerError || !layer) {
+        console.error("unlinkLogLayerRecTool: Error verifying layer:", layerError);
+        return `unlinkLogLayerRecTool: Layer with ID ${layer_id} not found or you don't have permission to access it.`;
+      }
+
+      console.log("unlinkLogLayerRecTool: Unlinking layer recommendation from log:", { log_id, layer_id });
+
+      const { error: unlinkError } = await supabase
+        .from("log_layer_recs")
+        .delete()
+        .eq("log_id", log_id)
+        .eq("layer_id", layer_id);
+
+      if (unlinkError) {
+        console.error("unlinkLogLayerRecTool: Error unlinking layer recommendation from log:", unlinkError);
+        return `unlinkLogLayerRecTool: Failed to unlink layer recommendation from log: ${unlinkError.message}`;
+      }
+
+      console.log("unlinkLogLayerRecTool: Layer recommendation unlinked from log successfully");
+      return `unlinkLogLayerRecTool: Successfully unlinked layer ${layer_id} recommendation from log ${log_id}`;
     } catch (error: unknown) {
-      console.error("semanticSearchLogTool: error:", error);
-      return `semanticSearchLogTool: error: ${
+      console.error("unlinkLogLayerRecTool: error:", error);
+      return `⚠️ Failed to unlink layer recommendation from log: ${
         error instanceof Error ? error.message : String(error)
       }`;
     }

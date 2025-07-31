@@ -295,21 +295,53 @@ const SelectLogCard = () => {
           </div>
         )}
 
-        {/* Layers Card */}
-        <div className="mt-2 mb-2">
-          <MultiSelector
-            values={selectedLayerIds}
-            onValuesChange={handleLayersChange}
-            loop={false}
-            className="text-sm"
-          >
-            <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
-              {selectedLayerIds.map((id) => {
-                const label = layers.find((l) => l.id === id)?.name || id;
-                return (
+      {/* Weather Recommendations Card */}
+      {log.recommendedLayers && log.recommendedLayers.length > 0 && (
+        <div className="mb-2">
+          <div className="p-3 rounded-lg bg-background border-border">
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-primary">Weather Recommendations</h3>
+              <div className="flex flex-wrap gap-1">
+                {log.recommendedLayers.map((layer) => (
                   <span
-                    key={id}
-                    className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs"
+                    key={layer.id}
+                    className="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 text-blue-800 text-xs font-medium"
+                  >
+                    {layer.name || "Unnamed Layer"}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Layers Card */}
+      <div className="mt-2 mb-2">
+        <MultiSelector
+          values={selectedLayerIds}
+          onValuesChange={handleLayersChange}
+          loop={false}
+          className="text-sm"
+        >
+          <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
+            {selectedLayerIds.map((id) => {
+              const label = layers.find((l) => l.id === id)?.name || id;
+              return (
+                <span
+                  key={id}
+                  className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs"
+                >
+                  {label}
+                  <button
+                    type="button"
+                    className="ml-1 text-muted-foreground hover:text-destructive"
+                    onClick={() =>
+                      handleLayersChange(
+                        selectedLayerIds.filter((v) => v !== id)
+                      )
+                    }
+                    aria-label={`Remove ${label}`}
                   >
                     {label}
                     <button
