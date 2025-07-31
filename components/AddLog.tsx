@@ -81,7 +81,7 @@ const AddLogCard = () => {
 
   return (
     <form
-      className="relative p-4 border rounded-lg bg-secondary border-secondary m-4"
+      className="relative p-4 border rounded-lg bg-secondary border-secondary"
       onSubmit={handleSubmit}
     >
       {/* Date Picker */}
@@ -115,7 +115,7 @@ const AddLogCard = () => {
       <Autocomplete
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
         placeholder="start typing address..."
-        className="bg-background shadow-none border-none w-full mb-2 p-2 rounded-md ring-1 ring-muted"
+        className="bg-background shadow-none border-none w-full mb-2 p-2 rounded-md ring-1 ring-muted h-9"
         defaultValue={address}
         onPlaceSelected={(place) => {
           if (place.geometry) {
@@ -173,7 +173,7 @@ const AddLogCard = () => {
         id="log-feedback"
         name="feedback"
         placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
-        className="w-full border rounded-md p-2 text-base bg-background border-none mb-4"
+        className="w-full border rounded-md p-2 text-base bg-background border-none mb-2"
         value={feedback}
         onChange={(e) => setFeedback(e.target.value)}
         rows={3}
@@ -181,7 +181,7 @@ const AddLogCard = () => {
       />
       
       {/* Submit Button */}
-      <Button type="submit" disabled={isLoading} className="w-full mt-2">
+      <Button type="submit" disabled={isLoading} className="w-full">
         {isLoading ? "Saving..." : "Add Log"}
       </Button>
     </form>

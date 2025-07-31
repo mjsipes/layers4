@@ -46,7 +46,7 @@ const SortFilterBar = ({
   <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
     <div className="col-span-2">
       <Button
-        className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
+        className="h-7 p-1 hover:bg-primary hover:text-primary-foreground"
         variant="ghost"
         onClick={() =>
           table
@@ -62,7 +62,7 @@ const SortFilterBar = ({
     </div>
     <div className="col-span-2">
       <Button
-        className="h-8 p-1 hover:bg-primary hover:text-primary-foreground"
+        className="h-7 p-1 hover:bg-primary hover:text-primary-foreground"
         variant="ghost"
         onClick={() =>
           table
@@ -81,7 +81,7 @@ const SortFilterBar = ({
         placeholder="Search layers by name or description..."
         value={globalFilter}
         onChange={(event) => setGlobalFilter(event.target.value)}
-        className="max-w-sm h-8"
+        className="max-w-sm h-7"
       />
     </div>
   </div>

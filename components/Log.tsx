@@ -22,8 +22,14 @@ import {
 } from "@/components/ui/multi-select";
 
 const SelectLogCard = () => {
-  const { selectedItemId, address: globalAddress, lat: globalLat, lon: globalLon } = useGlobalStore();
-  const { logs, deleteLog, updateLog, linkLayerToLog, unlinkLayerFromLog } = useLogStore();
+  const {
+    selectedItemId,
+    address: globalAddress,
+    lat: globalLat,
+    lon: globalLon,
+  } = useGlobalStore();
+  const { logs, deleteLog, updateLog, linkLayerToLog, unlinkLayerFromLog } =
+    useLogStore();
   const { layers } = useLayerStore();
 
   // Date picker state
@@ -35,7 +41,7 @@ const SelectLogCard = () => {
   const [lat, setLat] = React.useState<number | null>(null);
   const [lon, setLon] = React.useState<number | null>(null);
   const [saving, setSaving] = React.useState(false);
-  
+
   const log = logs.find((l) => l.id === selectedItemId);
   const [feedback, setFeedback] = React.useState(log?.feedback || "");
 
@@ -81,9 +87,15 @@ const SelectLogCard = () => {
 
   // Refactor to match Logs.tsx style
   const weatherData = log?.weather?.weather_data
-    ? (typeof log.weather.weather_data === 'string'
-        ? (() => { try { return JSON.parse(log.weather.weather_data); } catch { return null; } })()
-        : log.weather.weather_data)
+    ? typeof log.weather.weather_data === "string"
+      ? (() => {
+          try {
+            return JSON.parse(log.weather.weather_data);
+          } catch {
+            return null;
+          }
+        })()
+      : log.weather.weather_data
     : null;
   const weatherDay = weatherData?.days?.[0];
 
@@ -126,13 +138,18 @@ const SelectLogCard = () => {
       const newLat = place.geometry.location.lat();
       const newLon = place.geometry.location.lng();
       const newAddress = place.formatted_address || "";
-      
+
       setLat(newLat);
       setLon(newLon);
       setAddress(newAddress);
 
       // Immediately update the log with new address, lat, lon
-      console.log("SelectLogCard.handlePlaceSelected: ", newAddress, newLat, newLon);
+      console.log(
+        "SelectLogCard.handlePlaceSelected: ",
+        newAddress,
+        newLat,
+        newLon
+      );
       setSaving(true);
       try {
         await updateLog(log.id, {
@@ -175,169 +192,179 @@ const SelectLogCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
-      {/* Date Picker */}
-      <div>
-        <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              id="log-date"
-              className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
+    <div>
+      
+
+      <div className="relative p-4 border rounded-lg bg-secondary border-secondary ">
+        {/* Date Picker */}
+        <div>
+          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                id="log-date"
+                className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
+              >
+                {date
+                  ? formatDate(date.toISOString().slice(0, 10))
+                  : "Select date"}
+                <ChevronDownIcon />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-auto overflow-hidden p-0"
+              align="start"
             >
-              {date ? formatDate(date.toISOString().slice(0, 10)) : "Select date"}
-              <ChevronDownIcon />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              captionLayout="dropdown"
-              onSelect={handleDateChange}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+              <Calendar
+                mode="single"
+                selected={date}
+                captionLayout="dropdown"
+                onSelect={handleDateChange}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
 
-      {/* Location Picker - Simplified! */}
-      <Autocomplete
-        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-        placeholder="start typing address..."
-        className="bg-background shadow-none border-none w-full mb-4 p-2 rounded-md ring-1 ring-muted"
-        defaultValue={address}
-        onPlaceSelected={handlePlaceSelected}
-        onBlur={handleAddressBlur}
-        options={{
-          types: ["geocode"],
-        }}
-      />
+        {/* Location Picker - Simplified! */}
+        <Autocomplete
+          apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+          placeholder="start typing address..."
+          className="bg-background shadow-none border-none w-full mb-4 p-2 rounded-md ring-1 ring-muted h-9"
+          defaultValue={address}
+          onPlaceSelected={handlePlaceSelected}
+          onBlur={handleAddressBlur}
+          options={{
+            types: ["geocode"],
+          }}
+        />
 
-      {/* Weather Information Card */}
-      {weatherDay && (
-        <div className="mb-2">
-          <div className="p-3 rounded-lg bg-background border-border">
-            <div className="space-y-3">
-              {/* Temperature and Weather Stats Row */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Temperature Column */}
-                <div className="flex flex-col justify-start">
-                  <div className="flex items-start gap-1">
-                    <span className="text-5xl font-bold text-blue-600 leading-none">
-                      {Math.round(weatherDay.temp)}
-                    </span>
-                    <span className="text-lg font-bold text-blue-600">°</span>
-                  </div>
-                  {weatherDay.tempmin !== undefined && weatherDay.tempmax !== undefined && (
-                    <div className="flex gap-2 mt-2">
-                      <span className="badge text-xs">
-                        L: {Math.round(weatherDay.tempmin)}°
+        {/* Weather Information Card */}
+        {weatherDay && (
+          <div className="mb-2">
+            <div className="p-3 rounded-lg bg-background border-border">
+              <div className="space-y-3">
+                {/* Temperature and Weather Stats Row */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Temperature Column */}
+                  <div className="flex flex-col justify-start">
+                    <div className="flex items-start gap-1">
+                      <span className="text-8xl font-bold text-blue-600 leading-none">
+                        {Math.round(weatherDay.temp)}
                       </span>
-                      <span className="badge text-xs">
-                        H: {Math.round(weatherDay.tempmax)}°
-                      </span>
+                      <span className="text-6xl font-bold text-blue-600">°</span>
                     </div>
-                  )}
+                    {weatherDay.tempmin !== undefined &&
+                      weatherDay.tempmax !== undefined && (
+                        <div className="flex gap-2">
+                          <span className="badge text-xs">
+                            L: {Math.round(weatherDay.tempmin)}°
+                          </span>
+                          <span className="badge text-xs">
+                            H: {Math.round(weatherDay.tempmax)}°
+                          </span>
+                        </div>
+                      )}
+                  </div>
+                  {/* Weather Stats Column */}
+                  <div className="flex flex-col justify-between gap-2">
+                    {weatherDay.windspeed !== undefined && (
+                      <span className="badge text-xs w-full text-left">
+                        Wind: {weatherDay.windspeed} mph
+                      </span>
+                    )}
+                    {weatherDay.humidity !== undefined && (
+                      <span className="badge text-xs w-full text-left">
+                        Humidity: {weatherDay.humidity}%
+                      </span>
+                    )}
+                    {weatherDay.precip !== undefined && (
+                      <span className="badge text-xs w-full text-left">
+                        Precip: {weatherDay.precip}%
+                      </span>
+                    )}
+                  </div>
                 </div>
-                {/* Weather Stats Column */}
-                <div className="flex flex-col justify-around gap-2">
-                  {weatherDay.windspeed !== undefined && (
-                    <span className="badge text-xs w-full text-left">
-                      Wind: {weatherDay.windspeed} mph
-                    </span>
-                  )}
-                  {weatherDay.humidity !== undefined && (
-                    <span className="badge text-xs w-full text-left">
-                      Humidity: {weatherDay.humidity}%
-                    </span>
-                  )}
-                  {weatherDay.precip !== undefined && (
-                    <span className="badge text-xs w-full text-left">
-                      Precip: {weatherDay.precip}%
-                    </span>
-                  )}
-                </div>
+                {/* Weather Description */}
+                {weatherDay.description && (
+                  <div className="w-full overflow-hidden whitespace-nowrap border rounded-md bg-muted border-muted px-2 py-1 text-xs font-medium">
+                    {weatherDay.description}
+                  </div>
+                )}
               </div>
-              {/* Weather Description */}
-              {weatherDay.description && (
-                <div className="w-full overflow-hidden whitespace-nowrap border rounded-md bg-muted border-muted px-2 py-1 text-xs font-medium">
-                  {weatherDay.description}
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      ) }
+        )}
 
-      {/* Layers Card */}
-      <div className="mt-2 mb-2">
-        <MultiSelector
-          values={selectedLayerIds}
-          onValuesChange={handleLayersChange}
-          loop={false}
-          className="text-sm"
-        >
-          <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
-            {selectedLayerIds.map((id) => {
-              const label = layers.find((l) => l.id === id)?.name || id;
-              return (
-                <span
-                  key={id}
-                  className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs"
-                >
-                  {label}
-                  <button
-                    type="button"
-                    className="ml-1 text-muted-foreground hover:text-destructive"
-                    onClick={() =>
-                      handleLayersChange(
-                        selectedLayerIds.filter((v) => v !== id)
-                      )
-                    }
-                    aria-label={`Remove ${label}`}
+        {/* Layers Card */}
+        <div className="mt-2 mb-2">
+          <MultiSelector
+            values={selectedLayerIds}
+            onValuesChange={handleLayersChange}
+            loop={false}
+            className="text-sm"
+          >
+            <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background ">
+              {selectedLayerIds.map((id) => {
+                const label = layers.find((l) => l.id === id)?.name || id;
+                return (
+                  <span
+                    key={id}
+                    className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs"
                   >
-                    ×
-                  </button>
-                </span>
-              );
-            })}
-            <MultiSelectorInput />
-          </div>
-          <MultiSelectorContent>
-            <MultiSelectorList>
-              {layers.map((layer) => (
-                <MultiSelectorItem key={layer.id} value={layer.id}>
-                  {layer.name || "Unnamed Layer"}
-                </MultiSelectorItem>
-              ))}
-            </MultiSelectorList>
-          </MultiSelectorContent>
-        </MultiSelector>
-      </div>
+                    {label}
+                    <button
+                      type="button"
+                      className="ml-1 text-muted-foreground hover:text-destructive"
+                      onClick={() =>
+                        handleLayersChange(
+                          selectedLayerIds.filter((v) => v !== id)
+                        )
+                      }
+                      aria-label={`Remove ${label}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                );
+              })}
+              <MultiSelectorInput />
+            </div>
+            <MultiSelectorContent>
+              <MultiSelectorList>
+                {layers.map((layer) => (
+                  <MultiSelectorItem key={layer.id} value={layer.id}>
+                    {layer.name || "Unnamed Layer"}
+                  </MultiSelectorItem>
+                ))}
+              </MultiSelectorList>
+            </MultiSelectorContent>
+          </MultiSelector>
+        </div>
 
-      {/* Feedback */}
-      <div className="mt-2 mb-2">
-        <textarea
-          className="w-full border rounded-md p-2 text-base bg-background border-none"
-          value={feedback}
-          onChange={handleFeedbackChange}
-          onBlur={handleFeedbackBlur}
-          rows={3}
-          disabled={saving}
-          placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
-        />
-      </div>
+        {/* Feedback */}
+        <div className="mt-2 mb-2">
+          <textarea
+            className="w-full border rounded-md p-2 text-base bg-background border-none"
+            value={feedback}
+            onChange={handleFeedbackChange}
+            onBlur={handleFeedbackBlur}
+            rows={3}
+            disabled={saving}
+            placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
+          />
+        </div>
 
-      <div className="mt-auto">
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => deleteLog(log.id)}
-          className="flex items-center gap-2"
-        >
-          <Trash2 size={16} />
-          Delete
-        </Button>
+        <div className="mt-auto">
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => deleteLog(log.id)}
+            className="flex items-center gap-2"
+          >
+            <Trash2 size={16} />
+            Delete
+          </Button>
+        </div>
       </div>
     </div>
   );

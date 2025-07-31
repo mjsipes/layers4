@@ -29,11 +29,9 @@ export default async function DashboardPage() {
       <ResizablePanel defaultSize={70}>
         <div className="w-full h-full grid grid-cols-2">
           <div className="flex flex-col h-full items-center border-r">
-            <div className="w-full h-[360px] overflow-hidden">
-              <WeatherCard />
-            </div>
-            <Separator orientation="horizontal" />
+
             <DynamicCard />
+            <WeatherCard />
           </div>
           <WardobeCard />
         </div>

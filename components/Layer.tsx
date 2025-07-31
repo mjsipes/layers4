@@ -10,7 +10,7 @@ const SelectLayerCard = () => {
   const { selectedItemId } = useGlobalStore();
   const { layers, deleteLayer, updateLayer } = useLayerStore();
 
-  const layer = layers.find(l => l.id === selectedItemId);
+  const layer = layers.find((l) => l.id === selectedItemId);
   // Move all hooks above this guard
   const [name, setName] = React.useState(layer?.name || "");
   React.useEffect(() => {
@@ -47,16 +47,19 @@ const SelectLayerCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary m-4">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary ">
       <div className="absolute top-4 right-4">
-        <Badge variant="default" className="text-sm">
+        <Badge
+          variant="default"
+          className="text-sm h-9 w-9 items-center justify-center"
+        >
           {layer.warmth || "-"}
         </Badge>
       </div>
 
-      <div className="mb-3 pr-12">
+      <div className="mb-2 pr-12">
         <input
-          className="text-2xl font-semibold text-primary leading-tight w-full bg-background  rounded-md p-1 mb-2 bg-muted"
+          className="text-2xl font-semibold text-primary leading-tight w-full bg-background  rounded-md p-1 pl-2 mb-2 h-9"
           value={name}
           onChange={handleNameChange}
           onBlur={handleNameBlur}
@@ -64,7 +67,7 @@ const SelectLayerCard = () => {
         />
       </div>
 
-      <div className="mt-2 mb-4">
+      <div className="mb-2">
         <textarea
           className="w-full border  p-2 text-base bg-background rounded-md border-none"
           value={desc}
@@ -75,17 +78,15 @@ const SelectLayerCard = () => {
         />
       </div>
 
-      <div className="mt-auto">
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => deleteLayer(layer.id)}
-          className="flex items-center gap-2"
-        >
-          <Trash2 size={16} />
-          Delete
-        </Button>
-      </div>
+      <Button
+        variant="destructive"
+        size="sm"
+        onClick={() => deleteLayer(layer.id)}
+        className="flex items-center gap-2"
+      >
+        <Trash2 size={16} />
+        Delete
+      </Button>
     </div>
   );
 };

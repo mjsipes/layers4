@@ -2,6 +2,7 @@
 import React from "react";
 import { Plus, Calendar1 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SelectLayerCard from "@/components/Layer";
 import SelectLogCard from "@/components/Log";
 import { useGlobalStore } from "@/stores/global_store";
@@ -12,85 +13,53 @@ import AddLayerCard from "@/components/AddLayer";
 
 const DynamicCard = () => {
   const { selectedType, setSelectedItem } = useGlobalStore();
-      // const { addLayer } = useLayerStore();
-      // const { addLog } = useLogStore();
 
-  // const handleAddLayer = async () => {
-  //   setSelectedItem(null, "selectlayer");
-  //   const name = "";
-  //   const description = "";
-  //   const warmth = 5;
-  //   addLayer({ name, description, warmth });
-  // };
-
-  // const handleAddLog = async () => {
-  //   setSelectedItem(null, "addlog");
-  //   addLog({
-  //     lat: lat ?? undefined,
-  //     lon: lon ?? undefined,
-  //     address: address ?? undefined,
-  //     date: date ? date.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
-  //   });
-  // };
-
-  const renderActiveCard = () => {
-    switch (selectedType) {
-      case "addlayer":
-        return <AddLayerCard />;
-      case "addlog":
-        return <AddLogCard />;
-      case "selectlayer":
-        return <SelectLayerCard />;
-      // case "selectoutfit":
-      //   return <SelectOutfitCard />;
-      case "selectlog":
-        return <SelectLogCard />;
-      case "recommendations":
-        return (
-          <div className="p-4 text-center text-muted-foreground">
-            Recommendations coming soon...
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
-    <div className="h-full w-full flex flex-col bg-background">
-      {/* Action buttons */}
-      <div className="flex items-center justify-center pt-4 gap-2">
-        <button 
-          className="inline-flex items-center justify-center rounded-md px-2 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={() => setSelectedItem(null, "recommendations")}
-        >
-          <Calendar1 size={14} className="mr-1" />
-          Today
-        </button>
-        <button 
-          className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={() => setSelectedItem(null, "addlog")}
-        >
-          <Plus size={14} className="mr-1" />
-          Log
-        </button>
-        <button 
-          className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={() => setSelectedItem(null, "addlayer")}
-        >
-          <Plus size={14} className="mr-1" />
-          Layer
-        </button>
-        {/* <button 
-          className="inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium border bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80 transition-colors" 
-          onClick={handleAddLayer}
-        >
-          <Plus size={14} className="mr-1" />
-          <Plus size={14} className="mr-1" />
-          Layer
-        </button> */}
-      </div>
-      <ScrollArea className="flex-1">{renderActiveCard()}</ScrollArea>
+    <div className="w-full">
+      <Tabs 
+        value={selectedType || "recommendations"} 
+        onValueChange={(value) => setSelectedItem(null, value as any)}
+        className="w-full"
+      >
+        <div className="flex items-center justify-center mt-4 mb-2">
+          <div className="flex items-center gap-4 ">
+            <TabsList>
+              <TabsTrigger value="recommendations">
+                <Calendar1 size={14} className="mr-1" />
+                Today
+              </TabsTrigger>
+              <TabsTrigger value="addlog">
+                <Plus size={14} className="mr-1" />
+                Log
+              </TabsTrigger>
+              <TabsTrigger value="addlayer">
+                <Plus size={14} className="mr-1" />
+                Layer
+              </TabsTrigger>
+            </TabsList>
+          </div>
+        </div>
+        <ScrollArea className="h-[calc(100vh-9rem)] px-4">
+          <TabsContent value="recommendations">
+            <div className="p-4 text-center text-muted-foreground">
+              Recommendations coming soon...
+            </div>
+          </TabsContent>
+          <TabsContent value="addlog">
+            <AddLogCard />
+          </TabsContent>
+          <TabsContent value="addlayer">
+            <AddLayerCard />
+          </TabsContent>
+          <TabsContent value="selectlayer">
+            <SelectLayerCard />
+          </TabsContent>
+          <TabsContent value="selectlog">
+            <SelectLogCard />
+          </TabsContent>
+        </ScrollArea>
+      </Tabs>
     </div>
   );
 };

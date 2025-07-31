@@ -16,7 +16,7 @@ const WardobeCard = () => {
     <div className="w-full">
       <Tabs value={wardrobeActiveTab} onValueChange={(value) => setWardrobeActiveTab(value as "layers"  | "logs")} className="w-full">
         <div className="flex items-center justify-center mt-4 mb-2">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ">
             <TabsList>
               <TabsTrigger value="layers">Layers</TabsTrigger>           
                  {/* <TabsTrigger value="outfits">Outfits</TabsTrigger> */}
