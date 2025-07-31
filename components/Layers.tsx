@@ -330,7 +330,7 @@ const Layers = ({ viewMode }: LayersProps) => {
               <Badge variant="default" className="h-5 w-6 items-center justify-center">{layer.warmth || "-"}</Badge>
             </div>
 
-            <div className="mb-2 pr-12">
+            <div className="mb-2 pr-8">
               <h3 className="text-sm font-semibold text-primary leading-tight">
                 {layer.name || "Unnamed Layer"}
               </h3>

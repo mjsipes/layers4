@@ -186,10 +186,15 @@ const Logs = ({ viewMode }: LogsProps) => {
             className="truncate cursor-pointer"
             onClick={() => handleLogClick(log)}
           >
-            <div className="flex gap-1 flex-wrap">
+            <div className="flex gap-1 overflow-hidden">
               {currentWeather?.temp && (
-                <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground">
+                <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground flex-shrink-0">
                   {currentWeather?.temp && `${currentWeather.temp}\u00b0`}
+                </span>
+              )}
+              {log.address && (
+                <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
+                  {log.address}
                 </span>
               )}
             </div>
@@ -212,12 +217,12 @@ const Logs = ({ viewMode }: LogsProps) => {
             className="truncate p-1 cursor-pointer"
             onClick={() => handleLogClick(log)}
           >
-            <div className="flex gap-1 flex-wrap">
+            <div className="flex gap-1 overflow-hidden">
               {log.layers &&
                 log.layers.map((layer) => (
                   <span
                     key={layer.id}
-                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                    className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium border transition-colors bg-secondary text-secondary-foreground border-secondary hover:bg-primary hover:text-primary-foreground hover:border-primary overflow-hidden text-ellipsis whitespace-nowrap min-w-0"
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedItem(layer.id, "selectlayer");
@@ -232,21 +237,7 @@ const Logs = ({ viewMode }: LogsProps) => {
         );
       },
     },
-    {
-      accessorKey: "comfort_level",
-      header: () => <div className="text-center">Comfort</div>,
-      cell: ({ row }) => {
-        const log = row.original;
-        return (
-          <div
-            className="text-center cursor-pointer"
-            onClick={() => handleLogClick(log)}
-          >
-            <Badge variant="default">{log.comfort_level || "-"}</Badge>
-          </div>
-        );
-      },
-    },
+
   ];
 
   // ========================================
@@ -350,9 +341,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                             : cell.column.id === "weather"
                             ? "w-2/12"
                             : cell.column.id === "layers"
-                            ? "w-6/12"
-                            : cell.column.id === "comfort_level"
-                            ? "w-2/12 text-center"
+                            ? "w-8/12"
                             : ""
                         }
                       >
@@ -449,7 +438,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                       {log.layers.map((layer) => (
                         <span
                           key={layer.id}
-                          className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground"
+                          className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground overflow-hidden  whitespace-nowrap "
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedItem(layer.id, "selectlayer");
