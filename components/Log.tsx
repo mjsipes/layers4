@@ -133,8 +133,8 @@ const SelectLogCard = () => {
     }
   };
 
-  const handlePlaceSelected = async (place: any) => {
-    if (place.geometry) {
+  const handlePlaceSelected = async (place: google.maps.places.PlaceResult) => {
+    if (place.geometry && place.geometry.location) {
       const newLat = place.geometry.location.lat();
       const newLon = place.geometry.location.lng();
       const newAddress = place.formatted_address || "";
