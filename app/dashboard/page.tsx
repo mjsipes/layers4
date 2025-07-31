@@ -10,7 +10,6 @@ import WeatherCard from "@/components/Weather";
 import WardobeCard from "@/components/Wardrobe";
 import Chat from "@/components/Chat";
 import DynamicCard from "@/components/Dynamic";
-import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -29,10 +28,7 @@ export default async function DashboardPage() {
       <ResizablePanel defaultSize={70}>
         <div className="w-full h-full grid grid-cols-2">
           <div className="flex flex-col h-full items-center border-r">
-            <div className="w-full h-[360px] overflow-hidden">
-              <WeatherCard />
-            </div>
-            <Separator orientation="horizontal" />
+
             <DynamicCard />
           </div>
           <WardobeCard />

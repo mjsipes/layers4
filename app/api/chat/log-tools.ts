@@ -417,6 +417,7 @@ export const unlinkLogLayerTool = tool({
       }`;
     }
   },
+
 }); 
 
 export const linkLogLayerRecTool = tool({
@@ -520,7 +521,6 @@ export const unlinkLogLayerRecTool = tool({
   execute: async ({ log_id, layer_id }) => {
     try {
       const supabase = await createClient();
-
       const {
         data: { user },
         error: userError,

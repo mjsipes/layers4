@@ -26,23 +26,23 @@ const AddLayerCard = () => {
 
   return (
     <form
-      className="relative p-4 border rounded-lg bg-secondary border-secondary m-4"
+      className="relative p-4 border rounded-lg bg-secondary border-secondary"
       onSubmit={handleSubmit}
     >
       <div className="absolute top-4 right-4">
-        <Badge variant="default" className="text-sm">
+        <Badge variant="default" className="text-sm h-9 w-9">
           {/* {warmth} */}
         </Badge>
       </div>
-      <div className="mb-3 pr-12">
+      <div className="mb-2 pr-12">
         <input
-          className="text-2xl font-semibold text-primary leading-tight w-full bg-background rounded-md p-1 mb-2 bg-muted"
+          className="text-2xl font-semibold text-primary leading-tight w-full bg-background rounded-md p-1 mb-2 h-9 pl-2"
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="layer name"
         />
       </div>
-      <div className="mt-2 mb-4">
+      <div className="mb-2">
         <textarea
           className="w-full border p-2 text-base bg-background rounded-md border-none"
           value={desc}
@@ -52,7 +52,7 @@ const AddLayerCard = () => {
         />
       </div>
 
-      <Button type="submit" disabled={isLoading} className="w-full mt-2">
+      <Button type="submit" disabled={isLoading} className="w-full">
         {isLoading ? "Saving..." : "Add Layer"}
       </Button>
     </form>
