@@ -321,7 +321,7 @@ const Layers = ({ viewMode }: LayersProps) => {
             key={layer.id}
             className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
               selectedType === "selectlayer" && selectedItemId === layer.id
-                ? "border-blue-500"
+                ? "border-blue-600"
                 : ""
             }`}
             onClick={() => handleLayerClick(layer)}

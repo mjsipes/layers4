@@ -31,7 +31,7 @@ const WeatherCard = () => {
   const currentWeather = weatherData.days?.[0];
 
   return (
-    <div className="w-full h-full flex flex-col p-4 gap-4 justify-between">
+    <div className="w-full h-full flex flex-col p-4 gap-2 justify-between">
       {/* Location & Time row */}
       <div className="grid grid-cols-4 gap-2">
         <span className="badge truncate col-span-2">{address || "--"}</span>
@@ -50,8 +50,8 @@ const WeatherCard = () => {
             </h1>
             <span className="text-3xl font-bold text-primary">°</span>
           </div>
-          <div className="flex gap-2 mt-2">
-            <span className="badge truncate text-xs">
+          <div className="flex gap-2 ">
+            <span className="badge truncate text-xs ml-1">
               L: {currentWeather?.tempmin || "--"}°
             </span>
             <span className="badge truncate text-xs">
@@ -60,7 +60,7 @@ const WeatherCard = () => {
           </div>
         </div>
         {/* Weather Stats */}
-        <div className="col-span-2 flex flex-col justify-around gap-2">
+        <div className="col-span-2 flex flex-col justify-between gap-2">
           <span className="badge truncate w-full text-left">
             Wind: {currentWeather?.windspeed || "--"} mph
           </span>

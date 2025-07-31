@@ -8,7 +8,7 @@ const supabase = createClient();
 export function useLayersSubscription() {
   const setLayers = useLayerStore((state) => state.setLayers);
   const setSelectedItem = useGlobalStore((state) => state.setSelectedItem);
-
+  const setWardrobeActiveTab = useGlobalStore((state) => state.setWardrobeActiveTab);
   // Fetch all layers and update the store
   const fetchLayers = async () => {
     console.log("useLayersSubscription/fetchLayers: Fetching layers");
@@ -44,6 +44,7 @@ export function useLayersSubscription() {
             const newLayerId = payload?.new?.id;
             if (newLayerId) {
               setSelectedItem(newLayerId, "selectlayer");
+              setWardrobeActiveTab("layers");
             }
           } else if (payload?.eventType === "DELETE") {
             const layers = useLayerStore.getState().layers;

@@ -12,6 +12,7 @@ if we have embeddings in db then we do not want to get all with * because it wil
 embedd logs and layers + create semantic search / keyword search and maybe datatable
 ^^^^THIS WOULD BE REALLY GOOD PRACTICE^^^
 
+i think i love weather being right there. i think the only question is wether recomendations gets its own area or if that goes with the weather. but then that brings me back to the same question about giving weather its own place
 
 
 

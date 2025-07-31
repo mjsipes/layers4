@@ -14,6 +14,7 @@ import Home from "@/components/Home";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
 import { useGlobalSubscription, useGeolocation, useWeather, useAddress } from "@/hooks/useGlobalSubscription";
+import { Separator } from "@/components/ui/separator";
 
 
 const DynamicCard = () => {
@@ -36,7 +37,7 @@ const DynamicCard = () => {
         <div className="flex items-center justify-center mt-4 mb-2">
           <div className="flex items-center gap-4 ">
             <TabsList>
-              <TabsTrigger value="home">
+            <TabsTrigger value="home">
                 <Calendar1 size={14} className="mr-1" />
                 Today
               </TabsTrigger>
@@ -51,10 +52,13 @@ const DynamicCard = () => {
             </TabsList>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-9rem)] px-4">
+        
           <TabsContent value="home">
+            <Separator orientation="horizontal" />
+
             <Home />
           </TabsContent>
+          <ScrollArea className="h-[calc(100vh-9rem)] px-4">
           <TabsContent value="addlog">
             <AddLogCard />
           </TabsContent>

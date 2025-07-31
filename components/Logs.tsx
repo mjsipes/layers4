@@ -396,7 +396,7 @@ const Logs = ({ viewMode }: LogsProps) => {
               // Add conditional class for blue border if selected
               className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
                 selectedType === "selectlog" && selectedItemId === log.id
-                  ? "border-blue-500"
+                  ? "border-blue-600"
                   : ""
               }`}
               onClick={() => {
@@ -419,13 +419,13 @@ const Logs = ({ viewMode }: LogsProps) => {
               <div className="mt-2 mb-2 flex flex-col gap-2 items-start">
                 {currentWeather?.temp && (
                   <div className="p-1 rounded-lg bg-background  w-full">
-                    <div className="flex gap-1 flex-wrap w-full">
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-blue-600">
+                    <div className="flex gap-1 w-full">
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-blue-600 flex-shrink-0">
                         {Math.round(currentWeather.temp)}°
                       </span>
                       {log.address && (
-                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
-                          {log.address.slice(0, 10)}...
+                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
+                          {log.address}
                         </span>
                       )}
                     </div>
