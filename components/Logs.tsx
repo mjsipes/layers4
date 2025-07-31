@@ -44,7 +44,7 @@ const SortFilterBar = ({
   <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
     <div className="col-span-2">
       <Button
-        className="h-7 p-1 hover:bg-primary hover:text-primary-foreground"
+        className="h-7 p-1 hover:bg-background"
         variant="ghost"
         onClick={() =>
           table
@@ -60,7 +60,7 @@ const SortFilterBar = ({
     </div>
     <div className="col-span-2">
       <Button
-        className="h-7 p-1 hover:bg-primary hover:text-primary-foreground"
+        className="h-7 p-1 hover:bg-background"
         variant="ghost"
         onClick={() =>
           table
@@ -155,7 +155,7 @@ const Logs = ({ viewMode }: LogsProps) => {
         return (
           <div className="flex items-center gap-2">
             <Button
-              className="p-1 hover:bg-primary hover:text-primary-foreground"
+              className="p-1 hover:bg-background"
               variant="ghost"
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
@@ -190,7 +190,7 @@ const Logs = ({ viewMode }: LogsProps) => {
         return (
           <div className="flex items-center gap-2">
             <Button
-              className="p-1 hover:bg-primary hover:text-primary-foreground"
+              className="p-1 hover:bg-background"
               variant="ghost"
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
@@ -424,7 +424,7 @@ const Logs = ({ viewMode }: LogsProps) => {
             <div
               key={log.id}
               // Add conditional class for blue border if selected
-              className={`relative p-4 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
+              className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
                 selectedType === "selectlog" && selectedItemId === log.id
                   ? "border-blue-500"
                   : ""
@@ -439,14 +439,14 @@ const Logs = ({ viewMode }: LogsProps) => {
               </Badge>
             </div> */}
 
-              <div className="mb-3 pr-12">
+              <div className="mb-2">
                 <h3 className="text-sm font-semibold text-primary leading-tight">
                   {log.date ? formatDate(log.date) : formatDate(log.created_at)}
                 </h3>
               </div>
 
               {/* Weather and Layers Info */}
-              <div className="mt-2 mb-4 flex flex-col gap-2 items-start">
+              <div className="mt-2 mb-2 flex flex-col gap-2 items-start">
                 {currentWeather?.temp && (
                   <div className="p-1 rounded-lg bg-background  w-full">
                     <div className="flex gap-1 flex-wrap w-full">

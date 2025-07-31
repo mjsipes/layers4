@@ -44,7 +44,7 @@ const SortFilterBar = ({
   <div className="grid grid-cols-12 gap-4 bg-muted rounded-md p-1">
     <div className="col-span-2">
       <Button
-        className="h-7 p-1 hover:bg-primary hover:text-primary-foreground"
+        className="h-7 p-1 hover:bg-background"
         variant="ghost"
         onClick={() =>
           table
@@ -60,8 +60,8 @@ const SortFilterBar = ({
     </div>
     <div className="col-span-2">
       <Button
-        className="h-7 p-1 hover:bg-primary hover:text-primary-foreground"
-        variant="ghost"
+          className="h-7 p-1 hover:bg-background"
+          variant="ghost"
         onClick={() =>
           table
             .getColumn("created_at")
@@ -131,7 +131,7 @@ const Layers = ({ viewMode }: LayersProps) => {
         return (
           <div className="flex items-center gap-2">
             <Button
-              className="p-1 hover:bg-primary hover:text-primary-foreground"
+              className="p-1 hover:bg-background"
               variant="ghost"
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
@@ -191,7 +191,7 @@ const Layers = ({ viewMode }: LayersProps) => {
         return (
           <div className="flex items-center gap-2">
             <Button
-              className="p-1 hover:bg-primary hover:text-primary-foreground"
+              className="p-1 hover:bg-background"
               variant="ghost"
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
@@ -349,28 +349,26 @@ const Layers = ({ viewMode }: LayersProps) => {
         {filteredAndSortedLayers.map((layer) => (
           <div
             key={layer.id}
-            className={`relative p-4 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
+            className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
               selectedType === "selectlayer" && selectedItemId === layer.id
                 ? "border-blue-500"
                 : ""
             }`}
             onClick={() => handleLayerClick(layer)}
           >
-            <div className="absolute top-3 right-3">
-              <Badge variant="default">{layer.warmth || "-"}</Badge>
+            <div className="absolute top-1 right-2">
+              <Badge variant="default" className="h-5 w-6 items-center justify-center">{layer.warmth || "-"}</Badge>
             </div>
 
-            <div className="mb-3 pr-12">
+            <div className="mb-2 pr-12">
               <h3 className="text-sm font-semibold text-primary leading-tight">
                 {layer.name || "Unnamed Layer"}
               </h3>
             </div>
 
-            <div className="mt-auto">
               <p className="text-sm text-foreground line-clamp-3">
                 {layer.description || "-"}
               </p>
-            </div>
           </div>
         ))}
       </div>
