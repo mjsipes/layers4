@@ -127,22 +127,7 @@ const Layers = ({ viewMode }: LayersProps) => {
   const columns: ColumnDef<Layer>[] = [
     {
       accessorKey: "name",
-      header: ({ column }) => {
-        return (
-          <div className="flex items-center gap-2">
-            <Button
-              className="p-1 hover:bg-background"
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <span>Name</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
+      header: () => <div>Name</div>,
       cell: ({ row }) => {
         const layer = row.original;
         return (
@@ -187,22 +172,7 @@ const Layers = ({ viewMode }: LayersProps) => {
     },
     {
       accessorKey: "created_at",
-      header: ({ column }) => {
-        return (
-          <div className="flex items-center gap-2">
-            <Button
-              className="p-1 hover:bg-background"
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <span>Created</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
+      header: () => <div>Created</div>,
       cell: ({ row }) => {
         const layer = row.original;
         return (

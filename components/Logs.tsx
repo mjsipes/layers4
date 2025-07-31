@@ -151,22 +151,7 @@ const Logs = ({ viewMode }: LogsProps) => {
   const columns: ColumnDef<Log>[] = [
     {
       accessorKey: "date",
-      header: ({ column }) => {
-        return (
-          <div className="flex items-center gap-2">
-            <Button
-              className="p-1 hover:bg-background"
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <span>Date</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
+      header: () => <div>Date</div>,
       cell: ({ row }) => {
         const log = row.original;
         return (
@@ -186,22 +171,7 @@ const Logs = ({ viewMode }: LogsProps) => {
     },
     {
       accessorKey: "weather",
-      header: ({ column }) => {
-        return (
-          <div className="flex items-center gap-2">
-            <Button
-              className="p-1 hover:bg-background"
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <span>Temp</span>
-              <ArrowUpDown className="h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
+      header: () => <div>Temp</div>,
       cell: ({ row }) => {
         const log = row.original;
         const weatherData = log.weather?.weather_data
