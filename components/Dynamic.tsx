@@ -6,16 +6,19 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SelectLayerCard from "@/components/Layer";
 import SelectLogCard from "@/components/Log";
 import { useGlobalStore } from "@/stores/global_store";
-// import { useLayerStore } from "@/stores/layers_store";
-// import { useLogStore } from "@/stores/logs_store";
 import AddLogCard from "@/components/AddLog";
 import AddLayerCard from "@/components/AddLayer";
-import Home from "@/components/Home";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
-import { useGlobalSubscription, useGeolocation, useWeather, useAddress } from "@/hooks/useGlobalSubscription";
+import {
+  useGlobalSubscription,
+  useGeolocation,
+  useWeather,
+  useAddress,
+} from "@/hooks/useGlobalSubscription";
 import { Separator } from "@/components/ui/separator";
-
+import WeatherCard from "./Weather";
+import RecommendationCard from "./RecomendationCard";
 
 const DynamicCard = () => {
   useGeolocation();
@@ -26,18 +29,27 @@ const DynamicCard = () => {
   useAddress();
   const { selectedType, setSelectedItem } = useGlobalStore();
 
-
   return (
     <div className="w-full">
-      <Tabs 
-        value={selectedType || "home"} 
-        onValueChange={(value) => setSelectedItem(null, value as "home" | "addlog" | "addlayer" | "selectlayer" | "selectlog" )}
+      <Tabs
+        value={selectedType || "home"}
+        onValueChange={(value) =>
+          setSelectedItem(
+            null,
+            value as
+              | "home"
+              | "addlog"
+              | "addlayer"
+              | "selectlayer"
+              | "selectlog"
+          )
+        }
         className="w-full"
       >
         <div className="flex items-center justify-center mt-4 mb-2">
           <div className="flex items-center gap-4 ">
             <TabsList>
-            <TabsTrigger value="home">
+              <TabsTrigger value="home">
                 <Calendar1 size={14} className="mr-1" />
                 Today
               </TabsTrigger>
@@ -52,13 +64,17 @@ const DynamicCard = () => {
             </TabsList>
           </div>
         </div>
-        
-          <TabsContent value="home">
-            <Separator orientation="horizontal" />
 
-            <Home />
-          </TabsContent>
-          <ScrollArea className="h-[calc(100vh-9rem)] px-4">
+        <TabsContent value="home">
+          <div className="w-full h-[240px] overflow-hidden">
+            <WeatherCard />
+          </div>
+          <Separator orientation="horizontal" />
+          <div className="w-full h-[100px] overflow-hidden border-y">
+            <RecommendationCard />
+          </div>
+        </TabsContent>
+        <ScrollArea className="h-[calc(100vh-9rem)] px-4">
           <TabsContent value="addlog">
             <AddLogCard />
           </TabsContent>

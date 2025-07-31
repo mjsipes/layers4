@@ -237,10 +237,10 @@ const SelectLogCard = () => {
                   {/* Temperature Column */}
                   <div className="flex flex-col justify-start">
                     <div className="flex items-start gap-1">
-                      <span className="text-8xl font-bold text-blue-600 leading-none">
+                      <span className="text-8xl font-bold text-primary leading-none">
                         {Math.round(weatherDay.temp)}
                       </span>
-                      <span className="text-6xl font-bold text-blue-600">°</span>
+                      <span className="text-6xl font-bold text-primary">°</span>
                     </div>
                     {weatherDay.tempmin !== undefined &&
                       weatherDay.tempmax !== undefined && (

@@ -420,7 +420,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                 {currentWeather?.temp && (
                   <div className="p-1 rounded-lg bg-background  w-full">
                     <div className="flex gap-1 w-full">
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-blue-600 flex-shrink-0">
+                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-primary flex-shrink-0">
                         {Math.round(currentWeather.temp)}°
                       </span>
                       {log.address && (

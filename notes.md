@@ -3,29 +3,12 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 **TODO:**
 
+semantic search?
 
-## important notes ---------------------
-ai passed in .9 as similarity, so maybe dont let it control that value
-probably will just want to create a getrelevantprevious logs function that simply gets previous logs with similar weather or similar place or similar time of year, proabily will not even need semantic search for that.
-if we have embeddings in db then we do not want to get all with * because it will fill context of ai way to much.
-## -------------------------------------
-embedd logs and layers + create semantic search / keyword search and maybe datatable
-^^^^THIS WOULD BE REALLY GOOD PRACTICE^^^
-
-i think i love weather being right there. i think the only question is wether recomendations gets its own area or if that goes with the weather. but then that brings me back to the same question about giving weather its own place
-
-
-
-
-
-add todays recs:
-when i open the app it should have my recomendations for today. it probably should store the computation. probably a logs_layers_recs join table or layer_recs and . i think one of the question we are fighting with is do we automatically generate a log for the day we are on? is weather a part of the same days log? if everything is one. then we will have logs_layers join. then we will ahve logs_layers_recs join table and a logs_recs_description join table or something like that. everything will be build around the concept of a log. then at the top we will have buttons for today, +log, and +layer.  think this will be a good direction to head into because then we will becoming more like calendar. people can store whatever they want in a day. it will become more diverse.
+cache reomendations like weather
 
 what are you wearing today?
 we should try to create an add log card that instead of the multi select and text area, it is two text areas, first with preveiw of what are you wearing today? and the second with how did you feel? (too hot, too cold, just right) then have ai parse it and link logs
-
-
-
 
 get rid of comfort
 
