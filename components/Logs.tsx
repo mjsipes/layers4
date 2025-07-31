@@ -421,7 +421,7 @@ const Logs = ({ viewMode }: LogsProps) => {
                   <div className="p-1 rounded-lg bg-background  w-full">
                     <div className="flex gap-1 w-full">
                       <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-primary flex-shrink-0">
-                        {Math.round(currentWeather.temp)}°
+                        {Math.floor(currentWeather.temp)}°
                       </span>
                       {log.address && (
                         <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground overflow-hidden text-ellipsis whitespace-nowrap min-w-0">

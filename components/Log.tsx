@@ -238,7 +238,7 @@ const SelectLogCard = () => {
                   <div className="flex flex-col justify-start">
                     <div className="flex items-start gap-1">
                       <span className="text-8xl font-bold text-primary leading-none">
-                        {Math.round(weatherDay.temp)}
+                        {Math.floor(weatherDay.temp)}
                       </span>
                       <span className="text-6xl font-bold text-primary">°</span>
                     </div>
@@ -246,10 +246,10 @@ const SelectLogCard = () => {
                       weatherDay.tempmax !== undefined && (
                         <div className="flex gap-2">
                           <span className="badge text-xs">
-                            L: {Math.round(weatherDay.tempmin)}°
+                            L: {Math.floor(weatherDay.tempmin)}°
                           </span>
                           <span className="badge text-xs">
-                            H: {Math.round(weatherDay.tempmax)}°
+                            H: {Math.floor(weatherDay.tempmax)}°
                           </span>
                         </div>
                       )}
