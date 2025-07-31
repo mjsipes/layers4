@@ -88,7 +88,7 @@ const AddLogCard = () => {
             <Button
               variant="outline"
               id="log-date"
-              className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-blue-600 leading-tight mb-4"
+              className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
             >
               {date ? date.toLocaleDateString() : "Select date"}
               <ChevronDownIcon />

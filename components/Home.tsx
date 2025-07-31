@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -8,7 +8,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
-import { Trash2 } from "lucide-react";
 import { useGlobalStore } from "@/stores/global_store";
 import { useLogStore } from "@/stores/logs_store";
 import { useLayerStore } from "@/stores/layers_store";
@@ -20,45 +19,88 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
+import { Tables } from "@/lib/supabase/database.types";
 
-const SelectLogCard = () => {
-  const {
-    selectedItemId,
-    address: globalAddress,
-    lat: globalLat,
-    lon: globalLon,
-  } = useGlobalStore();
-  const { logs, deleteLog, updateLog, linkLayerToLog, unlinkLayerFromLog } =
-    useLogStore();
+type Log = Tables<"log"> & {
+  layers?: Tables<"layer">[];
+  weather?: Tables<"weather">;
+  recommendedLayers?: Tables<"layer">[];
+};
+
+const Home = () => {
+  const { logs, addLog, updateLog, linkLayerToLog, unlinkLayerFromLog } = useLogStore();
+  const { setSelectedItem, date, lat, lon, address } = useGlobalStore();
   const { layers } = useLayerStore();
+  const [loading, setLoading] = useState(true);
 
   // Date picker state
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [datePicker, setDatePicker] = React.useState<Date | undefined>(new Date());
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
 
   // Location picker state
-  const [address, setAddress] = React.useState("");
-  const [lat, setLat] = React.useState<number | null>(null);
-  const [lon, setLon] = React.useState<number | null>(null);
+  const [addressInput, setAddressInput] = React.useState("");
+  const [latInput, setLatInput] = React.useState<number | null>(null);
+  const [lonInput, setLonInput] = React.useState<number | null>(null);
   const [saving, setSaving] = React.useState(false);
 
-  const log = logs.find((l) => l.id === selectedItemId);
+  // Find today's log
+  const today = new Date().toISOString().split('T')[0];
+  const log = logs.find((l) => l.date === today);
   const [feedback, setFeedback] = React.useState(log?.feedback || "");
 
+  // Initialize today's log if it doesn't exist
+  useEffect(() => {
+    const initializeTodayLog = async () => {
+      // Only proceed if logs have been loaded (not empty array from initial state)
+      if (logs.length === 0) {
+        console.log("Home: Logs not loaded yet, waiting...");
+        return;
+      }
+      
+      if (!log) {
+        // Create today's log with current data
+        try {
+          console.log("Home: Creating today's log with data:", {
+            date: today,
+            lat,
+            lon,
+            address
+          });
 
+          await addLog({
+            date: today,
+            lat: lat || undefined,
+            lon: lon || undefined,
+            address: address || undefined,
+          });
+          
+          console.log("Home: Log creation initiated, waiting for subscription update...");
+        } catch (error) {
+          console.error('Home: Failed to create today\'s log:', error);
+          setLoading(false);
+          return;
+        }
+      } else {
+        setLoading(false);
+      }
+    };
 
+    initializeTodayLog();
+  }, [logs, date, lat, lon, address, addLog]);
+
+  // Update local state when log changes
   React.useEffect(() => {
     if (log) {
       if (log.date) {
         const [year, month, day] = log.date.split("-");
-        setDate(new Date(Number(year), Number(month) - 1, Number(day)));
+        setDatePicker(new Date(Number(year), Number(month) - 1, Number(day)));
       }
 
-      setAddress(log.address || globalAddress || "");
-      setLat(log.latitude != null ? log.latitude : globalLat);
-      setLon(log.longitude != null ? log.longitude : globalLon);
+      setAddressInput(log.address || address || "");
+      setLatInput(log.latitude != null ? log.latitude : lat);
+      setLonInput(log.longitude != null ? log.longitude : lon);
     }
-  }, [log, globalAddress, globalLat, globalLon]);
+  }, [log, address, lat, lon]);
 
   React.useEffect(() => {
     setFeedback(log?.feedback || "");
@@ -72,11 +114,32 @@ const SelectLogCard = () => {
     setSelectedLayerIds(log?.layers?.map((l) => l.id) || []);
   }, [log?.layers, log?.id]);
 
-  if (!log) {
-    return "null log right now";
+  // Check if we have today's log after any updates
+  useEffect(() => {
+    const todayLog = logs.find(log => log.date === today);
+    
+    if (todayLog && loading) {
+      setLoading(false);
+    }
+  }, [logs, loading, today]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-muted-foreground">Loading today's log...</p>
+      </div>
+    );
   }
 
-  // Refactor to match Logs.tsx style
+  if (!log) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-muted-foreground">Failed to load today's log</p>
+      </div>
+    );
+  }
+
+  // Weather data processing
   const weatherData = log?.weather?.weather_data
     ? typeof log.weather.weather_data === "string"
       ? (() => {
@@ -106,7 +169,7 @@ const SelectLogCard = () => {
   };
 
   const handleDateChange = async (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
+    setDatePicker(selectedDate);
     setDatePickerOpen(false);
 
     if (
@@ -130,13 +193,12 @@ const SelectLogCard = () => {
       const newLon = place.geometry.location.lng();
       const newAddress = place.formatted_address || "";
 
-      setLat(newLat);
-      setLon(newLon);
-      setAddress(newAddress);
+      setLatInput(newLat);
+      setLonInput(newLon);
+      setAddressInput(newAddress);
 
-      // Immediately update the log with new address, lat, lon
       console.log(
-        "SelectLogCard.handlePlaceSelected: ",
+        "Home.handlePlaceSelected: ",
         newAddress,
         newLat,
         newLon
@@ -155,13 +217,13 @@ const SelectLogCard = () => {
   };
 
   const handleAddressBlur = async () => {
-    if (address !== (log.address || "")) {
+    if (addressInput !== (log.address || "")) {
       setSaving(true);
       try {
         await updateLog(log.id, {
-          address: address || null,
-          latitude: lat,
-          longitude: lon,
+          address: addressInput || null,
+          latitude: latInput,
+          longitude: lonInput,
         });
       } finally {
         setSaving(false);
@@ -184,8 +246,6 @@ const SelectLogCard = () => {
 
   return (
     <div>
-      
-
       <div className="relative p-4 border rounded-lg bg-secondary border-secondary ">
         {/* Date Picker */}
         <div>
@@ -196,7 +256,7 @@ const SelectLogCard = () => {
                 id="log-date"
                 className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
               >
-                {date ? date.toLocaleDateString() : "Select date"}
+                {datePicker ? datePicker.toLocaleDateString() : "Select date"}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
@@ -206,7 +266,7 @@ const SelectLogCard = () => {
             >
               <Calendar
                 mode="single"
-                selected={date}
+                selected={datePicker}
                 captionLayout="dropdown"
                 onSelect={handleDateChange}
               />
@@ -219,7 +279,7 @@ const SelectLogCard = () => {
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
           placeholder="start typing address..."
           className="bg-background shadow-none border-none w-full mb-4 p-2 rounded-md ring-1 ring-muted h-9"
-          defaultValue={address}
+          defaultValue={addressInput}
           onPlaceSelected={handlePlaceSelected}
           onBlur={handleAddressBlur}
           options={{
@@ -284,53 +344,72 @@ const SelectLogCard = () => {
           </div>
         )}
 
-
-
-      {/* Layers Card */}
-      <div className="mt-2 mb-2">
-        <MultiSelector
-          values={selectedLayerIds}
-          onValuesChange={handleLayersChange}
-          loop={false}
-          className="text-sm"
-        >
-          <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background">
-            {selectedLayerIds.map((id) => {
-              const label = layers.find((l) => l.id === id)?.name || id;
-              return (
-                <span
-                  key={id}
-                  className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs"
-                >
-                  {label}
-                  <button
-                    type="button"
-                    className="ml-1 text-muted-foreground hover:text-destructive"
-                    onClick={() =>
-                      handleLayersChange(
-                        selectedLayerIds.filter((v) => v !== id)
-                      )
-                    }
-                    aria-label={`Remove ${label}`}
-                  >
-                    ×
-                  </button>
-                </span>
-              );
-            })}
-            <MultiSelectorInput />
+        {/* Weather Recommendations Card */}
+        {log.recommendedLayers && log.recommendedLayers.length > 0 && (
+          <div className="mb-2">
+            <div className="p-3 rounded-lg bg-background border-border">
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold text-primary">Weather Recommendations</h3>
+                <div className="flex flex-wrap gap-1">
+                  {log.recommendedLayers.map((layer) => (
+                    <span
+                      key={layer.id}
+                      className="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 text-blue-800 text-xs font-medium"
+                    >
+                      {layer.name || "Unnamed Layer"}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <MultiSelectorContent>
-            <MultiSelectorList>
-              {layers.map((layer) => (
-                <MultiSelectorItem key={layer.id} value={layer.id}>
-                  {layer.name || "Unnamed Layer"}
-                </MultiSelectorItem>
-              ))}
-            </MultiSelectorList>
-          </MultiSelectorContent>
-        </MultiSelector>
-      </div>
+        )}
+
+        {/* Layers Card */}
+        <div className="mt-2 mb-2">
+          <MultiSelector
+            values={selectedLayerIds}
+            onValuesChange={handleLayersChange}
+            loop={false}
+            className="text-sm"
+          >
+            <div className="flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-md bg-background">
+              {selectedLayerIds.map((id) => {
+                const label = layers.find((l) => l.id === id)?.name || id;
+                return (
+                  <span
+                    key={id}
+                    className="inline-flex items-center px-2 py-0.5 rounded-xl bg-secondary text-xs"
+                  >
+                    {label}
+                    <button
+                      type="button"
+                      className="ml-1 text-muted-foreground hover:text-destructive"
+                      onClick={() =>
+                        handleLayersChange(
+                          selectedLayerIds.filter((v) => v !== id)
+                        )
+                      }
+                      aria-label={`Remove ${label}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                );
+              })}
+              <MultiSelectorInput />
+            </div>
+            <MultiSelectorContent>
+              <MultiSelectorList>
+                {layers.map((layer) => (
+                  <MultiSelectorItem key={layer.id} value={layer.id}>
+                    {layer.name || "Unnamed Layer"}
+                  </MultiSelectorItem>
+                ))}
+              </MultiSelectorList>
+            </MultiSelectorContent>
+          </MultiSelector>
+        </div>
 
         {/* Feedback */}
         <div className="mt-2 mb-2">
@@ -344,21 +423,9 @@ const SelectLogCard = () => {
             placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
           />
         </div>
-
-        <div className="mt-auto">
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => deleteLog(log.id)}
-            className="flex items-center gap-2"
-          >
-            <Trash2 size={16} />
-            Delete
-          </Button>
-        </div>
       </div>
     </div>
   );
 };
 
-export default SelectLogCard;
+export default Home; 

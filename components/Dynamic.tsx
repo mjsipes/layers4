@@ -10,7 +10,7 @@ import { useGlobalStore } from "@/stores/global_store";
 // import { useLogStore } from "@/stores/logs_store";
 import AddLogCard from "@/components/AddLog";
 import AddLayerCard from "@/components/AddLayer";
-import WeatherCard from "@/components/Weather";
+import Home from "@/components/Home";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";
 import { useLogsSubscription } from "@/hooks/useLogsSubscription";
 import { useGlobalSubscription, useGeolocation, useWeather, useAddress } from "@/hooks/useGlobalSubscription";
@@ -53,8 +53,7 @@ const DynamicCard = () => {
         </div>
         <ScrollArea className="h-[calc(100vh-9rem)] px-4">
           <TabsContent value="home">
-          <WeatherCard />
-
+            <Home />
           </TabsContent>
           <TabsContent value="addlog">
             <AddLogCard />
