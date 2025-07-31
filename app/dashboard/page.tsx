@@ -10,7 +10,6 @@ import WeatherCard from "@/components/Weather";
 import WardobeCard from "@/components/Wardrobe";
 import Chat from "@/components/Chat";
 import DynamicCard from "@/components/Dynamic";
-import { Separator } from "@/components/ui/separator";
 
 export default async function DashboardPage() {
   const supabase = await createClient();

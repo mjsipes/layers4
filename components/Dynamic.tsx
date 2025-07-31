@@ -19,7 +19,7 @@ const DynamicCard = () => {
     <div className="w-full">
       <Tabs 
         value={selectedType || "recommendations"} 
-        onValueChange={(value) => setSelectedItem(null, value as any)}
+        onValueChange={(value) => setSelectedItem(null, value as "recommendations" | "addlog" | "addlayer" | "selectlayer" | "selectlog" )}
         className="w-full"
       >
         <div className="flex items-center justify-center mt-4 mb-2">

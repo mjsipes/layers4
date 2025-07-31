@@ -4,8 +4,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +37,7 @@ const SortFilterBar = ({
   globalFilter, 
   setGlobalFilter 
 }: { 
-  table: any; 
+  table: ReturnType<typeof useReactTable<Log>>; 
   globalFilter: string; 
   setGlobalFilter: (value: string) => void; 
 }) => (
