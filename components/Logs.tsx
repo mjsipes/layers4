@@ -76,7 +76,7 @@ const SortFilterBar = ({
     </div>
     <div className="col-span-8 flex items-center justify-end">
       <Input
-        placeholder="Search logs by description, date, or temperature..."
+        placeholder="Search logs by description, date, temperature, address, or layers..."
         value={globalFilter}
         onChange={(event) => setGlobalFilter(event.target.value)}
         className="max-w-sm h-7"
@@ -282,6 +282,18 @@ const Logs = ({ viewMode }: LogsProps) => {
       // Search in weather value
       const weatherValue = getWeatherValue(log).toLowerCase();
       if (weatherValue.includes(searchValue)) return true;
+
+      // Search in address
+      const address = log.address || "";
+      if (address.toLowerCase().includes(searchValue)) return true;
+
+      // Search in layer names
+      if (log.layers && log.layers.length > 0) {
+        const layerNames = log.layers.map(layer => layer.name || "Unnamed Layer");
+        if (layerNames.some(name => name.toLowerCase().includes(searchValue))) {
+          return true;
+        }
+      }
 
       return false;
     },
