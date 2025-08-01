@@ -154,6 +154,33 @@ export type Database = {
         }
         Relationships: []
       }
+      recommendations: {
+        Row: {
+          created_at: string
+          date: string | null
+          id: number
+          layers: string[]
+          reasoning: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          id?: number
+          layers: string[]
+          reasoning?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          id?: number
+          layers?: string[]
+          reasoning?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       weather: {
         Row: {
           created_at: string

@@ -1,63 +1,102 @@
-import React, { useState } from 'react'
-import { Input } from './ui/input'
-import { TextEffect } from '@/components/ui/text-effect'
-import { TextShimmer } from '@/components/ui/text-shimmer'
+"use client";
+import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { useRecommendationsSubscription } from '@/hooks/useRecommendationsSubscription';
+import { useGlobalStore } from '@/stores/global_store';
 
-const RecomendationCard = () => {
-  const [isFocused1, setIsFocused1] = useState(false)
-  const [value1, setValue1] = useState('')
-  const [isFocused2, setIsFocused2] = useState(false)
-  const [value2, setValue2] = useState('')
+const RecommendationCard = () => {
+  const { recommendations, loading, error } = useRecommendationsSubscription();
+  const { setSelectedItem } = useGlobalStore();
+  const { selectedItemId, selectedType } = useGlobalStore();
 
-  return (
-    <div className="p-4 w-full">
-      RecomendationCard
-      
-      <div className="flex gap-4">
-        {/* Input with TextEffect only */}
-        <div className="flex-1">
-          <label className="text-sm font-medium mb-2 block">TextEffect Only</label>
-          <div className="relative">
-            <Input
-              value={value1}
-              onChange={(e) => setValue1(e.target.value)}
-              onFocus={() => setIsFocused1(true)}
-              onBlur={() => setIsFocused1(false)}
-              className="pr-8"
-            />
-            {!value1 && !isFocused1 && (
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-muted-foreground">
-                <TextEffect per='char' preset='fade'>
-                  What are you wearing today?
-                </TextEffect>
-              </div>
-            )}
-          </div>
-        </div>
+  const handleLayerClick = (layerId: string) => {
+    console.log("RecommendationCard/handleLayerClick:", layerId);
+    setSelectedItem(layerId, "selectlayer");
+  };
 
-        {/* Input with TextShimmer only */}
-        <div className="flex-1">
-          <label className="text-sm font-medium mb-2 block">TextShimmer Only</label>
-          <div className="relative">
-            <Input
-              value={value2}
-              onChange={(e) => setValue2(e.target.value)}
-              onFocus={() => setIsFocused2(true)}
-              onBlur={() => setIsFocused2(false)}
-              className="pr-8"
-            />
-            {!value2 && !isFocused2 && (
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-muted-foreground">
-                <TextShimmer className="font-mono text-sm" duration={3}>
-                  What are you wearing today?
-                </TextShimmer>
-              </div>
-            )}
-          </div>
-        </div>
+  // ========================================
+  // LOADING STATE
+  // ========================================
+  if (loading) {
+    return (
+      <div className="w-full h-[200px] flex items-center justify-center">
+        <p className="text-muted-foreground">Loading recommendations...</p>
       </div>
-    </div>
-  )
-}
+    );
+  }
 
-export default RecomendationCard
+  // ========================================
+  // ERROR STATE
+  // ========================================
+  if (error) {
+    return (
+      <div className="w-full h-[200px] flex items-center justify-center">
+        <p className="text-destructive">Error: {error}</p>
+      </div>
+    );
+  }
+
+  // ========================================
+  // NO RECOMMENDATIONS FOUND
+  // ========================================
+  if (recommendations.length === 0) {
+    return (
+      <div className="w-full h-[200px] flex items-center justify-center">
+        <p className="text-muted-foreground">No recommendations found.</p>
+      </div>
+    );
+  }
+
+  // ========================================
+  // RECOMMENDATIONS DISPLAY
+  // ========================================
+  return (
+    <div className="space-y-4">
+      {recommendations.map((recommendation) => (
+        <div key={recommendation.id} className="space-y-3">
+          {/* Reasoning paragraph */}
+          {recommendation.reasoning && (
+            <p className="text-sm text-foreground leading-relaxed">
+              {recommendation.reasoning}
+            </p>
+          )}
+          
+          {/* Layer grid */}
+          {recommendation.layerDetails.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              {recommendation.layerDetails.map((layer) => (
+                <div
+                  key={layer.id}
+                  className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
+                    selectedType === "selectlayer" && selectedItemId === layer.id
+                      ? "border-blue-600"
+                      : ""
+                  }`}
+                  onClick={() => handleLayerClick(layer.id)}
+                >
+                  <div className="absolute top-1 right-2">
+                    <Badge variant="default" className="h-5 w-6 items-center justify-center">
+                      {layer.warmth || "-"}
+                    </Badge>
+                  </div>
+
+                  <div className="mb-2 pr-8">
+                    <h3 className="text-sm font-semibold text-primary leading-tight">
+                      {layer.name || "Unnamed Layer"}
+                    </h3>
+                  </div>
+
+                  <p className="text-sm text-foreground line-clamp-3">
+                    {layer.description || "-"}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default RecommendationCard;
