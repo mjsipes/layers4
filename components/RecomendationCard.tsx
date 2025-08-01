@@ -52,6 +52,9 @@ const RecommendationCard = () => {
   // ========================================
   return (
     <div className="space-y-4">
+      {/* Header */}
+      <h2 className="text-xl font-semibold text-primary">Weather Recommendations</h2>
+      
       {recommendations.map((recommendation) => (
         <div key={recommendation.id} className="space-y-3">
           {/* Reasoning paragraph */}
