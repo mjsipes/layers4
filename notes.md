@@ -5,6 +5,8 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 image upload
 
+what are you wearing today? and redo button for recomendations
+
 semantic search?
 
 recomendations in ui, then inline object generation
