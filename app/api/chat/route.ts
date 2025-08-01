@@ -5,6 +5,7 @@ import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool, s
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool, linkLogLayerRecTool, unlinkLogLayerRecTool } from "./log-tools";
 import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./global-tools";
 import { getDateTool } from "./get-date-tool";
+import { get_cached_recommendations, set_recommendations_tool, clear_recommendations_tool } from "./get-recommendations-tool";
 
 export const maxDuration = 30;
 
@@ -35,6 +36,9 @@ export async function POST(req: Request) {
       set_location: setLocationTool,
       get_location: getLocationTool,
       get_current_ui: getCurrentUITool,
+      get_cached_recommendations: get_cached_recommendations,
+      set_recommendations: set_recommendations_tool,
+      clear_recommendations: clear_recommendations_tool,
     },
   });
 
