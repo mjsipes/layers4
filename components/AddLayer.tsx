@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useLayerStore } from "@/stores/layers_store";
+import { useLayerStore } from "@/stores/layers-store";
 
 const AddLayerCard = () => {
   const { addLayer } = useLayerStore();

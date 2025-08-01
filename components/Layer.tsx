@@ -3,8 +3,8 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { useGlobalStore } from "@/stores/global_store";
-import { useLayerStore } from "@/stores/layers_store";
+import { useGlobalStore } from "@/stores/global-store";
+import { useLayerStore } from "@/stores/layers-store";
 
 const SelectLayerCard = () => {
   const { selectedItemId } = useGlobalStore();

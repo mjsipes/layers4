@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useLogStore } from "@/stores/logs_store";
+import { useLogStore } from "@/stores/logs-store";
 import { createClient } from "@/lib/supabase/client";
-import { useGlobalStore } from "@/stores/global_store";
+import { useGlobalStore } from "@/stores/global-store";
 
 const supabase = createClient();
 

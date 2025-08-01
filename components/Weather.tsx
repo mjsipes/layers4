@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useGlobalStore } from "@/stores/global_store";
+import { useGlobalStore } from "@/stores/global-store";
 
 const WeatherCard = () => {
 

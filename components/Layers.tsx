@@ -11,9 +11,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useLayerStore } from "@/stores/layers_store";
-import { useGlobalStore } from "@/stores/global_store";
-import type { Layer } from "@/stores/layers_store";
+import { useLayerStore } from "@/stores/layers-store";
+import { useGlobalStore } from "@/stores/global-store";
+import type { Layer } from "@/stores/layers-store";
 import {
   ColumnDef,
   flexRender,

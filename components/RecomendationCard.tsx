@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { useRecommendationsSubscription } from '@/hooks/useRecommendationsSubscription';
-import { useGlobalStore } from '@/stores/global_store';
+import { useGlobalStore } from '@/stores/global-store';
 
 const RecommendationCard = () => {
   const { recommendations, loading, error } = useRecommendationsSubscription();

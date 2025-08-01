@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/popover";
 import { ChevronDownIcon } from "lucide-react";
 import { Trash2 } from "lucide-react";
-import { useGlobalStore } from "@/stores/global_store";
-import { useLogStore } from "@/stores/logs_store";
-import { useLayerStore } from "@/stores/layers_store";
+import { useGlobalStore } from "@/stores/global-store";
+import { useLogStore } from "@/stores/logs-store";
+import { useLayerStore } from "@/stores/layers-store";
 import Autocomplete from "react-google-autocomplete";
 import {
   MultiSelector,

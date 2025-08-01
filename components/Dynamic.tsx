@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SelectLayerCard from "@/components/Layer";
 import SelectLogCard from "@/components/Log";
-import { useGlobalStore } from "@/stores/global_store";
+import { useGlobalStore } from "@/stores/global-store";
 import AddLogCard from "@/components/AddLog";
 import AddLayerCard from "@/components/AddLayer";
 import { useLayersSubscription } from "@/hooks/useLayersSubscription";

@@ -7,7 +7,7 @@ import Layers from "@/components/Layers";
 
 import Logs from "@/components/Logs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGlobalStore } from "@/stores/global_store";
+import { useGlobalStore } from "@/stores/global-store";
 
 const WardobeCard = () => {
   const { wardrobeViewMode, wardrobeActiveTab, setWardrobeActiveTab, toggleWardrobeViewMode } = useGlobalStore();

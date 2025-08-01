@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { createClient } from "@/lib/supabase/client";
 import { Tables } from "@/lib/supabase/database.types";
-import { useLayerStore } from "@/stores/layers_store";
+import { useLayerStore } from "@/stores/layers-store";
 
 const supabase = createClient();
 

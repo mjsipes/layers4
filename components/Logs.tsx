@@ -10,9 +10,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useLogStore } from "@/stores/logs_store";
-import { useGlobalStore } from "@/stores/global_store";
-import type { Log } from "@/stores/logs_store";
+import { useLogStore } from "@/stores/logs-store";
+import { useGlobalStore } from "@/stores/global-store";
+import type { Log } from "@/stores/logs-store";
 import {
   ColumnDef,
   flexRender,
