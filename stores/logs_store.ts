@@ -14,7 +14,6 @@ const supabase = createClient();
 type Log = Tables<"log"> & {
   layers?: Tables<"layer">[];
   weather?: Tables<"weather">;
-  recommendedLayers?: Tables<"layer">[];
 };
 
 type LogState = {

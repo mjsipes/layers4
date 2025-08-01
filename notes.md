@@ -3,9 +3,12 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 **TODO:**
 
+image upload
+
 semantic search?
 
 recomendations in ui, then inline object generation
+
 
 what are you wearing today?
 we should try to create an add log card that instead of the multi select and text area, it is two text areas, first with preveiw of what are you wearing today? and the second with how did you feel? (too hot, too cold, just right) then have ai parse it and link logs
