@@ -321,7 +321,10 @@ const SelectLogCard = () => {
                 </span>
               );
             })}
-            <MultiSelectorInput />
+            <MultiSelectorInput 
+              placeholder={selectedLayerIds.length === 0 ? "What did you wear today?" : ""}
+              className="text-base ml-1.5 placeholder:text-foreground/40 dark:placeholder:text-muted-foreground"
+            />
           </div>
           <MultiSelectorContent>
             <MultiSelectorList>
@@ -344,7 +347,7 @@ const SelectLogCard = () => {
             onBlur={handleFeedbackBlur}
             rows={3}
             disabled={saving}
-            placeholder="Today was a lovely day, but when the sun went down, I felt a bit chilly."
+            placeholder="How did you feel today?"
           />
         </div>
 
