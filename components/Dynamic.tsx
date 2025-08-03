@@ -64,13 +64,13 @@ const DynamicCard = () => {
             </TabsList>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-9rem)] px-4">
+        <ScrollArea className="h-[calc(100vh-9rem)]">
           <TabsContent value="home">
             <Separator orientation="horizontal" />
             <div className="w-full h-[240px] overflow-hidden">
               <WeatherCard />
             </div>
-            <div className="w-full h-[400px] overflow-hidden border-y">
+            <div className="w-full  overflow-hidden border-y">
               <RecommendationCard />
             </div>
           </TabsContent>

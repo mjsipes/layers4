@@ -186,7 +186,7 @@ const SelectLogCard = () => {
     <div>
       
 
-      <div className="relative p-4 border rounded-lg bg-secondary border-secondary ">
+      <div className="relative p-4 border rounded-lg bg-secondary border-secondary mx-4">
         {/* Date Picker */}
         <div>
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>

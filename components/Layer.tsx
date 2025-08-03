@@ -47,7 +47,7 @@ const SelectLayerCard = () => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg bg-secondary border-secondary ">
+    <div className="relative p-4 border rounded-lg bg-secondary border-secondary mx-4">
       <div className="absolute top-4 right-4">
         <Badge
           variant="default"

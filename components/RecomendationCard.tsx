@@ -51,18 +51,18 @@ const RecommendationCard = () => {
   // RECOMMENDATIONS DISPLAY
   // ========================================
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-4">
       {/* Header */}
       <h2 className="text-xl font-semibold text-primary">Weather Recommendations</h2>
       
       {recommendations.map((recommendation) => (
         <div key={recommendation.id} className="space-y-3">
           {/* Reasoning paragraph */}
-          {recommendation.reasoning && (
+          {/* {recommendation.reasoning && (
             <p className="text-sm text-foreground leading-relaxed">
               {recommendation.reasoning}
             </p>
-          )}
+          )} */}
           
           {/* Layer grid */}
           {recommendation.layerDetails.length > 0 && (
@@ -75,7 +75,7 @@ const RecommendationCard = () => {
                       ? "border-blue-600"
                       : ""
                   }`}
-                  onClick={() => handleLayerClick(layer.id)}
+                  // onClick={() => handleLayerClick(layer.id)}
                 >
                   <div className="absolute top-1 right-2">
                     <Badge variant="default" className="h-5 w-6 items-center justify-center">
@@ -89,9 +89,9 @@ const RecommendationCard = () => {
                     </h3>
                   </div>
 
-                  <p className="text-sm text-foreground line-clamp-3">
+                  {/* <p className="text-sm text-foreground line-clamp-3">
                     {layer.description || "-"}
-                  </p>
+                  </p> */}
                 </div>
               ))}
             </div>

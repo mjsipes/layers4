@@ -78,7 +78,7 @@ const AddLogCard = () => {
 
   return (
     <form
-      className="relative p-4 border rounded-lg bg-secondary border-secondary"
+      className="relative p-4 border rounded-lg bg-secondary border-secondary mx-4"
       onSubmit={handleSubmit}
     >
       {/* Date Picker */}
