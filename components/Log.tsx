@@ -187,6 +187,8 @@ const SelectLogCard = () => {
       
 
       <div className="relative p-4 border rounded-lg bg-secondary border-secondary mx-4">
+        <div className="grid grid-cols-2 gap-4">
+
         {/* Date Picker */}
         <div>
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
@@ -195,7 +197,7 @@ const SelectLogCard = () => {
                 variant="outline"
                 id="log-date"
                 className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
-              >
+                >
                 {date ? date.toLocaleDateString() : "Select date"}
                 <ChevronDownIcon />
               </Button>
@@ -203,13 +205,13 @@ const SelectLogCard = () => {
             <PopoverContent
               className="w-auto overflow-hidden p-0"
               align="start"
-            >
+              >
               <Calendar
                 mode="single"
                 selected={date}
                 captionLayout="dropdown"
                 onSelect={handleDateChange}
-              />
+                />
             </PopoverContent>
           </Popover>
         </div>
@@ -225,12 +227,13 @@ const SelectLogCard = () => {
           options={{
             types: ["geocode"],
           }}
-        />
+          />
+          </div>
 
         {/* Weather Information Card */}
         {weatherDay && (
           <div className="mb-2">
-            <div className="p-3 rounded-lg bg-background border-border">
+            <div className="p-3 rounded-lg bg-background ">
               <div className="space-y-3">
                 {/* Temperature and Weather Stats Row */}
                 <div className="grid grid-cols-2 gap-4">
