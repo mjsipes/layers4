@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { useGlobalStore } from "@/stores/global-store";
 import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";

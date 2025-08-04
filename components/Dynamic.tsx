@@ -16,7 +16,6 @@ import {
   useWeather,
   useAddress,
 } from "@/hooks/useGlobalSubscription";
-import { Separator } from "@/components/ui/separator";
 import Home from "./Home";
 
 const DynamicCard = () => {
