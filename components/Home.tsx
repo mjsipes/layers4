@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useGlobalStore } from "@/stores/global-store";
 import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
 import Autocomplete from "react-google-autocomplete";
@@ -153,31 +159,51 @@ const Home = () => {
             <p className="text-muted-foreground">No recommendations found.</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-primary">Weather Recommendations</h3>
+          <div className="p-3 rounded-lg bg-background border border-muted">
+            <h3 className="text-lg font-semibold text-primary mb-3">Weather Recommendations</h3>
             {recommendations.map((recommendation) => (
               <div key={recommendation.id} className="space-y-3">
                 {/* Layer grid */}
                 {recommendation.layerDetails.length > 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {recommendation.layerDetails.map((layer) => (
-                      <div
-                        key={layer.id}
-                        className="relative p-2 border rounded-lg bg-background border-muted"
-                      >
-                        <div className="absolute top-1 right-2">
-                          <Badge variant="default" className="h-5 w-6 items-center justify-center">
-                            {layer.warmth || "-"}
-                          </Badge>
-                        </div>
+                  <div className="p-3 rounded-md bg-muted border border-muted">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {recommendation.layerDetails.map((layer) => (
+                        <div
+                          key={layer.id}
+                          className="relative p-2 border rounded-md bg-background border-muted"
+                        >
+                          <div className="absolute top-1 right-2">
+                            <Badge variant="default" className="h-5 w-6 items-center justify-center">
+                              {layer.warmth || "-"}
+                            </Badge>
+                          </div>
 
-                        <div className="mb-2 pr-8">
-                          <h4 className="text-sm font-semibold text-primary leading-tight">
-                            {layer.name || "Unnamed Layer"}
-                          </h4>
+                          <div className="mb-2 pr-8">
+                            <h4 className="text-sm font-semibold text-primary leading-tight">
+                              {layer.name || "Unnamed Layer"}
+                            </h4>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Reasoning in Accordion */}
+                {recommendation.reasoning && (
+                  <div className="py-1 px-3 rounded-md bg-muted border border-muted">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="reasoning" className="border-none">
+                        <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground py-1">
+                          View reasoning
+                        </AccordionTrigger>
+                        <AccordionContent className="p-0">
+                          <p className="text-sm text-foreground leading-relaxed py-1 m-0">
+                            {recommendation.reasoning}
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
                 )}
               </div>
