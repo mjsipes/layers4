@@ -139,16 +139,16 @@ const Home = () => {
         </div>
       ) : (
         <div className="mb-2">
-          <div className="p-3 rounded-lg bg-background">
+          <div className="p-3 rounded-lg bg-background h-[185px] flex items-center justify-center">
             <p className="text-muted-foreground">Loading weather data...</p>
           </div>
         </div>
       )}
 
       {/* Recommendations Section */}
-      <div className="mt-2 mb-2">
+      <div className="mt-4">
         {loading ? (
-          <div className="p-3 rounded-lg bg-background">
+          <div className="p-3 rounded-lg bg-background h-[100px] flex items-center justify-center">
             <p className="text-muted-foreground">Loading recommendations...</p>
           </div>
         ) : error ? (
