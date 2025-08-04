@@ -26,21 +26,51 @@ export interface RecommendationWithLayers extends Recommendation {
 
 export function useRecommendationsSubscription() {
   const [recommendations, setRecommendations] = React.useState<RecommendationWithLayers[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Get global state values
+  const date = useGlobalStore((state) => state.date);
+  const lat = useGlobalStore((state) => state.lat);
+  const lon = useGlobalStore((state) => state.lon);
 
   // Fetch recommendations with their associated layers
   const fetchRecommendations = async () => {
-    console.log("useRecommendationsSubscription/fetchRecommendations: Fetching recommendations");
-    setLoading(true);
+    console.log("=== useRecommendationsSubscription/fetchRecommendations START ===");
+    console.log("useRecommendationsSubscription/fetchRecommendations:", { date, lat, lon });
+    
+    if (!date || !lat || !lon) {
+      console.log("useRecommendationsSubscription/fetchRecommendations: Missing required data, skipping fetch");
+      setRecommendations([]);
+      return;
+    }
+
     setError(null);
 
     try {
-      // First, fetch all recommendations
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user?.id) {
+        console.log("useRecommendationsSubscription/fetchRecommendations: No authenticated user");
+        setRecommendations([]);
+        return;
+      }
+
+      // Fetch recommendations for specific date, location, and user
+      const dateString = date.toISOString().split("T")[0];
+      const roundedLat = Math.round(lat * 100) / 100;
+      const roundedLon = Math.round(lon * 100) / 100;
+      
+      console.log("=== ROUNDED COORDINATES ===");
+      console.log("Original lat:", lat, "Original lon:", lon);
+      console.log("Rounded lat:", roundedLat, "Rounded lon:", roundedLon);
+      
       const { data: recommendationsData, error: recommendationsError } = await supabase
         .from("recommendations")
         .select("*")
-        .order("created_at", { ascending: false });
+        .eq("user_id", user.id)
+        .eq("date", dateString)
+        .eq("latitude", roundedLat)
+        .eq("longitude", roundedLon);
 
       if (recommendationsError) {
         console.error("useRecommendationsSubscription/fetchRecommendations: ", recommendationsError);
@@ -49,16 +79,12 @@ export function useRecommendationsSubscription() {
         return;
       }
 
-      if (!recommendationsData || recommendationsData.length === 0) {
-        setRecommendations([]);
-        setLoading(false);
-        return;
-      }
+      console.log("useRecommendationsSubscription/fetchRecommendations: ", recommendationsData);  
 
       // For each recommendation, fetch the associated layers
       const recommendationsWithLayers: RecommendationWithLayers[] = [];
       
-      for (const recommendation of recommendationsData) {
+      for (const recommendation of recommendationsData || []) {
         if (recommendation.layers && recommendation.layers.length > 0) {
           const { data: layersData, error: layersError } = await supabase
             .from("layer")
@@ -90,8 +116,6 @@ export function useRecommendationsSubscription() {
       console.error("useRecommendationsSubscription/fetchRecommendations: Unexpected error", err);
       setError("An unexpected error occurred");
       setRecommendations([]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -122,7 +146,7 @@ export function useRecommendationsSubscription() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [date, lat, lon]);
 
-  return { recommendations, loading, error, refetch: fetchRecommendations };
+  return { recommendations, error, refetch: fetchRecommendations };
 } 

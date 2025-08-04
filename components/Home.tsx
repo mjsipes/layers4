@@ -21,7 +21,7 @@ const Home = () => {
     setLocation: setGlobalLocation,
     setAddress: setGlobalAddress
   } = useGlobalStore();
-  const { recommendations, loading, error } = useRecommendationsSubscription();
+  const { recommendations, error } = useRecommendationsSubscription();
 
   // Location picker state
   const [address, setAddress] = React.useState(globalAddress || "");
@@ -147,11 +147,7 @@ const Home = () => {
 
       {/* Recommendations Section */}
       <div className="mt-4">
-        {loading ? (
-          <div className="p-3 rounded-lg bg-background h-[100px] flex items-center justify-center">
-            <p className="text-muted-foreground">Loading recommendations...</p>
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="p-3 rounded-lg bg-background">
             <p className="text-destructive">Error: {error}</p>
           </div>

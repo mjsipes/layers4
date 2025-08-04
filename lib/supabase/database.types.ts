@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
           name: string | null
           top: boolean | null
           user_id: string | null
@@ -30,6 +31,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string | null
           top?: boolean | null
           user_id?: string | null
@@ -40,6 +42,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string | null
           top?: boolean | null
           user_id?: string | null
@@ -159,7 +162,9 @@ export type Database = {
           created_at: string
           date: string | null
           id: number
+          latitude: number | null
           layers: string[]
+          longitude: number | null
           reasoning: string | null
           user_id: string | null
         }
@@ -167,7 +172,9 @@ export type Database = {
           created_at?: string
           date?: string | null
           id?: number
+          latitude?: number | null
           layers: string[]
+          longitude?: number | null
           reasoning?: string | null
           user_id?: string | null
         }
@@ -175,7 +182,9 @@ export type Database = {
           created_at?: string
           date?: string | null
           id?: number
+          latitude?: number | null
           layers?: string[]
+          longitude?: number | null
           reasoning?: string | null
           user_id?: string | null
         }
@@ -216,109 +225,6 @@ export type Database = {
       calculate_outfit_warmth: {
         Args: { outfit_uuid: string }
         Returns: number
-      }
-      get_logs_by_date: {
-        Args: { log_date: string }
-        Returns: {
-          log_id: string
-          date: string
-          comfort_level: number
-          feedback: string
-          was_too_hot: boolean
-          was_too_cold: boolean
-          outfit_name: string
-          total_warmth: number
-          layer_names: string
-          weather_data: Json
-        }[]
-      }
-      get_logs_by_outfit: {
-        Args: { outfit_uuid: string }
-        Returns: {
-          log_id: string
-          date: string
-          comfort_level: number
-          feedback: string
-          was_too_hot: boolean
-          was_too_cold: boolean
-          outfit_name: string
-          total_warmth: number
-          layer_names: string
-          weather_data: Json
-        }[]
-      }
-      get_logs_date_range: {
-        Args: { start_date: string; end_date: string }
-        Returns: {
-          log_id: string
-          date: string
-          comfort_level: number
-          feedback: string
-          was_too_hot: boolean
-          was_too_cold: boolean
-          outfit_name: string
-          total_warmth: number
-          layer_names: string
-          weather_data: Json
-        }[]
-      }
-      get_outfit_details: {
-        Args: { outfit_uuid: string }
-        Returns: {
-          outfit_name: string
-          total_warmth: number
-          layer_name: string
-          layer_warmth: number
-          is_top: boolean
-          is_bottom: boolean
-        }[]
-      }
-      get_outfit_stats: {
-        Args: { outfit_uuid: string }
-        Returns: {
-          times_worn: number
-          avg_comfort: number
-          too_hot_count: number
-          too_cold_count: number
-          temp_range_low: number
-          temp_range_high: number
-        }[]
-      }
-      match_layer: {
-        Args: {
-          query_embedding: string
-          match_threshold: number
-          match_count: number
-        }
-        Returns: {
-          bottom: boolean | null
-          created_at: string
-          description: string | null
-          id: string
-          name: string | null
-          top: boolean | null
-          user_id: string | null
-          warmth: number | null
-        }[]
-      }
-      match_log: {
-        Args: {
-          query_embedding: string
-          match_threshold: number
-          match_count: number
-        }
-        Returns: {
-          address: string | null
-          comfort_level: number | null
-          created_at: string
-          date: string | null
-          feedback: string | null
-          id: string
-          latitude: number | null
-          longitude: number | null
-          user_id: string | null
-          weather_id: string | null
-        }[]
       }
     }
     Enums: {

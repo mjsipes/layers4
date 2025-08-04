@@ -90,13 +90,15 @@ export const get_cached_recommendations = tool({
 });
 
 export const set_recommendations_tool = tool({
-  description: "Set weather recommendations for a specific date. Takes an array of layer UUIDs and reasoning text.",
+  description: "Set weather recommendations for a specific date and location. Takes an array of layer UUIDs, reasoning text, latitude, and longitude.",
   parameters: z.object({
     date: z.string().describe("The date for the recommendations (YYYY-MM-DD format)"),
     layer_uuids: z.array(z.string()).describe("Array of layer UUIDs to recommend"),
     reasoning: z.string().describe("The reasoning for why these layers are recommended"),
+    latitude: z.number().describe("The latitude coordinate for the location"),
+    longitude: z.number().describe("The longitude coordinate for the location"),
   }),
-  execute: async ({ date, layer_uuids, reasoning }) => {
+  execute: async ({ date, layer_uuids, reasoning, latitude, longitude }) => {
     try {
       const supabase = await createClient();
       // Get the current user
@@ -149,7 +151,7 @@ export const set_recommendations_tool = tool({
         };
       }
 
-      // Insert the new recommendation
+      // Insert the new recommendation with rounded lat/lon
       const { data: newRecommendation, error: insertError } = await supabase
         .from("recommendations")
         .insert({
@@ -157,6 +159,8 @@ export const set_recommendations_tool = tool({
           layers: layer_uuids,
           reasoning,
           user_id: user.id,
+          latitude: Math.round(latitude * 100) / 100, // Round to 2 decimal places
+          longitude: Math.round(longitude * 100) / 100, // Round to 2 decimal places
         })
         .select()
         .single();

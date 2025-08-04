@@ -3,6 +3,8 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 **TODO:**
 
+work on get weather recomendations
+
 image upload
 
 what are you wearing today? and redo button for recomendations
