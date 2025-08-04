@@ -199,7 +199,7 @@ const Home = () => {
 
             {/* Reasoning in Accordion */}
             {recommendation.reasoning && (
-              <div className=" px-3 rounded-md bg-muted border border-muted">
+              <div className=" px-3 rounded-md bg-muted border border-muted mt-2">
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="reasoning" className="border-none">
                     <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground py-1">
