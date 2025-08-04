@@ -11,7 +11,6 @@ import { TextEffect } from "@/components/ui/text-effect";
 import { useGlobalStore } from "@/stores/global-store";
 import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
 import Autocomplete from "react-google-autocomplete";
-import { Textarea } from "./ui/textarea";
 
 const Home = () => {
   const {
