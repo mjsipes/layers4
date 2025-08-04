@@ -35,8 +35,8 @@ export function useRecommendationsSubscription() {
 
   // Fetch recommendations with their associated layers
   const fetchRecommendations = async () => {
-    console.log("=== useRecommendationsSubscription/fetchRecommendations START ===");
-    console.log("useRecommendationsSubscription/fetchRecommendations:", { date, lat, lon });
+    console.log("useRecommendationsSubscription/fetchRecommendations: START");
+    console.log("useRecommendationsSubscription/fetchRecommendations: values:", { date, lat, lon });
     
     if (!date || !lat || !lon) {
       console.log("useRecommendationsSubscription/fetchRecommendations: Missing required data, skipping fetch");
@@ -60,9 +60,11 @@ export function useRecommendationsSubscription() {
       const roundedLat = Math.round(lat * 100) / 100;
       const roundedLon = Math.round(lon * 100) / 100;
       
-      console.log("=== ROUNDED COORDINATES ===");
-      console.log("Original lat:", lat, "Original lon:", lon);
-      console.log("Rounded lat:", roundedLat, "Rounded lon:", roundedLon);
+      console.log("useRecommendationsSubscription/fetchRecommendations: rounded coordinates");
+      console.log("useRecommendationsSubscription/fetchRecommendations: original lat:", lat, "original lon:", lon);
+      console.log("useRecommendationsSubscription/fetchRecommendations: rounded lat:", roundedLat, "rounded lon:", roundedLon);
+      console.log("useRecommendationsSubscription/fetchRecommendations: dateString:", dateString);
+
       
       const { data: recommendationsData, error: recommendationsError } = await supabase
         .from("recommendations")
