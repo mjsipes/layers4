@@ -326,8 +326,8 @@ const Layers = ({ viewMode }: LayersProps) => {
             }`}
             onClick={() => handleLayerClick(layer)}
           >
-            <div className="absolute top-1 right-2">
-              <Badge variant="default" className="h-5 w-6 items-center justify-center">{layer.warmth || "-"}</Badge>
+            <div className="absolute top-2 right-2">
+              <Badge variant="default" className="h-6 w-6 items-center justify-center">{layer.warmth || ""}</Badge>
             </div>
 
             <div className="mb-2 pr-8">
@@ -337,7 +337,7 @@ const Layers = ({ viewMode }: LayersProps) => {
             </div>
 
               <p className="text-sm text-foreground line-clamp-3">
-                {layer.description || "-"}
+                {layer.description || ""}
               </p>
           </div>
         ))}

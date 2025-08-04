@@ -168,13 +168,13 @@ const Home = () => {
                         key={layer.id}
                         className="relative p-2 border rounded-md bg-muted border-muted"
                       >
-                        <div className="absolute top-1 right-2">
-                          <Badge variant="default" className="h-5 w-6 items-center justify-center">
-                            {layer.warmth || "-"}
+                        <div className="absolute top-1 right-1">
+                          <Badge variant="default" className="h-6 w-6 items-center justify-center">
+                            {layer.warmth || ""}
                           </Badge>
                         </div>
 
-                        <div className="mb-2 pr-8">
+                        <div className=" pr-8">
                           <h4 className="text-sm font-semibold text-primary leading-tight">
                             {layer.name || "Unnamed Layer"}
                           </h4>
