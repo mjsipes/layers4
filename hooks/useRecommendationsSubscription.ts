@@ -56,7 +56,7 @@ export function useRecommendationsSubscription() {
       }
 
       // Fetch recommendations for specific date, location, and user
-      const dateString = date.toISOString().split("T")[0];
+      const dateString = date.toLocaleDateString('en-CA'); // YYYY-MM-DD format in local timezone
       const roundedLat = Math.round(lat * 100) / 100;
       const roundedLon = Math.round(lon * 100) / 100;
       

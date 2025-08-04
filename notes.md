@@ -4,6 +4,7 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 **TODO:**
 
 work on get weather recomendations
+date one off errors :(
 
 image upload
 
