@@ -143,23 +143,18 @@ export const useLogStore = create<LogState>()(
           if (error) throw error;
           // Get the full layer object from the global layers store
           const allLayers = useLayerStore.getState().layers;
-          const fullLayer = allLayers.find((l) => l.id === layerId) || {
-            id: layerId,
-            name: null,
-            description: null,
-            warmth: null,
-            user_id: null,
-            created_at: '',
-            top: null,
-            bottom: null
-          };
-          set((state) => ({
-            logs: state.logs.map((log) =>
-              log.id === logId && log.layers
-                ? { ...log, layers: [...log.layers, fullLayer] }
-                : log
-            ),
-          }));
+          const fullLayer = allLayers.find((l) => l.id === layerId);
+          
+          // Only update state if the layer exists
+          if (fullLayer) {
+            set((state) => ({
+              logs: state.logs.map((log) =>
+                log.id === logId && log.layers
+                  ? { ...log, layers: [...log.layers, fullLayer] }
+                  : log
+              ),
+            }));
+          }
           console.log("logs_store/linkLayerToLog: Linked:", data);
         } catch (err) {
           console.error("logs_store/linkLayerToLog: Failed to link layer:", err);
