@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { TextEffect } from '@/components/ui/text-effect';
 import { useGlobalStore } from "@/stores/global-store";
 import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
 import Autocomplete from "react-google-autocomplete";
@@ -165,42 +166,42 @@ const Home = () => {
               <div key={recommendation.id} className="space-y-3">
                 {/* Layer grid */}
                 {recommendation.layerDetails.length > 0 && (
-                  <div className="p-3 rounded-md bg-muted border border-muted">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {recommendation.layerDetails.map((layer) => (
-                        <div
-                          key={layer.id}
-                          className="relative p-2 border rounded-md bg-background border-muted"
-                        >
-                          <div className="absolute top-1 right-2">
-                            <Badge variant="default" className="h-5 w-6 items-center justify-center">
-                              {layer.warmth || "-"}
-                            </Badge>
-                          </div>
-
-                          <div className="mb-2 pr-8">
-                            <h4 className="text-sm font-semibold text-primary leading-tight">
-                              {layer.name || "Unnamed Layer"}
-                            </h4>
-                          </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {recommendation.layerDetails.map((layer) => (
+                      <div
+                        key={layer.id}
+                        className="relative p-2 border rounded-md bg-muted border-muted"
+                      >
+                        <div className="absolute top-1 right-2">
+                          <Badge variant="default" className="h-5 w-6 items-center justify-center">
+                            {layer.warmth || "-"}
+                          </Badge>
                         </div>
-                      ))}
-                    </div>
+
+                        <div className="mb-2 pr-8">
+                          <h4 className="text-sm font-semibold text-primary leading-tight">
+                            {layer.name || "Unnamed Layer"}
+                          </h4>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
                 
                 {/* Reasoning in Accordion */}
                 {recommendation.reasoning && (
-                  <div className="py-1 px-3 rounded-md bg-muted border border-muted">
+                  <div className=" px-3 rounded-md bg-muted border border-muted">
                     <Accordion type="single" collapsible className="w-full">
                       <AccordionItem value="reasoning" className="border-none">
                         <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground py-1">
                           View reasoning
                         </AccordionTrigger>
                         <AccordionContent className="p-0">
-                          <p className="text-sm text-foreground leading-relaxed py-1 m-0">
-                            {recommendation.reasoning}
-                          </p>
+                          <div className="text-sm text-foreground leading-relaxed pb-1.5">
+                            <TextEffect per='char' preset='fade' speedReveal={10}>
+                              {recommendation.reasoning}
+                            </TextEffect>
+                          </div>
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
