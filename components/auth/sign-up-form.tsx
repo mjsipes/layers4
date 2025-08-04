@@ -105,7 +105,7 @@ export function SignUpForm({
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating an account..." : "Sign up"}
               </Button>
-              <Button
+              {/* <Button
                 onClick={() => {
                   supabase.auth.signInWithOAuth({
                     provider: "google",
@@ -113,7 +113,7 @@ export function SignUpForm({
                 }}
               >
                 Sign up with google
-              </Button>
+              </Button> */}
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}

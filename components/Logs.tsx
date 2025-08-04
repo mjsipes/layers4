@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useLogStore } from "@/stores/logs-store";
 import { useGlobalStore } from "@/stores/global-store";
@@ -300,8 +300,16 @@ const Logs = ({ viewMode }: LogsProps) => {
 
   if (logs.length === 0) {
     return (
-      <div className="w-full h-[200px] flex items-center justify-center">
-        <p className="text-muted-foreground">No logs found...</p>
+      <div className="w-full h-[200px] flex flex-col items-center justify-center gap-4">
+        <p className="text-muted-foreground">No logs...</p>
+        <Button 
+          onClick={() => setSelectedItem(null, "addlog")}
+          className="flex items-center gap-2 shadow-none"
+          variant="outline"
+        >
+          <Plus size={16} />
+          Log
+        </Button>
       </div>
     );
   }

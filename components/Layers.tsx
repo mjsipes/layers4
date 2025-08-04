@@ -9,7 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useLayerStore } from "@/stores/layers-store";
 import { useGlobalStore } from "@/stores/global-store";
@@ -234,8 +234,16 @@ const Layers = ({ viewMode }: LayersProps) => {
   // ========================================
   if (layers.length === 0) {
     return (
-      <div className="w-full h-[200px] flex items-center justify-center">
-        <p className="text-muted-foreground">Loading layers...</p>
+      <div className="w-full h-[200px] flex flex-col items-center justify-center gap-4">
+        <p className="text-muted-foreground">No layers...</p>
+        <Button 
+          variant="outline"
+          onClick={() => setSelectedItem(null, "addlayer")}
+          className="flex items-center gap-2 shadow-none"
+        >
+          <Plus size={16} />
+          Layer
+        </Button>
       </div>
     );
   }
