@@ -1,32 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ChevronDownIcon } from "lucide-react";
 import { useGlobalStore } from "@/stores/global-store";
 import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
 import Autocomplete from "react-google-autocomplete";
 
 const Home = () => {
   const { 
-    date: globalDate, 
     address: globalAddress, 
     lat: globalLat, 
     lon: globalLon, 
     weatherData,
-    setGlobalState 
+    setLocation: setGlobalLocation,
+    setAddress: setGlobalAddress
   } = useGlobalStore();
   const { recommendations, loading, error } = useRecommendationsSubscription();
-
-  // Date picker state
-  const [date, setDate] = React.useState<Date | undefined>(globalDate || new Date());
-  const [datePickerOpen, setDatePickerOpen] = React.useState(false);
 
   // Location picker state
   const [address, setAddress] = React.useState(globalAddress || "");
@@ -34,19 +22,10 @@ const Home = () => {
   const [lon, setLon] = React.useState<number | null>(globalLon);
 
   React.useEffect(() => {
-    setDate(globalDate || new Date());
     setAddress(globalAddress || "");
     setLat(globalLat);
     setLon(globalLon);
-  }, [globalDate, globalAddress, globalLat, globalLon]);
-
-  const handleDateChange = async (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    setDatePickerOpen(false);
-    if (selectedDate) {
-      setGlobalState({ date: selectedDate });
-    }
-  };
+  }, [globalAddress, globalLat, globalLon]);
 
   const handlePlaceSelected = async (place: google.maps.places.PlaceResult) => {
     if (place.geometry && place.geometry.location) {
@@ -58,20 +37,16 @@ const Home = () => {
       setLon(newLon);
       setAddress(newAddress);
 
-      setGlobalState({
-        address: newAddress,
-        lat: newLat,
-        lon: newLon,
-      });
+      setGlobalAddress(newAddress);
+      setGlobalLocation(newLat, newLon);
     }
   };
 
   const handleAddressBlur = async () => {
-    setGlobalState({
-      address: address || null,
-      lat: lat,
-      lon: lon,
-    });
+    setGlobalAddress(address || null);
+    if (lat !== null && lon !== null) {
+      setGlobalLocation(lat, lon);
+    }
   };
 
   const currentWeather = weatherData?.days?.[0];
@@ -79,31 +54,11 @@ const Home = () => {
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary mx-4">
       <div className="grid grid-cols-2 gap-4">
-        {/* Date Picker */}
+        {/* Date Display - Fixed to Today */}
         <div>
-          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                id="home-date"
-                className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4 rounded-md"
-              >
-                {date ? date.toLocaleDateString() : "Select date"}
-                <ChevronDownIcon />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-auto overflow-hidden p-0"
-              align="start"
-            >
-              <Calendar
-                mode="single"
-                selected={date}
-                captionLayout="dropdown"
-                onSelect={handleDateChange}
-              />
-            </PopoverContent>
-          </Popover>
+          <div className="w-full flex items-center bg-background shadow-none border-none text-2xl font-semibold text-primary leading-tight mb-4 pl-4 rounded-md h-9">
+            {new Date().toLocaleDateString()}
+          </div>
         </div>
 
         {/* Location Picker */}
