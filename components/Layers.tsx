@@ -327,10 +327,10 @@ const Layers = ({ viewMode }: LayersProps) => {
         {filteredAndSortedLayers.map((layer) => (
           <div
             key={layer.id}
-            className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
+            className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group ${
               selectedType === "selectlayer" && selectedItemId === layer.id
-                ? "border-blue-600"
-                : ""
+                ? "border-primary"
+                : "border-secondary"
             }`}
             onClick={() => handleLayerClick(layer)}
           >

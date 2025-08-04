@@ -402,10 +402,10 @@ const Logs = ({ viewMode }: LogsProps) => {
             <div
               key={log.id}
               // Add conditional class for blue border if selected
-              className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group border-secondary ${
+              className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group ${
                 selectedType === "selectlog" && selectedItemId === log.id
-                  ? "border-blue-600"
-                  : ""
+                  ? "border-primary"
+                  : "border-secondary"
               }`}
               onClick={() => {
                 handleLogClick(log);
