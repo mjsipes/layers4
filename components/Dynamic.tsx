@@ -17,8 +17,7 @@ import {
   useAddress,
 } from "@/hooks/useGlobalSubscription";
 import { Separator } from "@/components/ui/separator";
-import WeatherCard from "./Weather";
-import RecommendationCard from "./RecomendationCard";
+import Home from "./Home";
 
 const DynamicCard = () => {
   useGeolocation();
@@ -66,13 +65,7 @@ const DynamicCard = () => {
         </div>
         <ScrollArea className="h-[calc(100vh-9rem)]">
           <TabsContent value="home">
-            <Separator orientation="horizontal" />
-            <div className="w-full h-[240px] overflow-hidden">
-              <WeatherCard />
-            </div>
-            <div className="w-full  overflow-hidden border-y">
-              <RecommendationCard />
-            </div>
+            <Home />
           </TabsContent>
           <TabsContent value="addlog">
             <AddLogCard />
