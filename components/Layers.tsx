@@ -230,25 +230,6 @@ const Layers = ({ viewMode }: LayersProps) => {
     .rows.map((row) => row.original);
 
   // ========================================
-  // NO LAYERS FOUND
-  // ========================================
-  if (layers.length === 0) {
-    return (
-      <div className="w-full h-[200px] flex flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">No layers...</p>
-        <Button 
-          variant="outline"
-          onClick={() => setSelectedItem(null, "addlayer")}
-          className="flex items-center gap-2 shadow-none"
-        >
-          <Plus size={16} />
-          Layer
-        </Button>
-      </div>
-    );
-  }
-
-  // ========================================
   // TABLE VIEW
   // ========================================
   if (viewMode === "table") {
@@ -260,7 +241,7 @@ const Layers = ({ viewMode }: LayersProps) => {
           setGlobalFilter={setGlobalFilter}
         />
         <ScrollArea>
-          <Table className="table-fixed w-full">
+          <Table className="table-fixed w-full mt-4">
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
@@ -300,7 +281,20 @@ const Layers = ({ viewMode }: LayersProps) => {
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {layers.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center gap-4 py-8">
+                        <Button 
+                          variant="outline"
+                          onClick={() => setSelectedItem(null, "addlayer")}
+                          className="flex items-center gap-2 shadow-none"
+                        >
+                          <Plus size={16} />
+                          Layer
+                        </Button>
+                      </div>
+                    ) : (
+                      "No results."
+                    )}
                   </TableCell>
                 </TableRow>
               )}
@@ -324,31 +318,44 @@ const Layers = ({ viewMode }: LayersProps) => {
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filteredAndSortedLayers.map((layer) => (
-          <div
-            key={layer.id}
-            className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group ${
-              selectedType === "selectlayer" && selectedItemId === layer.id
-                ? "border-primary"
-                : "border-secondary"
-            }`}
-            onClick={() => handleLayerClick(layer)}
-          >
-            <div className="absolute top-2 right-2">
-              <Badge variant="default" className="h-6 w-6 items-center justify-center">{layer.warmth || ""}</Badge>
-            </div>
+        {filteredAndSortedLayers.length > 0 ? (
+          filteredAndSortedLayers.map((layer) => (
+            <div
+              key={layer.id}
+              className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group ${
+                selectedType === "selectlayer" && selectedItemId === layer.id
+                  ? "border-primary"
+                  : "border-secondary"
+              }`}
+              onClick={() => handleLayerClick(layer)}
+            >
+              <div className="absolute top-2 right-2">
+                <Badge variant="default" className="h-6 w-6 items-center justify-center">{layer.warmth || ""}</Badge>
+              </div>
 
-            <div className="mb-2 pr-8">
-              <h3 className="text-sm font-semibold text-primary leading-tight">
-                {layer.name || "Unnamed Layer"}
-              </h3>
-            </div>
+              <div className="mb-2 pr-8">
+                <h3 className="text-sm font-semibold text-primary leading-tight">
+                  {layer.name || "Unnamed Layer"}
+                </h3>
+              </div>
 
-              <p className="text-sm text-foreground line-clamp-3">
-                {layer.description || ""}
-              </p>
+                <p className="text-sm text-foreground line-clamp-3">
+                  {layer.description || ""}
+                </p>
+            </div>
+          ))
+        ) : (
+          <div className="col-span-full flex flex-col items-center justify-center gap-4 py-8">
+            <Button 
+              variant="outline"
+              onClick={() => setSelectedItem(null, "addlayer")}
+              className="flex items-center gap-2 shadow-none mt-2"
+            >
+              <Plus size={16} />
+              Layer
+            </Button>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

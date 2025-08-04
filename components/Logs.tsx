@@ -295,26 +295,6 @@ const Logs = ({ viewMode }: LogsProps) => {
     .rows.map((row) => row.original);
 
   // ========================================
-  // NO LOGS FOUND
-  // ========================================
-
-  if (logs.length === 0) {
-    return (
-      <div className="w-full h-[200px] flex flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">No logs...</p>
-        <Button 
-          onClick={() => setSelectedItem(null, "addlog")}
-          className="flex items-center gap-2 shadow-none"
-          variant="outline"
-        >
-          <Plus size={16} />
-          Log
-        </Button>
-      </div>
-    );
-  }
-
-  // ========================================
   // TABLE VIEW
   // ========================================
   if (viewMode === "table") {
@@ -326,7 +306,7 @@ const Logs = ({ viewMode }: LogsProps) => {
           setGlobalFilter={setGlobalFilter}
         />
         <ScrollArea>
-          <Table className="table-fixed w-full">
+          <Table className="table-fixed w-full mt-4">
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
@@ -366,7 +346,20 @@ const Logs = ({ viewMode }: LogsProps) => {
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {logs.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center gap-4 py-8">
+                        <Button 
+                          onClick={() => setSelectedItem(null, "addlog")}
+                          className="flex items-center gap-2 shadow-none"
+                          variant="outline"
+                        >
+                          <Plus size={16} />
+                          Log
+                        </Button>
+                      </div>
+                    ) : (
+                      "No results."
+                    )}
                   </TableCell>
                 </TableRow>
               )}
@@ -390,84 +383,97 @@ const Logs = ({ viewMode }: LogsProps) => {
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredAndSortedLogs.map((log) => {
-          const weatherData = log.weather?.weather_data
-            ? typeof log.weather.weather_data === "string"
-              ? JSON.parse(log.weather.weather_data)
-              : log.weather.weather_data
-            : null;
-          const currentWeather = weatherData?.days?.[0];
+        {filteredAndSortedLogs.length > 0 ? (
+          filteredAndSortedLogs.map((log) => {
+            const weatherData = log.weather?.weather_data
+              ? typeof log.weather.weather_data === "string"
+                ? JSON.parse(log.weather.weather_data)
+                : log.weather.weather_data
+              : null;
+            const currentWeather = weatherData?.days?.[0];
 
-          return (
-            <div
-              key={log.id}
-              // Add conditional class for blue border if selected
-              className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group ${
-                selectedType === "selectlog" && selectedItemId === log.id
-                  ? "border-primary"
-                  : "border-secondary"
-              }`}
-              onClick={() => {
-                handleLogClick(log);
-              }}
+            return (
+              <div
+                key={log.id}
+                // Add conditional class for blue border if selected
+                className={`relative p-2 border-2 rounded-lg bg-secondary cursor-pointer transition-all duration-200 group ${
+                  selectedType === "selectlog" && selectedItemId === log.id
+                    ? "border-primary"
+                    : "border-secondary"
+                }`}
+                onClick={() => {
+                  handleLogClick(log);
+                }}
+              >
+                {/* <div className="absolute top-3 right-3">
+                <Badge variant="default">
+                  {log.comfort_level || '-'}
+                </Badge>
+              </div> */}
+
+                <div className="mb-2">
+                  <h3 className="text-sm font-semibold text-primary leading-tight">
+                    {log.date ? formatDate(log.date) : formatDate(log.created_at)}
+                  </h3>
+                </div>
+
+                {/* Weather and Layers Info */}
+                <div className="mt-2 mb-2 flex flex-col gap-2 items-start">
+                  {currentWeather?.temp && (
+                    <div className="p-1 rounded-lg bg-background  w-full">
+                      <div className="flex gap-1 w-full">
+                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-primary flex-shrink-0">
+                          {Math.floor(currentWeather.temp)}°
+                        </span>
+                        {log.address && (
+                          <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
+                            {log.address}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {log.layers && log.layers.length > 0 && (
+                    <div className="p-1 rounded-lg bg-background w-full">
+                      <div className="flex gap-1 flex-wrap">
+                        {log.layers.map((layer) => (
+                          <span
+                            key={layer.id}
+                            className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground overflow-hidden  whitespace-nowrap "
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedItem(layer.id, "selectlayer");
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {layer.name || "Unnamed Layer"}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-auto">
+                  <p className="text-sm text-foreground line-clamp-3">
+                    {log.feedback || ""}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="col-span-full flex flex-col items-center justify-center gap-4 py-8">
+            <Button 
+              onClick={() => setSelectedItem(null, "addlog")}
+              className="flex items-center gap-2 shadow-none mt-2"
+              variant="outline"
             >
-              {/* <div className="absolute top-3 right-3">
-              <Badge variant="default">
-                {log.comfort_level || '-'}
-              </Badge>
-            </div> */}
-
-              <div className="mb-2">
-                <h3 className="text-sm font-semibold text-primary leading-tight">
-                  {log.date ? formatDate(log.date) : formatDate(log.created_at)}
-                </h3>
-              </div>
-
-              {/* Weather and Layers Info */}
-              <div className="mt-2 mb-2 flex flex-col gap-2 items-start">
-                {currentWeather?.temp && (
-                  <div className="p-1 rounded-lg bg-background  w-full">
-                    <div className="flex gap-1 w-full">
-                      <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-bold bg-secondary text-primary flex-shrink-0">
-                        {Math.floor(currentWeather.temp)}°
-                      </span>
-                      {log.address && (
-                        <span className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
-                          {log.address}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-                {log.layers && log.layers.length > 0 && (
-                  <div className="p-1 rounded-lg bg-background w-full">
-                    <div className="flex gap-1 flex-wrap">
-                      {log.layers.map((layer) => (
-                        <span
-                          key={layer.id}
-                          className="inline-flex items-center rounded-md px-1 py-0.5 text-xs font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground overflow-hidden  whitespace-nowrap "
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedItem(layer.id, "selectlayer");
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {layer.name || "Unnamed Layer"}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-auto">
-                <p className="text-sm text-foreground line-clamp-3">
-                  {log.feedback || ""}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+              <Plus size={16} />
+              Log
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
