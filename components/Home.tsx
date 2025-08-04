@@ -7,21 +7,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { TextEffect } from '@/components/ui/text-effect';
+import { TextEffect } from "@/components/ui/text-effect";
 import { useGlobalStore } from "@/stores/global-store";
 import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
 import Autocomplete from "react-google-autocomplete";
+import { Textarea } from "./ui/textarea";
 
 const Home = () => {
-  const { 
-    address: globalAddress, 
-    lat: globalLat, 
-    lon: globalLon, 
+  const {
+    address: globalAddress,
+    lat: globalLat,
+    lon: globalLon,
     weatherData,
     setLocation: setGlobalLocation,
-    setAddress: setGlobalAddress
+    setAddress: setGlobalAddress,
   } = useGlobalStore();
-  const { recommendations, error } = useRecommendationsSubscription();
+  const { recommendations } = useRecommendationsSubscription();
 
   // Location picker state
   const [address, setAddress] = React.useState(globalAddress || "");
@@ -60,10 +61,10 @@ const Home = () => {
 
   return (
     <div className="relative p-4 border rounded-lg bg-secondary border-secondary mx-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Date Display - Fixed to Today */}
         <div>
-          <div className="w-full flex items-center bg-background shadow-none border-none text-2xl font-semibold text-primary leading-tight mb-4 pl-4 rounded-md h-9">
+          <div className="w-full flex items-center bg-background shadow-none border-none text-2xl font-semibold text-primary leading-tight pl-4 rounded-md h-9">
             {new Date().toLocaleDateString()}
           </div>
         </div>
@@ -72,7 +73,7 @@ const Home = () => {
         <Autocomplete
           apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
           placeholder="start typing address..."
-          className="bg-background shadow-none border-none w-full mb-4 p-2 rounded-md ring-1 ring-muted h-9"
+          className="bg-background shadow-none border-none w-full p-2 rounded-md ring-1 ring-muted h-9"
           defaultValue={address}
           onPlaceSelected={handlePlaceSelected}
           onBlur={handleAddressBlur}
@@ -84,8 +85,7 @@ const Home = () => {
 
       {/* Weather Information Card */}
       {currentWeather ? (
-        <div className="mb-2">
-          <div className="p-3 rounded-lg bg-background">
+          <div className="p-3 rounded-lg bg-background mb-4">
             <div className="space-y-3">
               {/* Temperature and Weather Stats Row */}
               <div className="grid grid-cols-2 gap-4">
@@ -136,9 +136,8 @@ const Home = () => {
               )}
             </div>
           </div>
-        </div>
       ) : (
-        <div className="mb-2">
+        <div className="mb-4">
           <div className="p-3 rounded-lg bg-background h-[185px] flex items-center justify-center">
             <p className="text-muted-foreground">Loading weather data...</p>
           </div>
@@ -146,68 +145,64 @@ const Home = () => {
       )}
 
       {/* Recommendations Section */}
-      <div className="mt-4">
-        {error ? (
-          <div className="p-3 rounded-lg bg-background">
-            <p className="text-destructive">Error: {error}</p>
-          </div>
-        ) : recommendations.length === 0 ? (
-          <div className="p-3 rounded-lg bg-background">
-            <p className="text-muted-foreground">No recommendations found.</p>
-          </div>
-        ) : (
-          <div className="p-3 rounded-lg bg-background border border-muted">
-            <h3 className="text-lg font-semibold text-primary mb-3">Weather Recommendations</h3>
-            {recommendations.map((recommendation) => (
-              <div key={recommendation.id} className="space-y-3">
-                {/* Layer grid */}
-                {recommendation.layerDetails.length > 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {recommendation.layerDetails.map((layer) => (
-                      <div
-                        key={layer.id}
-                        className="relative p-2 border rounded-md bg-muted border-muted"
-                      >
-                        <div className="absolute top-1 right-1">
-                          <Badge variant="default" className="h-6 w-6 items-center justify-center">
-                            {layer.warmth || ""}
-                          </Badge>
-                        </div>
 
-                        <div className=" pr-8">
-                          <h4 className="text-sm font-semibold text-primary leading-tight">
-                            {layer.name || "Unnamed Layer"}
-                          </h4>
-                        </div>
-                      </div>
-                    ))}
+      <div className="p-3 rounded-lg bg-background border border-muted">
+        <h3 className="text-lg font-semibold text-primary">
+          Weather Recommendations
+        </h3>
+        {recommendations.map((recommendation) => (
+          <div key={recommendation.id} className="space-y-3">
+            {/* Layer grid */}
+            {recommendation.layerDetails.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                {recommendation.layerDetails.map((layer) => (
+                  <div
+                    key={layer.id}
+                    className="relative p-2 border rounded-md bg-muted border-muted"
+                  >
+                    <div className="absolute top-1 right-1">
+                      <Badge
+                        variant="default"
+                        className="h-6 w-6 items-center justify-center"
+                      >
+                        {layer.warmth || ""}
+                      </Badge>
+                    </div>
+
+                    <div className=" pr-8">
+                      <h4 className="text-sm font-semibold text-primary leading-tight">
+                        {layer.name || "Unnamed Layer"}
+                      </h4>
+                    </div>
                   </div>
-                )}
-                
-                {/* Reasoning in Accordion */}
-                {recommendation.reasoning && (
-                  <div className=" px-3 rounded-md bg-muted border border-muted">
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="reasoning" className="border-none">
-                        <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground py-1">
-                          View reasoning
-                        </AccordionTrigger>
-                        <AccordionContent className="p-0">
-                          <div className="text-sm text-foreground leading-relaxed pb-1.5">
-                            <TextEffect per='char' preset='fade' speedReveal={10}>
-                              {recommendation.reasoning}
-                            </TextEffect>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </div>
-                )}
+                ))}
               </div>
-            ))}
+            )}
+
+            {/* Reasoning in Accordion */}
+            {recommendation.reasoning && (
+              <div className=" px-3 rounded-md bg-muted border border-muted">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="reasoning" className="border-none">
+                    <AccordionTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground py-1">
+                      View reasoning
+                    </AccordionTrigger>
+                    <AccordionContent className="p-0">
+                      <div className="text-sm text-foreground leading-relaxed pb-1.5">
+                        <TextEffect per="char" preset="fade" speedReveal={10}>
+                          {recommendation.reasoning}
+                        </TextEffect>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            )}
           </div>
-        )}
+        ))}
       </div>
+
+      {/* <Textarea placeholder="How did you feel today?" className="w-full border rounded-md p-2 text-base bg-background border-none" /> */}
     </div>
   );
 };

@@ -3,7 +3,7 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 **TODO:**
 
-work on get weather recomendations
+work on get get-recomendations api route, or not, idk
 date one off errors :(
 
 image upload

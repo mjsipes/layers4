@@ -5,7 +5,7 @@ import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool, s
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool, linkLogLayerRecTool, unlinkLogLayerRecTool } from "./log-tools";
 import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./global-tools";
 import { getDateTool } from "./get-date-tool";
-import { get_cached_recommendations, set_recommendations_tool, clear_recommendations_tool } from "./get-recommendations-tool";
+import { view_recommendations_tool, set_recommendations_tool, delete_recommendations_tool } from "./get-recommendations-tool";
 
 export const maxDuration = 30;
 
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai("gpt-4o"),
     messages,
-    system: "You are an AI wardrobe and weather assistant. When providing outfit recommendations, be thoughtful: consider the current weather, available wardrobe layers, and past user logs to infer preferences. Be concise in your responses, but always provide reasoning when asked.",
+    system: "You are an AI wardrobe and weather assistant. When providing outfit recommendations, be thoughtful: consider the current weather, available wardrobe layers, and past user logs to infer preferences. Be concise in your responses, but always provide reasoning when asked. When sharing recommendations, always call the set_recommendations tool first to update the UI with the new recommendations.",
     tools: {
       get_weather: getWeatherTool,
       get_date: getDateTool,
@@ -36,9 +36,9 @@ export async function POST(req: Request) {
       set_location: setLocationTool,
       get_location: getLocationTool,
       get_current_ui: getCurrentUITool,
-      get_cached_recommendations: get_cached_recommendations,
+      view_recommendations: view_recommendations_tool,
       set_recommendations: set_recommendations_tool,
-      clear_recommendations: clear_recommendations_tool,
+      delete_recommendations: delete_recommendations_tool,
     },
   });
 

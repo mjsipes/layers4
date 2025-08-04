@@ -26,7 +26,6 @@ export interface RecommendationWithLayers extends Recommendation {
 
 export function useRecommendationsSubscription() {
   const [recommendations, setRecommendations] = React.useState<RecommendationWithLayers[]>([]);
-  const [error, setError] = React.useState<string | null>(null);
 
   // Get global state values
   const date = useGlobalStore((state) => state.date);
@@ -43,8 +42,6 @@ export function useRecommendationsSubscription() {
       setRecommendations([]);
       return;
     }
-
-    setError(null);
 
     try {
       // Get current user
@@ -76,7 +73,6 @@ export function useRecommendationsSubscription() {
 
       if (recommendationsError) {
         console.error("useRecommendationsSubscription/fetchRecommendations: ", recommendationsError);
-        setError("Failed to fetch recommendations");
         setRecommendations([]);
         return;
       }
@@ -116,7 +112,6 @@ export function useRecommendationsSubscription() {
       setRecommendations(recommendationsWithLayers);
     } catch (err) {
       console.error("useRecommendationsSubscription/fetchRecommendations: Unexpected error", err);
-      setError("An unexpected error occurred");
       setRecommendations([]);
     }
   };
@@ -150,5 +145,5 @@ export function useRecommendationsSubscription() {
     };
   }, [date, lat, lon]);
 
-  return { recommendations, error, refetch: fetchRecommendations };
+  return { recommendations, refetch: fetchRecommendations };
 } 
