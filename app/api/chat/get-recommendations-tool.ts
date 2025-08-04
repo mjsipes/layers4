@@ -125,7 +125,7 @@ export const view_recommendations_tool = tool({
 });
 
 export const set_recommendations_tool = tool({
-  description: "Set weather recommendations for a specific date and location. Takes an array of layer UUIDs, reasoning text, latitude, and longitude. You should always call this function before sharing recommendations with the user. This allows the UI to be updated with the new recommendations.",
+  description: "Set weather recommendations for a specific date and location. Takes an array of layer UUIDs, reasoning text, latitude, and longitude. You should always call this function before sharing recommendations with the user. This allows the UI to be updated with the new recommendations. Before calling this function, you should call the delete_recommendations_tool function to delete any existing recommendations for the same date and location.",
   parameters: z.object({
     date: z.string().describe("The date for the recommendations (YYYY-MM-DD format)"),
     layer_uuids: z.array(z.string()).describe("Array of layer UUIDs to recommend"),
@@ -197,7 +197,7 @@ export const set_recommendations_tool = tool({
 });
 
 export const delete_recommendations_tool = tool({
-  description: "Delete weather recommendations for a specific date and location.",
+  description: "Delete weather recommendations for a specific date and location. You should always call this function before sharing recommendations with the user. This allows the UI to be updated with the new recommendations.",
   parameters: z.object({
     date: z.string().describe("The date to delete recommendations for (YYYY-MM-DD format)"),
     latitude: z.number().describe("The latitude coordinate for the location"),

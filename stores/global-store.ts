@@ -5,6 +5,27 @@ import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 
+// Import the recommendation types
+export interface Recommendation {
+  id: number;
+  created_at: string;
+  date: string | null;
+  layers: string[];
+  reasoning: string | null;
+  user_id: string | null;
+}
+
+export interface RecommendationWithLayers extends Recommendation {
+  layerDetails: Array<{
+    id: string;
+    name: string | null;
+    description: string | null;
+    warmth: number | null;
+    top: boolean | null;
+    bottom: boolean | null;
+  }>;
+}
+
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
@@ -27,6 +48,12 @@ type GlobalState = {
   lon: number | null;
   weatherData: any;
   
+  // Recommendations state
+  recommendations: RecommendationWithLayers[];
+  
+  // Chat state
+  pendingMessage: string | null;
+  
   // Actions
   setSelectedItem: (itemId: string | null, type: SelectedItemType) => void;
   setWardrobeViewMode: (mode: ViewMode) => void;
@@ -37,6 +64,10 @@ type GlobalState = {
   setWeatherData: (data: any) => void;
   clearWeather: () => void;
   setAddress: (address: string | null) => void;
+  setRecommendations: (recommendations: RecommendationWithLayers[]) => void;
+  clearRecommendations: () => void;
+  addMessage: (message: string) => void;
+  clearPendingMessage: () => void;
 };
 
 /* ------------------------------------------------------------------ */
@@ -60,6 +91,12 @@ export const useGlobalStore = create<GlobalState>()(
         lon: null,
         weatherData: null,
         
+        // Recommendations state
+        recommendations: [],
+        
+        // Chat state
+        pendingMessage: null,
+        
         // Global UI actions
         setSelectedItem: (itemId, type) => {
           set({ selectedItemId: itemId, selectedType: type });
@@ -81,6 +118,14 @@ export const useGlobalStore = create<GlobalState>()(
         setWeatherData: (data) => set({ weatherData: data }),
         clearWeather: () => set({ weatherData: null }),
         setAddress: (address) => set({ address }),
+        
+        // Recommendations actions
+        setRecommendations: (recommendations) => set({ recommendations }),
+        clearRecommendations: () => set({ recommendations: [] }),
+        
+        // Chat actions
+        addMessage: (message) => set({ pendingMessage: message }),
+        clearPendingMessage: () => set({ pendingMessage: null }),
       }),
       {
         name: 'layers-global-state', // localStorage key

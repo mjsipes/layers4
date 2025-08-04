@@ -8,11 +8,25 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SendIcon, CheckCircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStickToBottom } from "use-stick-to-bottom";
+import { useGlobalStore } from "@/stores/global-store";
+import { useEffect } from "react";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     maxSteps: 5,
   });
+  
+  const { pendingMessage, clearPendingMessage } = useGlobalStore();
+
+  useEffect(() => {
+    if (pendingMessage) {
+      append({
+        role: 'user',
+        content: pendingMessage,
+      });
+      clearPendingMessage();
+    }
+  }, [pendingMessage, append, clearPendingMessage]);
 
   const { scrollRef, contentRef } = useStickToBottom();
 

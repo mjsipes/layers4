@@ -1,31 +1,12 @@
 import React, { useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useGlobalStore } from "@/stores/global-store";
+import type { RecommendationWithLayers } from "@/stores/global-store";
 
 const supabase = createClient();
 
-export interface Recommendation {
-  id: number;
-  created_at: string;
-  date: string | null;
-  layers: string[];
-  reasoning: string | null;
-  user_id: string | null;
-}
-
-export interface RecommendationWithLayers extends Recommendation {
-  layerDetails: Array<{
-    id: string;
-    name: string | null;
-    description: string | null;
-    warmth: number | null;
-    top: boolean | null;
-    bottom: boolean | null;
-  }>;
-}
-
 export function useRecommendationsSubscription() {
-  const [recommendations, setRecommendations] = React.useState<RecommendationWithLayers[]>([]);
+  const { recommendations, setRecommendations } = useGlobalStore();
 
   // Get global state values
   const date = useGlobalStore((state) => state.date);
@@ -34,7 +15,6 @@ export function useRecommendationsSubscription() {
 
   // Fetch recommendations with their associated layers
   const fetchRecommendations = async () => {
-    console.log("useRecommendationsSubscription/fetchRecommendations: START");
     console.log("useRecommendationsSubscription/fetchRecommendations: values:", { date, lat, lon });
     
     if (!date || !lat || !lon) {
@@ -57,10 +37,11 @@ export function useRecommendationsSubscription() {
       const roundedLat = Math.round(lat * 100) / 100;
       const roundedLon = Math.round(lon * 100) / 100;
       
-      console.log("useRecommendationsSubscription/fetchRecommendations: rounded coordinates");
-      console.log("useRecommendationsSubscription/fetchRecommendations: original lat:", lat, "original lon:", lon);
-      console.log("useRecommendationsSubscription/fetchRecommendations: rounded lat:", roundedLat, "rounded lon:", roundedLon);
-      console.log("useRecommendationsSubscription/fetchRecommendations: dateString:", dateString);
+      console.log("useRecommendationsSubscription/fetchRecommendations:", {
+        original: { lat, lon },
+        rounded: { lat: roundedLat, lon: roundedLon },
+        dateString
+      });
 
       
       const { data: recommendationsData, error: recommendationsError } = await supabase

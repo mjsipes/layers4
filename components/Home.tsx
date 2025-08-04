@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/accordion";
 import { TextEffect } from "@/components/ui/text-effect";
 import { useGlobalStore } from "@/stores/global-store";
-import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
 import Autocomplete from "react-google-autocomplete";
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Home = () => {
   const {
@@ -18,10 +19,18 @@ const Home = () => {
     lat: globalLat,
     lon: globalLon,
     weatherData,
+    recommendations,
     setLocation: setGlobalLocation,
     setAddress: setGlobalAddress,
   } = useGlobalStore();
-  const { recommendations } = useRecommendationsSubscription();
+  const { addMessage } = useGlobalStore();
+
+  const handleRefreshRecommendations = () => {
+    const message = recommendations.length > 0 
+      ? "please give me new weather recommendations" 
+      : "what should i wear today";
+    addMessage(message);
+  };
 
   // Location picker state
   const [address, setAddress] = React.useState(globalAddress || "");
@@ -146,9 +155,19 @@ const Home = () => {
       {/* Recommendations Section */}
 
       <div className="p-3 rounded-lg bg-background border border-muted">
-        <h3 className="text-lg font-semibold text-primary">
-          Weather Recommendations
-        </h3>
+        <div className="flex items-center justify-between ">
+          <h3 className="text-lg font-semibold text-primary">
+            Weather Recommendations
+          </h3>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleRefreshRecommendations}
+            className="h-8 w-8 p-0 bg-muted"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+        </div>
         {recommendations.map((recommendation) => (
           <div key={recommendation.id} className="space-y-3">
             {/* Layer grid */}
