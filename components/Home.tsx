@@ -84,7 +84,7 @@ const Home = () => {
 
       {/* Weather Information Card */}
       {currentWeather ? (
-          <div className="p-3 rounded-lg bg-background mb-4">
+          <div className="p-3 rounded-lg bg-background mb-4 h-[185px]">
             <div className="space-y-3">
               {/* Temperature and Weather Stats Row */}
               <div className="grid grid-cols-2 gap-4">

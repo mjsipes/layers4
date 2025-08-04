@@ -66,7 +66,7 @@ export const view_recommendations_tool = tool({
       console.log("view_recommendations_tool: processing", recommendations.length, "recommendations");
       const recommendationsWithLayers = [];
       for (const recommendation of recommendations) {
-        console.log("view_recommendations_tool: processing recommendation:", recommendation.id);
+        console.log("view_recommendations_tool: processing recommendation:", recommendation.id, "reasoning:", recommendation.reasoning);
         if (recommendation.layers && recommendation.layers.length > 0) {
           const { data: layersData, error: layersError } = await supabase
             .from("layer")
@@ -80,13 +80,27 @@ export const view_recommendations_tool = tool({
 
           console.log("view_recommendations_tool: found", layersData?.length || 0, "layers for recommendation", recommendation.id);
           recommendationsWithLayers.push({
-            ...recommendation,
+            id: recommendation.id,
+            date: recommendation.date,
+            reasoning: recommendation.reasoning,
+            latitude: recommendation.latitude,
+            longitude: recommendation.longitude,
+            user_id: recommendation.user_id,
+            created_at: recommendation.created_at,
+            layers: recommendation.layers,
             layerDetails: layersData || [],
           });
         } else {
           console.log("view_recommendations_tool: no layers for recommendation", recommendation.id);
           recommendationsWithLayers.push({
-            ...recommendation,
+            id: recommendation.id,
+            date: recommendation.date,
+            reasoning: recommendation.reasoning,
+            latitude: recommendation.latitude,
+            longitude: recommendation.longitude,
+            user_id: recommendation.user_id,
+            created_at: recommendation.created_at,
+            layers: recommendation.layers,
             layerDetails: [],
           });
         }
