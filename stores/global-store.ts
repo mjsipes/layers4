@@ -26,6 +26,20 @@ export interface RecommendationWithLayers extends Recommendation {
   }>;
 }
 
+export interface MatchedLayer {
+  id: string;
+  name: string | null;
+  description: string | null;
+  warmth: number | null;
+  similarity?: number;
+}
+
+export interface ProposedLayer {
+  name: string;
+  description: string;
+  warmth: number;
+}
+
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
@@ -51,6 +65,10 @@ type GlobalState = {
   // Recommendations state
   recommendations: RecommendationWithLayers[];
   
+  // Clothing analysis state
+  matchedLayers: MatchedLayer[];
+  proposedLayers: ProposedLayer[];
+  
   // Chat state
   pendingMessage: string | null;
   
@@ -66,6 +84,9 @@ type GlobalState = {
   setAddress: (address: string | null) => void;
   setRecommendations: (recommendations: RecommendationWithLayers[]) => void;
   clearRecommendations: () => void;
+  setMatchedLayers: (layers: MatchedLayer[] | ((prev: MatchedLayer[]) => MatchedLayer[])) => void;
+  setProposedLayers: (layers: ProposedLayer[] | ((prev: ProposedLayer[]) => ProposedLayer[])) => void;
+  clearClothingAnalysis: () => void;
   addMessage: (message: string) => void;
   clearPendingMessage: () => void;
 };
@@ -93,6 +114,10 @@ export const useGlobalStore = create<GlobalState>()(
         
         // Recommendations state
         recommendations: [],
+        
+        // Clothing analysis state
+        matchedLayers: [],
+        proposedLayers: [],
         
         // Chat state
         pendingMessage: null,
@@ -122,6 +147,15 @@ export const useGlobalStore = create<GlobalState>()(
         // Recommendations actions
         setRecommendations: (recommendations) => set({ recommendations }),
         clearRecommendations: () => set({ recommendations: [] }),
+        
+        // Clothing analysis actions
+        setMatchedLayers: (layers) => set((state) => ({ 
+          matchedLayers: typeof layers === 'function' ? layers(state.matchedLayers) : layers 
+        })),
+        setProposedLayers: (layers) => set((state) => ({ 
+          proposedLayers: typeof layers === 'function' ? layers(state.proposedLayers) : layers 
+        })),
+        clearClothingAnalysis: () => set({ matchedLayers: [], proposedLayers: [] }),
         
         // Chat actions
         addMessage: (message) => set({ pendingMessage: message }),

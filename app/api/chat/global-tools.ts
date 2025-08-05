@@ -225,3 +225,66 @@ export const getCurrentUITool = tool({
     }
   },
 });
+
+export const setClothingInputTool = tool({
+  description: "Update the clothing analysis UI state with matched existing layers and proposed new layers. Use this after analyzing user's clothing description.",
+  parameters: z.object({
+    matched_layers: z.array(z.object({
+      id: z.string().describe("ID of the matched layer"),
+      name: z.string().describe("Name of the layer"),
+      description: z.string().nullable().describe("Description of the layer"),
+      warmth: z.number().nullable().describe("Warmth level of the layer"),
+      similarity: z.number().optional().describe("Similarity score (0-1)")
+    })).describe("Array of existing layers that match the user's description"),
+    proposed_layers: z.array(z.object({
+      name: z.string().describe("Name for the proposed new layer"),
+      description: z.string().describe("Description for the proposed new layer"),
+      warmth: z.number().describe("Warmth level for the proposed layer (1-10)")
+    })).describe("Array of new layers to propose for unrecognized clothing items")
+  }),
+  execute: async ({ matched_layers, proposed_layers }) => {
+    try {
+      console.log("setClothingInputTool: Executing with:", { matched_layers, proposed_layers });
+      
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      
+      if (userError || !user?.id) {
+        console.error("setClothingInputTool: Authentication error:", userError);
+        return `setClothingInputTool: Authentication error: ${userError?.message || 'No user'}`;
+      }
+
+      // Prepare the analysis result
+      const analysisResult = {
+        type: 'clothing_analysis',
+        matched_layers,
+        proposed_layers,
+        user_id: user.id
+      };
+
+      console.log("setClothingInputTool: Sending analysis via realtime:", analysisResult);
+
+      // Send via realtime channel - use same channel name as useGlobalSubscription
+      const channelName = `ui-updates-${user.id}`;
+      const channel = supabase.channel(channelName);
+      await channel.send({
+        type: 'broadcast',
+        event: 'clothing_analysis_update',
+        payload: analysisResult
+      });
+      
+      console.log(`setClothingInputTool: Sent to channel: ${channelName}`);
+
+      return `setClothingInputTool: Successfully updated clothing analysis UI with ${matched_layers.length} matched layers and ${proposed_layers.length} proposed layers.`;
+
+    } catch (error: unknown) {
+      console.error("setClothingInputTool: error:", error);
+      return `setClothingInputTool: error: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+    }
+  },
+});

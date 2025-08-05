@@ -95,6 +95,7 @@ export function useGlobalSubscription() {
   const setSelectedItem = useGlobalStore((state) => state.setSelectedItem);
   const setLocation = useGlobalStore((state) => state.setLocation);
 
+
   useEffect(() => {
     const setupGlobalSubscription = async () => {
       try {
@@ -165,6 +166,7 @@ export function useGlobalSubscription() {
               });
             }
           )
+
           .subscribe();
 
         console.log("useGlobalSubscription: Global subscription initialized:", channelName);

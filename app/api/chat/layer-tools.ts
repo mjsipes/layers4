@@ -194,6 +194,8 @@ export const deleteLayerTool = tool({
   },
 });
 
+
+
 export const semanticSearchLayerTool = tool({
   description: "Search for layers using semantic similarity. Takes a query and finds the most similar layers in the user's wardrobe. Optionally accepts match_threshold (0-1, default 0.78) and match_count (default 5) to control search sensitivity and number of results.",
   parameters: z.object({
