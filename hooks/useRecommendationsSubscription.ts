@@ -99,7 +99,9 @@ export function useRecommendationsSubscription() {
 
   useEffect(() => {
     fetchRecommendations();
+  }, [date, lat, lon]);
 
+  useEffect(() => {
     const channel = supabase
       .channel("recommendations-channel")
       .on(
@@ -124,7 +126,7 @@ export function useRecommendationsSubscription() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [date, lat, lon]);
+  }, []);
 
   return { recommendations, refetch: fetchRecommendations };
 } 
