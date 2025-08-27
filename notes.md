@@ -2,10 +2,14 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 
 **TODO:**
-for responsive layout: weather card spacing. move chat state to global. maybe move add log and add layer to hamburger bar for mobile. but then what happens to layers and logs tabs in wardrobe?
+recomendations in ui, then inline object generation, make ai great again
+fasinating the getlocation subscriptions we can no longer mount in the weather componentn because on mobile they are not mounted
+
+for responsive layout: weather card spacing. 
+log and layer move into bottom navbar to remove all tabslists in the app. add log/ add layer adds from the log / layer section respectively either as popup or inline or something. mobile must be able to edit inline from the page. no table veiw, just grid.
+
 
 work on get get-recomendations api route, or not, idk
-date one off errors :(
 
 image upload
 
@@ -13,12 +17,7 @@ what are you wearing today? and redo button for recomendations
 
 semantic search?
 
-recomendations in ui, then inline object generation
-
-
 what are you wearing today?
-we should try to create an add log card that instead of the multi select and text area, it is two text areas, first with preveiw of what are you wearing today? and the second with how did you feel? (too hot, too cold, just right) then have ai parse it and link logs
-
 
 get rid of comfort
 
