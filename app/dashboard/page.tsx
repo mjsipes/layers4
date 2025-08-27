@@ -66,7 +66,7 @@ export default function DashboardPage() {
         <div className="flex justify-around items-center">
           <button
             onClick={() => setActiveView("chat")}
-            className={`flex items-center justify-center p-3 rounded-lg transition-colors ${
+            className={`flex items-center justify-center p-2 rounded-sm transition-colors ${
               activeView === "chat"
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -77,7 +77,7 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveView("dynamic")}
-            className={`flex items-center justify-center p-3 rounded-lg transition-colors ${
+            className={`flex items-center justify-center p-2 rounded-sm transition-colors ${
               activeView === "dynamic"
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -88,7 +88,7 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveView("wardrobe")}
-            className={`flex items-center justify-center p-3 rounded-lg transition-colors ${
+            className={`flex items-center justify-center p-2 rounded-sm transition-colors ${
               activeView === "wardrobe"
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
