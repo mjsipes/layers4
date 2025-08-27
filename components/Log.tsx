@@ -196,10 +196,12 @@ const SelectLogCard = () => {
               <Button
                 variant="outline"
                 id="log-date"
-                className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4"
+                className="w-full justify-between bg-background shadow-none border-none hover:bg-background hover:text-primary text-2xl font-semibold text-primary leading-tight mb-4 !px-2 gap-1"
                 >
-                {date ? date.toLocaleDateString() : "Select date"}
-                <ChevronDownIcon />
+                <div className="overflow-hidden whitespace-nowrap flex-1 text-left">
+                  {date ? date.toLocaleDateString() : "Select date"}
+                </div>
+                <ChevronDownIcon className="shrink-0" />
               </Button>
             </PopoverTrigger>
             <PopoverContent

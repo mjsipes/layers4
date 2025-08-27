@@ -72,7 +72,7 @@ const Home = () => {
       <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Date Display - Fixed to Today */}
         <div>
-          <div className="w-full flex items-center bg-background shadow-none border-none text-2xl font-semibold text-primary leading-tight pl-4 rounded-md h-9">
+          <div className="w-full flex items-center bg-background shadow-none border-none text-2xl font-semibold text-primary leading-tight px-2 rounded-md h-9 overflow-hidden">
             {new Date().toLocaleDateString()}
           </div>
         </div>

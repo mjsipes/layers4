@@ -2,7 +2,7 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 
 **TODO:**
-for responsive layour: date overflow in weather card, weather card spacing
+for responsive layour: weather card spacing
 
 work on get get-recomendations api route, or not, idk
 date one off errors :(
