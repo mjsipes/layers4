@@ -1,6 +1,9 @@
-import { redirect } from "next/navigation";
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { MessageSquare, Calendar, Grid } from "lucide-react";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -10,15 +13,95 @@ import WardobeCard from "@/components/Wardrobe";
 import Chat from "@/components/Chat";
 import DynamicCard from "@/components/Dynamic";
 
-export default async function DashboardPage() {
-  const supabase = await createClient();
+type ActiveView = "chat" | "dynamic" | "wardrobe";
 
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    redirect("/auth/login");
+export default function DashboardPage() {
+  const [activeView, setActiveView] = useState<ActiveView>("dynamic");
+  const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.getUser();
+      
+      if (error || !data?.user) {
+        router.push("/auth/login");
+        return;
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-full">Loading...</div>;
   }
 
-  return (
+  const renderMobileView = () => (
+    <div className="flex flex-col h-full">
+      {/* Main content area */}
+      <div className="flex-1 overflow-hidden">
+        {activeView === "chat" && <Chat />}
+        {activeView === "dynamic" && <DynamicCard />}
+        {activeView === "wardrobe" && <WardobeCard />}
+      </div>
+
+      {/* Bottom hamburger menu */}
+      <div className="border-t bg-background p-2">
+        <div className="flex justify-around items-center">
+          <button
+            onClick={() => setActiveView("chat")}
+            className={`flex items-center justify-center p-3 rounded-lg transition-colors ${
+              activeView === "chat"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <MessageSquare size={20} />
+          </button>
+
+          <button
+            onClick={() => setActiveView("dynamic")}
+            className={`flex items-center justify-center p-3 rounded-lg transition-colors ${
+              activeView === "dynamic"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Calendar size={20} />
+          </button>
+
+          <button
+            onClick={() => setActiveView("wardrobe")}
+            className={`flex items-center justify-center p-3 rounded-lg transition-colors ${
+              activeView === "wardrobe"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Grid size={20} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDesktopView = () => (
     <ResizablePanelGroup direction="horizontal" className="w-screen h-full">
       <ResizablePanel defaultSize={30}>
         <Chat />
@@ -34,4 +117,6 @@ export default async function DashboardPage() {
       </ResizablePanel>
     </ResizablePanelGroup>
   );
+
+  return isMobile ? renderMobileView() : renderDesktopView();
 }

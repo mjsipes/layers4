@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 const GoToDashboard = () => {
   const router = useRouter();
   return (
-    <Button
+    <Button size="sm"
       onClick={() => {
         router.push("/dashboard");
       }}

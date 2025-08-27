@@ -15,10 +15,10 @@ export default function Home() {
           <Navbar showDashboardButton={true} />
           
           <div className="pointer-events-none">
-              <h1 className="text-9xl font-extrabold tracking-tight text-primary text-center mb-6">
+              <h1 className="text-7xl sm:text-9xl font-extrabold tracking-tight text-primary text-center mb-6">
                 Layers
               </h1>
-              <h1 className="text-5xl font-bold tracking-tight text-foreground text-center">
+              <h1 className="sm:text-5xl text-2xl font-bold tracking-tight text-foreground text-center">
                 AI integrated wardrobe.
                 So you never dress too hot or too cold.
               </h1>
