@@ -1,6 +1,5 @@
 'use client';
 
-import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from "react-markdown";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -8,26 +7,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SendIcon, CheckCircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStickToBottom } from "use-stick-to-bottom";
-import { useGlobalStore } from "@/stores/global-store";
-import { useEffect } from "react";
+import { useChatContext } from "@/components/chat-context";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
-    maxSteps: 5,
-  });
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChatContext();
   
-  const { pendingMessage, clearPendingMessage } = useGlobalStore();
-
-  useEffect(() => {
-    if (pendingMessage) {
-      append({
-        role: 'user',
-        content: pendingMessage,
-      });
-      clearPendingMessage();
-    }
-  }, [pendingMessage, append, clearPendingMessage]);
-
   const { scrollRef, contentRef } = useStickToBottom();
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -65,7 +49,6 @@ export default function Chat() {
                     case 'tool-invocation':
                       return (
                         <div key={`${message.id}-${i}`} className="text-xs text-muted-foreground font-mono">
-                          {/* {part.toolInvocation.toolName}({Object.entries(part.toolInvocation.args).map(([key, value]) => `${key}: ${value}`).join(', ')}){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />} */}
                           {part.toolInvocation.toolName}(){part.toolInvocation.state === "result" && <CheckCircleIcon className="size-3 text-green-600 inline" />}
                         </div>
                       );

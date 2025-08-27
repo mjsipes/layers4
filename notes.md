@@ -2,7 +2,7 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 
 **TODO:**
-for responsive layour: weather card spacing
+for responsive layout: weather card spacing. move chat state to global. maybe move add log and add layer to hamburger bar for mobile. but then what happens to layers and logs tabs in wardrobe?
 
 work on get get-recomendations api route, or not, idk
 date one off errors :(
