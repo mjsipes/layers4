@@ -9,7 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useLayerStore } from "@/stores/layers-store";
 import { useGlobalStore } from "@/stores/global-store";
@@ -55,7 +55,6 @@ const SortFilterBar = ({
         }
       >
         <span>Name</span>
-        <ArrowUpDown className="h-4 w-4" />
       </Button>
     </div>
     <div className="col-span-2">
@@ -71,7 +70,6 @@ const SortFilterBar = ({
         }
       >
         <span>Created</span>
-        <ArrowUpDown className="h-4 w-4" />
       </Button>
     </div>
     <div className="col-span-8 flex items-center justify-end">

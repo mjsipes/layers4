@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useLogStore } from "@/stores/logs-store";
 import { useGlobalStore } from "@/stores/global-store";
@@ -54,7 +54,6 @@ const SortFilterBar = ({
         }
       >
         <span>Date</span>
-        <ArrowUpDown className="h-4 w-4" />
       </Button>
     </div>
     <div className="col-span-2">
@@ -70,7 +69,6 @@ const SortFilterBar = ({
         }
       >
         <span>Temp</span>
-        <ArrowUpDown className="h-4 w-4" />
       </Button>
     </div>
     <div className="col-span-8 flex items-center justify-end">
