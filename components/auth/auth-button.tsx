@@ -17,7 +17,7 @@ export async function AuthButton({ showDashboardButton = false }: AuthButtonProp
 
   return user ? (
     <div className="flex items-center gap-4">
-      Hey, {user.email}!
+      {user.email}
       {showDashboardButton && <GoToDashboard />}
       <LogoutButton />
     </div>
