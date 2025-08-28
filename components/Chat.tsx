@@ -26,7 +26,7 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden border-l">
-      <ScrollArea className="h-[calc(100vh-12.875rem)] md:h-[calc(100vh-9.5rem)] px-4 py-2" viewportRef={scrollRef}>
+      <ScrollArea className="h-dynamic-chat md:h-[calc(100vh-9.5rem)] px-4 py-2" viewportRef={scrollRef}>
         <div className="space-y-2 w-full" ref={contentRef}>
           {messages.map(message => (
             <div

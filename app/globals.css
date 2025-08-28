@@ -84,3 +84,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile viewport height fix for iOS Safari */
+@layer utilities {
+  .h-screen-dynamic {
+    height: 100vh; /* Fallback for browsers that don't support dvh */
+    height: 100dvh; /* Dynamic viewport height */
+  }
+  
+  .h-screen-safe {
+    height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  .min-h-screen-dynamic {
+    min-height: 100vh; /* Fallback for browsers that don't support dvh */
+    min-height: 100dvh; /* Dynamic viewport height */
+  }
+
+  .h-dynamic-content {
+    height: calc(100vh - 11.875rem);
+    height: calc(100dvh - 11.875rem);
+  }
+
+  .h-dynamic-chat {
+    height: calc(100vh - 12.875rem);
+    height: calc(100dvh - 12.875rem);
+  }
+
+  @supports not (height: 100dvh) {
+    .h-dynamic-content {
+      height: calc(var(--vh, 1vh) * 100 - 11.875rem);
+    }
+    .h-dynamic-chat {
+      height: calc(var(--vh, 1vh) * 100 - 12.875rem);
+    }
+  }
+}

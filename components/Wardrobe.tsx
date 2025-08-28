@@ -30,7 +30,7 @@ const WardobeCard = () => {
             </button>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-11.875rem)] md:h-[calc(100vh-8.5rem)] px-4">
+        <ScrollArea className="h-dynamic-content md:h-[calc(100vh-8.5rem)] px-4">
           <TabsContent value="logs">
             <Logs viewMode={wardrobeViewMode} />
           </TabsContent>
