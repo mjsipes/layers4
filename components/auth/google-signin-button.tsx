@@ -9,7 +9,7 @@ interface GoogleSignInButtonProps {
   className?: string;
 }
 
-export function GoogleSignInButton({ mode, className }: GoogleSignInButtonProps) {
+export function GoogleSignInButton({  className }: GoogleSignInButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
 
