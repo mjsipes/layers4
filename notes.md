@@ -3,10 +3,6 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 
 **TODO:**
 
-login with google:
-https://supabase.com/docs/guides/auth/social-login/auth-google#google-pre-built
-https://console.cloud.google.com/auth/clients?inv=1&invt=Ab2yVg&project=mymlproject-431919
-
 integration with stripe
 
 read the code / make chatbot good / inline recs / recomendations in ui, then inline object generation, make ai great again

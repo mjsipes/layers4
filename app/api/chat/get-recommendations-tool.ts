@@ -125,7 +125,7 @@ export const view_recommendations_tool = tool({
 });
 
 export const set_recommendations_tool = tool({
-  description: "Set weather recommendations for a specific date and location. Takes an array of layer UUIDs, reasoning text, latitude, and longitude. You should always call this function before sharing recommendations with the user. This allows the UI to be updated with the new recommendations. Before calling this function, you should call the delete_recommendations_tool function to delete any existing recommendations for the same date and location.",
+  description: "Set weather recommendations for a specific date and location. Takes an array of layer UUIDs, reasoning text, latitude, and longitude. You should always call this function before sharing recommendations with the user. This allows the UI to be updated with the new recommendations. This function automatically clears any existing recommendations for the same date and location before setting new ones.",
   parameters: z.object({
     date: z.string().describe("The date for the recommendations (YYYY-MM-DD format)"),
     layer_uuids: z.array(z.string()).describe("Array of layer UUIDs to recommend"),
@@ -151,11 +151,32 @@ export const set_recommendations_tool = tool({
       
       console.log("set_recommendations_tool: user_id:", user.id);
 
-
-      // Insert the new recommendation with rounded lat/lon
+      // Round coordinates for consistency
       const roundedLat = Math.round(latitude * 100) / 100;
       const roundedLon = Math.round(longitude * 100) / 100;
-      console.log("set_recommendations_tool: inserting recommendation with rounded coordinates:", { roundedLat, roundedLon });
+      
+      // First, delete any existing recommendations for this date, location, and user
+      console.log("set_recommendations_tool: deleting existing recommendations for date:", date, "user_id:", user.id, "lat:", roundedLat, "lon:", roundedLon);
+      const { error: deleteError } = await supabase
+        .from("recommendations")
+        .delete()
+        .eq("date", date)
+        .eq("user_id", user.id)
+        .eq("latitude", roundedLat)
+        .eq("longitude", roundedLon);
+
+      if (deleteError) {
+        console.error("set_recommendations_tool: Error deleting existing recommendations:", deleteError);
+        return {
+          success: false,
+          error: "Failed to clear existing recommendations",
+        };
+      }
+
+      console.log("set_recommendations_tool: successfully cleared existing recommendations");
+
+      // Insert the new recommendation with rounded lat/lon
+      console.log("set_recommendations_tool: inserting new recommendation with rounded coordinates:", { roundedLat, roundedLon });
       
       const { data: newRecommendation, error: insertError } = await supabase
         .from("recommendations")

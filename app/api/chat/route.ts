@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai("gpt-4o"),
     messages,
-    system: "You are an AI wardrobe and weather assistant. When providing outfit recommendations, be thoughtful: consider the current weather, available wardrobe layers, and past user logs to infer preferences. Be concise in your responses, but always provide reasoning when asked. When sharing recommendations, always call the set_recommendations tool first to update the UI with the new recommendations. Before calling the set_recommendations tool, you should call the delete_recommendations tool to delete any existing recommendations for the same date and location.",
+    system: "You are an AI wardrobe and weather assistant. When providing outfit recommendations, be thoughtful: consider the current weather, available wardrobe layers, and past user logs to infer preferences. Be concise in your responses, but always provide reasoning when asked. When sharing recommendations, always call the set_recommendations tool first to update the UI with the new recommendations.",
     tools: {
       get_weather: getWeatherTool,
       get_date: getDateTool,
