@@ -48,7 +48,7 @@ const DynamicCard = () => {
             </TabsList>
           </div>
         </div>
-        <ScrollArea className="h-[calc(100vh-11.875rem)] md:h-[calc(100vh-8.5rem)]">
+        <ScrollArea className="h-[calc(100vh-15rem)] md:h-[calc(100vh-8.5rem)]">
           <TabsContent value="home">
             <Home />
           </TabsContent>
