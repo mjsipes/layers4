@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       insert_layer: insertLayerTool,
       delete_layer: deleteLayerTool,
       update_layer: updateLayerTool,
-      semantic_search_layer: semanticSearchLayerTool,
+      // semantic_search_layer: semanticSearchLayerTool,
       select_logs: selectLogsTool,
       insert_log: insertLogTool,
       delete_log: deleteLogTool,

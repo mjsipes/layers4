@@ -4,12 +4,12 @@ npx supabase gen types typescript --project-id zoyvqdccoilrpiwpzzym --schema pub
 **TODO:**
 
 integration with stripe
-
 read the code / make chatbot good / inline recs / recomendations in ui, then inline object generation, make ai great again
 
-fasinating the getlocation subscriptions we can no longer mount in the weather componentn because on mobile they are not mounted
+
 
 for responsive layout: weather card spacing. 
+intuitive when getting recomendations
 log and layer move into bottom navbar to remove all tabslists in the app. add log/ add layer adds from the log / layer section respectively either as popup or inline or something. mobile must be able to edit inline from the page. no table veiw, just grid.
 
 

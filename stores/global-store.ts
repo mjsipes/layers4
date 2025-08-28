@@ -51,9 +51,6 @@ type GlobalState = {
   // Recommendations state
   recommendations: RecommendationWithLayers[];
   
-  // Chat state
-  pendingMessage: string | null;
-  
   // Actions
   setSelectedItem: (itemId: string | null, type: SelectedItemType) => void;
   setWardrobeViewMode: (mode: ViewMode) => void;
@@ -66,8 +63,6 @@ type GlobalState = {
   setAddress: (address: string | null) => void;
   setRecommendations: (recommendations: RecommendationWithLayers[]) => void;
   clearRecommendations: () => void;
-  addMessage: (message: string) => void;
-  clearPendingMessage: () => void;
 };
 
 /* ------------------------------------------------------------------ */
@@ -94,9 +89,6 @@ export const useGlobalStore = create<GlobalState>()(
         // Recommendations state
         recommendations: [],
         
-        // Chat state
-        pendingMessage: null,
-        
         // Global UI actions
         setSelectedItem: (itemId, type) => {
           set({ selectedItemId: itemId, selectedType: type });
@@ -122,10 +114,6 @@ export const useGlobalStore = create<GlobalState>()(
         // Recommendations actions
         setRecommendations: (recommendations) => set({ recommendations }),
         clearRecommendations: () => set({ recommendations: [] }),
-        
-        // Chat actions
-        addMessage: (message) => set({ pendingMessage: message }),
-        clearPendingMessage: () => set({ pendingMessage: null }),
       }),
       {
         name: 'layers-global-state', // localStorage key

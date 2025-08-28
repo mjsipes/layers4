@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { TextEffect } from "@/components/ui/text-effect";
 import { useGlobalStore } from "@/stores/global-store";
+import { useChatContext } from "@/components/chat-context";
 import Autocomplete from "react-google-autocomplete";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,19 +24,26 @@ const Home = () => {
     setLocation: setGlobalLocation,
     setAddress: setGlobalAddress,
   } = useGlobalStore();
-  const { addMessage } = useGlobalStore();
-
-  const handleRefreshRecommendations = () => {
-    const message = recommendations.length > 0 
-      ? "please give me new weather recommendations" 
-      : "what should i wear today";
-    addMessage(message);
-  };
+  
+  // Use chat context directly instead of global store
+  const { append } = useChatContext();
 
   // Location picker state
   const [address, setAddress] = React.useState(globalAddress || "");
   const [lat, setLat] = React.useState<number | null>(globalLat);
   const [lon, setLon] = React.useState<number | null>(globalLon);
+  
+  const handleRefreshRecommendations = React.useCallback(() => {
+    const message = recommendations.length > 0 
+      ? "please give me new weather recommendations" 
+      : "what should i wear today";
+    
+    // Send message directly to chat
+    append({
+      role: 'user',
+      content: message,
+    });
+  }, [recommendations.length, append]);
 
   React.useEffect(() => {
     setAddress(globalAddress || "");

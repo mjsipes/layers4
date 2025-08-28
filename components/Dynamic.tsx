@@ -8,25 +8,9 @@ import SelectLogCard from "@/components/Log";
 import { useGlobalStore } from "@/stores/global-store";
 import AddLogCard from "@/components/AddLog";
 import AddLayerCard from "@/components/AddLayer";
-import { useLayersSubscription } from "@/hooks/useLayersSubscription";
-import { useLogsSubscription } from "@/hooks/useLogsSubscription";
-import { useRecommendationsSubscription } from "@/hooks/useRecommendationsSubscription";
-import {
-  useGlobalSubscription,
-  useGeolocation,
-  useWeather,
-  useAddress,
-} from "@/hooks/useGlobalSubscription";
 import Home from "./Home";
 
 const DynamicCard = () => {
-  useGeolocation();
-  useWeather();
-  useLayersSubscription();
-  useLogsSubscription();
-  useRecommendationsSubscription();
-  useGlobalSubscription();
-  useAddress();
   const { selectedType, setSelectedItem } = useGlobalStore();
 
   return (
