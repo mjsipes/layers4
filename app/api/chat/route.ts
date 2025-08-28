@@ -1,7 +1,7 @@
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { getWeatherTool } from "./get-weather-tool";
-import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool, semanticSearchLayerTool} from "./layer-tools";
+import { selectLayersTool, insertLayerTool, deleteLayerTool , updateLayerTool} from "./layer-tools";
 import { selectLogsTool, insertLogTool, deleteLogTool, updateLogTool, linkLogLayerTool, unlinkLogLayerTool, linkLogLayerRecTool, unlinkLogLayerRecTool } from "./log-tools";
 import { displayUITool, setLocationTool, getLocationTool, getCurrentUITool } from "./global-tools";
 import { getDateTool } from "./get-date-tool";
