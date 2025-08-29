@@ -21,6 +21,7 @@ That is when I thought of creating layers. An app aimed at doing exactly this.
 - **APIs**: [Google Maps API](https://developers.google.com/maps), [Visual Crossing Weather API](https://www.visualcrossing.com/weather-api/)
 - **Hosting**: [Vercel](https://vercel.com/)
 
+
 ## The AI + Software Integration Experiment
 In my implementation of layers, my greatest emphasis was on the integration of AI and Sophware. Currently, this is a transitional period from software to ai. 
 ### We ask: 
@@ -146,5 +147,5 @@ connecting ai to client through
 
 
 I think this is a demo, not a product. 
-- reflect on time spent working on chatbot ui versus traditional ui (flexibility versus rigidness)
+- reflect on time spent working on chatbot ui versus traditional ui (flexibility versus rigidness) spent 80% of time on it
 - fun thought; how can i make a successful business only apis / will there be a successful business only mcp?
