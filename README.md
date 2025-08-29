@@ -60,11 +60,46 @@ future:
 ## Technical Challenges & Solutions
 
 ### MCP vs Tool Calling Architecture
+
+i heard mcp is going to change the world. mcp = future of way ai interacts with services on the internet? , decided I must create an app with it. did deep research
+https://modelcontextprotocol.io/docs/getting-started/intro
+https://platform.openai.com/docs/guides/tools-connectors-mcp
+https://developers.cloudflare.com/agents/guides/remote-mcp-server/
+https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel
+
+original architecture:
+server: remote mcp server in cloudflare worker
+client: supabase edge function calling openai api with reference to cloudflare server url
+
+was a lot to manage.
+
+second architecture: moved everything to nextjs api route
+server: remote mcp server in nextjs api route
+client: nextjs api route calling openai api with reference to cloudflare server url
+
+benefit: all mcp logic both in the project directory (1 directory as opposed to 3)
+
+when I added authentication to the app, I came to struggle with oath/passing user tokens/authentication with mcp server
+
+realised I jumped the gun to using mcp technology, function calling was all i need to implement the app.
+
+openai api function/tools vs vercel ai sdk
+
+two most popular npm packages for ai, I understood open api is more foundational, vercel ai sdk is more abstract
+
+tried open ai for tool calling
+
+tried vercel ai sdk for tool calling
+
+vercel ai sdk was increadibly easy
+
+vercel ai sdk is amazing, super easy for tool calling, streaming, and ui components
+https://ai-sdk.dev/docs/introduction
+
+
+
 mcp vs toolcalling
 ai integration areas
-responsive design
-zustand / subscription issues
-
 
 begining philosophy of mpc server-> ai with tool calling
 - openai api for tool calling -> vercel ai sdk
@@ -75,19 +110,21 @@ multiselect -> smart ai
 - experiemented with adding ai to sort filter area, ended up preferring keyword search with tanstack whatever
 
 ### Responsive Design: Mobile-First Learning
-- responsive design: learned important lesson to start with phone and then build up to desktop. i think the app right now is not well designed for mobile
+- responsive design: learned important lesson to start with phone and then build up to desktop. i think the app right now is not well designed for mobile, to many buttons to press
+i did not think about mobile first design when i was making this app. i kept sharing this app with friends and family and they opened it up on phone which looked horrible
+[add photos?]
+i have made it mobile friendly. now looking at it, i think ther are to many buttons / togle areas, and I have idea to move more down to the bottom navbar to be able to remove the tabslists at the top of the wardrove section and the home weather section. if successful i will apply to web as well. if I had first created for mobile, i might have optimized for space then and come to a better solution early on
 
+before mobile friendly: https://layers4-r4mi3ac6w-mjsipes-projects.vercel.app/
 
-
-- reflect on time spent working on chatbot ui versus traditional ui (flexibility versus rigidness)
-- fun thought; how can i make a successful business only apis / will there be a successful business only mcp?
 
 ### State Management: Zustand vs Subscriptions
+- disenfranchised by zustand, learning how little i understand about it. it is an npm package but is react agnostic, and you can not actually mount react hooks in zustand stores, makes it feel pretty confusing to me, to subscribe to a datatable and share that info across my app I needed two files. a hook, a zustand store, and I needed to mount the hook in another file in my app (app.tsx). If i use context, I could define the data and the subscription / fetching logic all in one file and then I would wrap the app with context in app.tsx. In total it takes an extra file to care for, which I did not like.
+
+Also subscription issues. I do not know if this is a result of zustand or another problem with supabase subscriptions, I need to investigate further.
 - zustand state mangement - we must check to see if it is causing subscription issues
 - subscription issues
 
-
-I think this is a demo, not a product. 
 
 
 
@@ -103,3 +140,8 @@ connecting ai to client through
 
 
 ## Personal Takeaways & What's Next
+
+
+I think this is a demo, not a product. 
+- reflect on time spent working on chatbot ui versus traditional ui (flexibility versus rigidness)
+- fun thought; how can i make a successful business only apis / will there be a successful business only mcp?
