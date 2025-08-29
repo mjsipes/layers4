@@ -13,6 +13,59 @@ I beleive connecting them would yeild accurate recomendations for what to wear f
 
 That is when I thought of creating layers. An app aimed at doing exactly this.
 
+
+## The AI + Software Integration Experiment
+
+In building Layers, my main focus was exploring how AI can integrate with traditional software. We’re in a transitional period—software is no longer just static interfaces, and AI is beginning to reshape how people interact with applications.
+
+### Why This Matters
+
+The big question is: **how will AI transform software?**
+
+* Will it replace traditional interfaces entirely?
+* Or will the future be a thoughtful integration of both?
+
+Layers explores this tension with a **dual-interface approach**:
+
+* **Traditional UI → Rigid** (explicitly designed interactions, predictable flows)
+* **AI Interface → Flexible** (natural conversation, tool-calling to extend capabilities)
+
+Both the chat and the UI can do everything in the app—they share the same backend for viewing, updating, inserting, and deleting logs/layers, as well as fetching weather, location, and recommendations.
+
+
+### What I Discovered
+
+I spent about **80% of my development time** building the traditional UI. Every button, toggle, and view had to be manually designed and coded, and **responsive design made this even more complicated**.
+
+By contrast, the AI interface—powered by the **Vercel AI SDK’s tool-calling**—made feature integration far faster. This contrast led me to ask:
+
+* Is the future interface purely conversational?
+* Will we always need visual UI for complex data?
+* What happens when AI can generate UI components on demand?
+
+### The Temporal Window
+
+Layers also highlights the unique moment we’re in:
+
+1. **AI isn’t perfect at memory** – logs of clothing preferences and comfort still improve recommendations.
+2. **Context windows are limited** – the app provides persistent wardrobe and weather context that AI alone cannot.
+3. **Users still prefer visual interfaces** for certain tasks.
+
+But this window is closing. As AI memory and context expand, apps like Layers may evolve into something even more powerful—where explicit storage and visual UI are optional rather than necessary.
+
+### Results & Open Questions
+
+Layers is an ongoing product I plan to continue developing. What excites me most are the open questions it raises about future AI–software integration:
+
+* Could there be a successful business built on APIs alone—or even entirely around MCP servers?
+* Will AI outputs stay in **Markdown** (simple, universal), evolve into **generated objects** (structured calls), or move toward directly generating **UI code (HTML/CSS/React)** on demand?
+
+These are the design experiments I set out to test with Layers, and they’ll continue shaping where I take the product next.
+
+
+
+
+
 ## Tech Stack
 - **Frontend**: [Next.js](https://nextjs.org/) with [TypeScript](https://www.typescriptlang.org/)
 - **Backend**: [Supabase](https://supabase.com/) + [Next.js API Routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes)
@@ -20,38 +73,6 @@ That is when I thought of creating layers. An app aimed at doing exactly this.
 - **AI**: [Vercel AI SDK](https://sdk.vercel.ai/) with [OpenAI API](https://openai.com/api/)
 - **APIs**: [Google Maps API](https://developers.google.com/maps), [Visual Crossing Weather API](https://www.visualcrossing.com/weather-api/)
 - **Hosting**: [Vercel](https://vercel.com/)
-
-
-## The AI + Software Integration Experiment
-In my implementation of layers, my greatest emphasis was on the integration of AI and Sophware. Currently, this is a transitional period from software to ai. 
-### We ask: 
-### AI eating Software
-currently, ai is eating all software. IMO, AI will eat all educational software like quizlet. paid information is being eaten by ai, that is professions that are expertise, and software which provides information (laywers, doctors) (quizlet, chegg) how much more software will ai eat / will ai eat all software?
-### AI integrating with Software
-- we are integrating with software
-- we are doing a lot of building ai on top of software
-- will ai be build on top of software? 
-- what type of integration will we want?
-- will people make money from integrating software with ai?
-- we are also asking what will the future of software and ai integration look like
-
-For the user interface, I wanted to create a traditional user interface and an ai interface. I am curious if the future user interface is directly with ai, or an integration between ai and traditional ui. I was also curious to explore how i could integrate ai with software
-about what type of interactions we will like to have with integrated ai, 
-
-Both the user interface and ai interface can do everything the other can. 
-I was curious to know which interfact people would like to use more.
-I was curious what type of ways i could integrate ai with the traditional ui to improve the experience.
-It was interested to note that creating a traditional ui was what i spent 80% of my time working on. Traditional ui = rigid. AI UI = flexible. Traditional ui I became obsessed about translating my idea of an app to give weather recomendaedion into the most intuitive design for a web page. But maybe AI UI is better and simpler to interact with than a traditional UI
-
-Considerations: this app does exist only in a small point in time where it is possible to build and small point in time when it is useful. On the topic of AI eating software, this proejct only is better than pure AI because of the stored data and me attempting to create a traditional ui integrating AI which has a better user experience than pure AI interaction.
-because right now so is not good at remembering stuff about you over a long period of time, so i can create a good application that stores the information about what a user wears and give that to the ai to help with the recommendations. One day though the ai will be so good at storing data or the context window will just be so big that it can remember everything you talk about with it from your birth to death and then my layers app will not be useful anymore
-
-Maybe we flip the switch and have Original Ui integrate into AI with generated objects? 50% AI and 50% AI. Not integrated just right next to each other.
-
-- ai should it output markdown, pull up display in dynamic area, or display inline components?
-
-future:
-- will chat gpt be able to do layers better / ai + database do layers better? and expanding to logging something else as well?
 
 
 
@@ -143,9 +164,8 @@ connecting ai to client through
 
 
 
+
+
+
+
 ## Personal Takeaways & What's Next
-
-
-I think this is a demo, not a product. 
-- reflect on time spent working on chatbot ui versus traditional ui (flexibility versus rigidness) spent 80% of time on it
-- fun thought; how can i make a successful business only apis / will there be a successful business only mcp?
