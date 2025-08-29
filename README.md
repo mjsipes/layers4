@@ -14,6 +14,8 @@ I beleive connecting them would yeild accurate recomendations for what to wear f
 That is when I thought of creating layers. An app aimed at doing exactly this.
 
 
+
+
 ## The AI + Software Integration Experiment
 
 In building Layers, my main focus was exploring how AI can integrate with traditional software. We’re in a transitional period—software is no longer just static interfaces, and AI is beginning to reshape how people interact with applications.
@@ -168,4 +170,4 @@ connecting ai to client through
 
 
 
-## Personal Takeaways & What's Next
+## What's Next
