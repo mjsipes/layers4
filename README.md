@@ -1,8 +1,8 @@
-# layers4.vercel.com 
+# layers4.vercel.com 👕🎿⚡
 
 **Live App: https://layers4.vercel.app/**
 
-# journey behind the tech
+## The Journey Behind the Tech
 
 I was skiing last winter when I got the idea for this app. As an intermediate skier who grew up skiing about 10 days a year, I never dressed right. It was either freezing cold out and I was freezing, or somehow it was not cold enough and I ended up really hot. If you have ever skiied before, reflect on this thought and think if you can relate or not. If you havent skiied before, take it from me, its impossible to dress right for the weather. 20 degrees and 30 degrees sound like the same type of cold when you grow up with most days being 60's and 70's. But 20 degrees and 30 degrees are very different types of cold.
 
@@ -14,9 +14,14 @@ I beleive connecting them would yeild accurate recomendations for what to wear f
 That is when I thought of creating layers. An app aimed at doing exactly this.
 
 ## Tech Stack
-NextJS, Supabase. Hosted on vercel. OpenAI api for ai.
+- **Frontend**: [Next.js](https://nextjs.org/) with [TypeScript](https://www.typescriptlang.org/)
+- **Backend**: [Supabase](https://supabase.com/) + [Next.js API Routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- **AI**: [Vercel AI SDK](https://sdk.vercel.ai/) with [OpenAI API](https://openai.com/api/)
+- **APIs**: [Google Maps API](https://developers.google.com/maps), [Visual Crossing Weather API](https://www.visualcrossing.com/weather-api/)
+- **Hosting**: [Vercel](https://vercel.com/)
 
-## Emphasis: The Integration of AI and Sophware / Personal takeaways
+## The AI + Software Integration Experiment
 In my implementation of layers, my greatest emphasis was on the integration of AI and Sophware. Currently, this is a transitional period from software to ai. 
 ### We ask: 
 ### AI eating Software
@@ -52,8 +57,9 @@ future:
 
 
 
-# Technical Challenges & Solutions / failiures/hardships stories / Technical Evolution
+## Technical Challenges & Solutions
 
+### MCP vs Tool Calling Architecture
 mcp vs toolcalling
 ai integration areas
 responsive design
@@ -68,7 +74,7 @@ multiselect -> smart ai
 - ai should it output markdown, pull up display in dynamic area, or display inline components?
 - experiemented with adding ai to sort filter area, ended up preferring keyword search with tanstack whatever
 
-
+### Responsive Design: Mobile-First Learning
 - responsive design: learned important lesson to start with phone and then build up to desktop. i think the app right now is not well designed for mobile
 
 
@@ -76,6 +82,7 @@ multiselect -> smart ai
 - reflect on time spent working on chatbot ui versus traditional ui (flexibility versus rigidness)
 - fun thought; how can i make a successful business only apis / will there be a successful business only mcp?
 
+### State Management: Zustand vs Subscriptions
 - zustand state mangement - we must check to see if it is causing subscription issues
 - subscription issues
 
@@ -86,7 +93,7 @@ I think this is a demo, not a product.
 
 
 
-# Cool Features I've Built / things i am really happy about
+## What I'm Proud Of
 feature rich sophisticated ui
 ai vercel sdk
 sign in with google, google maps geolocation
@@ -95,5 +102,4 @@ connecting ai to client through
 
 
 
-## todo: / What's Next
-# personal takeaways
+## Personal Takeaways & What's Next
