@@ -117,6 +117,9 @@ i have made it mobile friendly. now looking at it, i think ther are to many butt
 
 before mobile friendly: https://layers4-r4mi3ac6w-mjsipes-projects.vercel.app/
 
+| Before Mobile Friendly Design | Mobile Friendly Weather Panel | Mobile Friendly Chat Panel | Mobile Friendly Wardrobe Panel |
+|------|---------|------|--------|
+| ![](public/0.png) | ![](public/2.png) | ![](public/1.png) | ![](public/3.png) |
 
 ### State Management: Zustand vs Subscriptions
 - disenfranchised by zustand, learning how little i understand about it. it is an npm package but is react agnostic, and you can not actually mount react hooks in zustand stores, makes it feel pretty confusing to me, to subscribe to a datatable and share that info across my app I needed two files. a hook, a zustand store, and I needed to mount the hook in another file in my app (app.tsx). If i use context, I could define the data and the subscription / fetching logic all in one file and then I would wrap the app with context in app.tsx. In total it takes an extra file to care for, which I did not like.
