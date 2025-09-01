@@ -5,7 +5,22 @@
 
 **AI Integrated wardrobe. So you never dress too hot or too cold.**
 
-This app became my testing ground for exploring the fundamental question: What is the user interface of the future?
+## Try It Out
+
+**TLDR**: Learn by reading the journey below or jumping straight into the demo.
+
+Here's a recommended sequence of queries for the AI to see the app in action:
+
+### Demo Flow (Recommended)
+1. Ask: "What is my location?"
+2. Ask: "What is the weather?" 
+3. Ask: "What should I wear?" *(notice limited recommendations)*
+4. Tell the AI: "I'm wearing [your outfit] and I feel [too hot/cold/perfect]"
+5. Add clothing: "I have [list items] in my wardrobe"
+6. Ask again: "What should I wear?" *(see improved recommendations)*
+
+*Or try the pre-populated demo account: mjsipes@gmail.com / 123456*
+
 
 ## The Journey Behind the Tech
 
@@ -32,15 +47,6 @@ Through developing Layers, I tested these hypotheses with specific experiments/e
 I designed Layers with a split screen, resizable window where both traditional and AI interfaces can perform identical operations on the database. Both can do the same thing, and the AI can actually control the UI through dynamic cards.
 
 The AI can dynamically pull up different components—displaying specific logs, layers, or immediately showing newly added items. When the AI adds layers, it can immediately display them for user review. Both the traditional interface and AI chat handle the same CRUD operations (update, delete, select, insert) on the database's logs and layers.
-
-**The Demo Flow**: I built a comprehensive feature demonstration that showcases multiple technical capabilities in sequence:
-
-1. Ask: "What is my location?" → *Demonstrates tool calling + Supabase subscriptions for real-time location data*
-2. Ask: "What is the weather?" → *Shows weather API integration and data retrieval*  
-3. Ask: "What should I wear?" → *Reveals AI's limitations without personal context*
-4. Tell the AI: "I'm wearing [outfit] and I feel [comfort level]" → *Shows AI controlling UI components - new logs appear in the dynamic area*
-5. Add clothing: "I have [items] in my wardrobe" → *Demonstrates database operations through AI*
-6. Ask again: "What should I wear?" → *Shows improved recommendations with personal context*
 
 This single flow demonstrates: tool calling, real-time subscriptions, API integration, AI-UI control, database operations, and the learning process. It's a perfect example of how AI can orchestrate multiple backend services while providing a seamless user experience.
 
