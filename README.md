@@ -1,11 +1,9 @@
 
 # Layers ❄️🎿
 
-**Live App**: https://layers4.vercel.app/
-
 **AI Integrated wardrobe. So you never dress too hot or too cold.**
 
-## Try It Out
+## Try It Out - https://layers4.vercel.app/
 
 **TLDR**: Learn by reading the journey below or jumping straight into the demo.
 
