@@ -5,8 +5,6 @@
 
 ## Try It Out - https://layers4.vercel.app/
 
-**TLDR**: Learn by reading the journey below or jumping straight into the demo.
-
 Here's a recommended sequence of queries for the AI to see the app in action:
 
 ### Demo Flow (Recommended)
@@ -46,8 +44,6 @@ I designed Layers with a split screen, resizable window where both traditional a
 
 The AI can dynamically pull up different components—displaying specific logs, layers, or immediately showing newly added items. When the AI adds layers, it can immediately display them for user review. Both the traditional interface and AI chat handle the same CRUD operations (update, delete, select, insert) on the database's logs and layers.
 
-This single flow demonstrates: tool calling, real-time subscriptions, API integration, AI-UI control, database operations, and the learning process. It's a perfect example of how AI can orchestrate multiple backend services while providing a seamless user experience.
-
 ## Experiment 2: The MCP Deep Dive (Two Weeks in the Wilderness)
 
 One of my most significant technical challenges was spending two weeks trying to expose my app's AI functionality through a Model Context Protocol server instead of simple tool calling.
@@ -58,13 +54,11 @@ I dove deep into the emerging MCP ecosystem, spending two weeks exploring:
 - OAuth authentication for MCP
 - The MCP inspector tools
 
-I explored all the documentation:
+I explored the following documentation:
 - [Model Context Protocol documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
 - [OpenAI's MCP integration guides](https://platform.openai.com/docs/guides/tools-connectors-mcp)
 - [Vercel's MCP server deployment](https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel)
 - [Cloudflare's remote MCP server guides](https://developers.cloudflare.com/agents/guides/remote-mcp-server/)
-
-I learned about Cloudflare Workers, explored MCP inspector tools, and got stuck implementing OAuth for user authentication. Eventually, I realized I was overengineering the solution—I just needed tool calling. The exploration taught me valuable lessons about the emerging ecosystem of AI-service integration, but sometimes the newest technology isn't the right technology.
 
 ## Experiment 3: Keyword Search vs Semantic Search vs Hybrid Search
 
