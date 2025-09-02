@@ -19,8 +19,6 @@ Here’s a quick sequence to see the app in action:
 
 *Or try the pre‑populated demo account: **[mjsipes@gmail.com](mailto:mjsipes@gmail.com)** / **123456***
 
----
-
 ## The Journey Behind the Tech
 
 One day last winter I was skiing in Lake Tahoe. As someone who grew up skiing maybe 10 days a year, I never dressed right for the mountains. Twenty degrees and thirty degrees both sound like "freezing" when you’re used to 60s and 70s, but that ten‑degree difference can be the difference between a perfect day and being too hot or too cold.
@@ -106,8 +104,6 @@ User:
 I am in Lake Tahoe. What should I wear today?
 ```
 
----
-
 ## Architecture Decisions & Exploration
 
 The core loop is two simple interactions—**“What did you wear today?”** and **“What should I wear today?”** The project unfolded in that order:
@@ -146,8 +142,6 @@ At first I framed the choice as “future USB” vs “old and janky.” After t
 ## “What should I wear today?” — Presenting results to the user
    Once the plumbing worked, I asked: *Should the app present results purely as chat/Markdown, as a full UI, or both?* That became a major focus of the summer. Initially the agent replied with Markdown. Would a fully fledged UI be better? I explored **AI**, **UI**, **both**, and **mixed**.
 
----
-
 ### Experiment 1: Dual AI UI and Traditional UI
 
 Layers uses a split‑screen, resizable layout where both the traditional UI and the AI interface can perform **identical operations** on the database. Both paths can do the same things, and the AI can **control the UI** through dynamic cards.
@@ -155,8 +149,6 @@ Layers uses a split‑screen, resizable layout where both the traditional UI and
 * The AI can dynamically surface components—displaying specific logs, layers, or immediately showing newly added items.
 * When the AI adds layers, it can immediately display them for user review.
 * Both the traditional interface and AI chat handle the same CRUD operations (select, insert, update, delete) on **Logs** and **Layers**.
-
----
 
 ### Experiment 2: Keyword Search vs Semantic Search vs Hybrid Search
 
@@ -185,7 +177,6 @@ I built a **hybrid search**:
 **The brutal reality:** The advantage of pure **client‑side keyword search** (instant results on every keystroke) outweighed server‑side hybrid search (always triggers a spinner, even if brief). My data isn’t that complex. Keyword search across **all** entries (date, location, outfits, description) feels smart *and* fast.
 
 Worth noting: my app loads all of a user’s logs and layers to the client. In apps like Gmail or Google where the client doesn’t load everything up front, hybrid/server search makes more sense because keyword search must go to the server anyway—so combining AI + keyword search is appealing there.
-
 
 ### Intermission: Where the Project Stands
 
@@ -223,16 +214,11 @@ My current mobile design has **three panels** (chat, weather, wardrobe). It coul
 
 I’d love users to take a photo of their outfit, upload it, and have all the clothing pieces logged correctly.
 
----
-
 ## Final Conclusion
-
 
 The entire scope of this project is only useful **until** LLMs’ context windows effectively hold our whole lives. Until then, I think Layers is a meaningful way to capture personal context and turn it into better, personalized recommendations.
 
 I’d love for people to try it and share feedback.
-
----
 
 ## Tech Stack
 
