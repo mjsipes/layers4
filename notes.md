@@ -19,3 +19,7 @@ for responsive layout: weather card spacing.
 make weather card able to search other places weather?
 then add a history button
 when it comes to styling, what is the difference between a card and a badge? should i always try to use the shadcn classes? and then just override them?
+
+
+linkedin post:
+I spent half of my summer on this project. I’d love for people to try it and share feedback — it started as a simple idea while skiing in Lake Tahoe and turned into a full exploration of AI vs UI design.

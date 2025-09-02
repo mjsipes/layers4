@@ -5,6 +5,7 @@
 ## Try It Out
 
 **Live:** [https://layers4.vercel.app/](https://layers4.vercel.app/)
+**Github** [https://github.com/mjsipes/layers4](https://github.com/mjsipes/layers4)
 
 Here’s a quick sequence to see the app in action:
 
