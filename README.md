@@ -187,20 +187,15 @@ I built a **hybrid search**:
 Worth noting: my app loads all of a user’s logs and layers to the client. In apps like Gmail or Google where the client doesn’t load everything up front, hybrid/server search makes more sense because keyword search must go to the server anyway—so combining AI + keyword search is appealing there.
 
 
----
+### Intermission: Where the Project Stands
 
-## Ideas & Next Steps
+At this point, the project is at a checkpoint. I haven’t yet implemented Experiment 3 or the ideas that follow. Instead, I’m pausing to explore a bigger question: how much should I invest in AI vs UI right now?
 
-**Why this focus now?** Because I see real value in answering the “AI vs UI” question well. Do I focus on this, or on MCP?
+So far, I’ve spent around 80% of my time on the UI. It’s tempting to keep polishing and expanding it, but I realize the AI layer still needs more depth—things like refining the system prompt, experimenting with how tool calling shapes user interactions, and strengthening the model’s ability to reason over logs and layers.
 
-**Current answer:** I spent **\~80%** of my time on the **UI**. Evidence of rigidity: I still have big ideas to make the UI better, but I need to spend a few months improving the **pure AI** parts (e.g., researching the **system prompt** and how **tool calling** shapes the user prompt) so I don’t stall on UI polish. I promise the UI isn’t done—I have plenty left to build—but it’s time to strengthen the AI side and then loop back.
-why? 
-because I see lots of value in this question. 
-do i focus on this ore do i focus on mcp?
+This is where I am today: focusing on the AI foundations so the project doesn’t stall out on UI polish alone. Once the AI side feels stronger, I’ll return to the UI with fresh energy and continue into Experiments 3 and beyond.
 
-current answer: i spent 80% of my time on the ui. evidence for rigidness, i still have amazing ideas for making the ui better, but i need to spend a few months going back to improving on the ai purely partb of the app,(do i need to right now go back to the ai and make the changes i am thinking about? reasearch system prompt and how tool calling makes the user prompt?) so i do not slow to a halt on the ui, but doing all of this so i can go back to the ui because i promise thisis not done, i still have ideas about theb ui i want to do i want to do the following:
-
-### AI‑Powered Multiselect
+### Experiment 3: AI‑Powered Multiselect
 
 When logging what you wore, the multiselect uses keyword search—but it can’t **add new layers** from that input. If the placeholder is “What did you wear today?” and a user types “I wore a blue shirt,” it won’t find anything if there’s no keyword match.
 
@@ -212,7 +207,7 @@ Maybe the AI doesn’t auto‑add—just **suggests**. The client renders chips 
 
 **Reason I haven’t implemented yet:** I’m mentally hung up on whether this belongs in **today’s log** view or as its **own view**.
 
-### Generative UI Exploration
+### Experiment 4: Generative UI Exploration
 
 This connects to the broader UI philosophy. If the future is AI‑first interfaces, how will that look? Today, AI generates Markdown (tables, bold, indentation). But **generative UI** is getting more interesting—like what ChatGPT is starting to do for shopping experiences.
 
@@ -224,13 +219,14 @@ My current mobile design has **three panels** (chat, weather, wardrobe). It coul
 
 **Theoretical endpoint:** AI generates raw HTML/CSS/JS—or direct React components—combining data and code generation beyond current generative UI.
 
-### Image Input Integration
+### Experiment 5: Image Input Integration
 
 I’d love users to take a photo of their outfit, upload it, and have all the clothing pieces logged correctly.
 
 ---
 
 ## Final Conclusion
+
 
 The entire scope of this project is only useful **until** LLMs’ context windows effectively hold our whole lives. Until then, I think Layers is a meaningful way to capture personal context and turn it into better, personalized recommendations.
 
