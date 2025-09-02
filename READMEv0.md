@@ -38,7 +38,7 @@ A summer ago I built a RAG solution to help an AI model give strong answers to s
 
 I can use Layers throughout the winter and measure accuracy. With as little as three previous days of experience, I believe it will work. I skied 25 days last season, so I’ll have \~30 days of great context to evaluate.
 
-### Why LLM + Weather Alone Isn’t Enough
+## Why LLM + Weather Alone Isn’t Enough
 
 **If I ask ChatGPT:**
 
@@ -64,7 +64,7 @@ I can use Layers throughout the winter and measure accuracy. With as little as t
 
 I’ve gone to Giants games with friends wearing a hoodie and still felt freezing. I also have a friend who could go in a t‑shirt and be fine—and might even call the weather “nice.” Everyone is different. One recommendation won’t fit everybody. So the prompt “what should I wear?” shouldn’t be the same for every user. It must include context about **you**: what layers you own, examples of what you wore on certain days, what the weather was like, and whether you were too hot or too cold.
 
-### My Hypothesis (Prompts & Tools)
+## My Hypothesis (Prompts & Tools)
 
 If you create a prompt like the following, you’ll get much more accurate recommendations.
 
@@ -112,9 +112,14 @@ I am in Lake Tahoe. What should I wear today?
 
 The core loop is two simple interactions—**“What did you wear today?”** and **“What should I wear today?”** The project unfolded in that order:
 
-## “What did you wear today?” — Collecting data via chat
+## **“What did you wear today?” — Collecting data via chat**
+   I don’t want users to manually enter all their logs and layers. Instead, the AI should add logs and layers it learns from natural conversation.
 
-I don’t want users to manually enter all their logs and layers. Instead, the AI should add logs and layers it learns from natural conversation.
+**Inputs I want to support:**
+
+1. User types in natural language
+2. User types in by hand (structured entry)
+3. User uploads a photo
 
 This led to the first version of the AI agent—and to a key architectural choice. To connect the AI to my database, I needed a safe bridge so the model could call a small set of functions (e.g., fetch logs, add layers, write feedback) instead of touching the DB directly. There are two modern ways to expose those functions: **Tool Calling** and the newer **Model Context Protocol (MCP)**.
 
@@ -143,12 +148,12 @@ At first I framed the choice as “future USB” vs “old and janky.” After t
 
 **Outcome:** I used **tool calling** for Layers.
 
-## “What should I wear today?” — Presenting results to the user
+## **“What should I wear today?” — Presenting results to the user**
    Once the plumbing worked, I asked: *Should the app present results purely as chat/Markdown, as a full UI, or both?* That became a major focus of the summer. Initially the agent replied with Markdown. Would a fully fledged UI be better? I explored **AI**, **UI**, **both**, and **mixed**.
 
 ---
 
-### Experiment 1: Dual AI UI and Traditional UI
+###  Experiment 1: Dual AI UI and Traditional UI
 
 Layers uses a split‑screen, resizable layout where both the traditional UI and the AI interface can perform **identical operations** on the database. Both paths can do the same things, and the AI can **control the UI** through dynamic cards.
 
@@ -186,19 +191,10 @@ I built a **hybrid search**:
 
 Worth noting: my app loads all of a user’s logs and layers to the client. In apps like Gmail or Google where the client doesn’t load everything up front, hybrid/server search makes more sense because keyword search must go to the server anyway—so combining AI + keyword search is appealing there.
 
-
 ---
 
+
 ## Ideas & Next Steps
-
-**Why this focus now?** Because I see real value in answering the “AI vs UI” question well. Do I focus on this, or on MCP?
-
-**Current answer:** I spent **\~80%** of my time on the **UI**. Evidence of rigidity: I still have big ideas to make the UI better, but I need to spend a few months improving the **pure AI** parts (e.g., researching the **system prompt** and how **tool calling** shapes the user prompt) so I don’t stall on UI polish. I promise the UI isn’t done—I have plenty left to build—but it’s time to strengthen the AI side and then loop back.
-why? 
-because I see lots of value in this question. 
-do i focus on this ore do i focus on mcp?
-
-current answer: i spent 80% of my time on the ui. evidence for rigidness, i still have amazing ideas for making the ui better, but i need to spend a few months going back to improving on the ai purely partb of the app,(do i need to right now go back to the ai and make the changes i am thinking about? reasearch system prompt and how tool calling makes the user prompt?) so i do not slow to a halt on the ui, but doing all of this so i can go back to the ui because i promise thisis not done, i still have ideas about theb ui i want to do i want to do the following:
 
 ### AI‑Powered Multiselect
 
