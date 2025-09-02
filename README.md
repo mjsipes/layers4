@@ -102,7 +102,10 @@ User:
 I am in Lake Tahoe. What should I wear today?
 ```
 
-The core loop of my app is two simple interactions—**“What did you wear today?”** and **“What should I wear today?”** The project unfolded in that order:
+The core loop of my app is two simple interactions
+**“What did you wear today?”**
+**“What should I wear today?”** 
+The project unfolded in that order.
 
 ## “What did you wear today?” — Collecting data via chat
 
