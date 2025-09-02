@@ -112,15 +112,13 @@ The project unfolded in that order.
 
 ## “What did you wear today?” — Collecting data via chat
 
-I don’t want users to manually enter all their logs and layers. Instead, the AI should add logs and layers it learns from natural conversation.
+I didnt want users to manually enter all their logs and layers. Instead, the AI should add logs and layers it learns from natural conversation.
 
-This led to the first version of the AI agent—and to a key architectural choice. To connect the AI to my database, I needed a safe bridge so the model could call a small set of functions (e.g., fetch logs, add layers, write feedback) instead of touching the DB directly. There are two modern ways to expose those functions: **Tool Calling** and the newer **Model Context Protocol (MCP)**.
+This led to the first version of the AI agent—and to a key architectural choice. To connect the AI to my database, I needed a safe bridge so the model could call a small set of functions (e.g., get_user_logs, get_user_layers, add_log, add_layer) instead of touching the DB directly. There are two modern ways to expose those functions: **Tool Calling** and the newer **Model Context Protocol (MCP)**.
 
 ### Big Decisions: MCP vs Tool Calling
 
-At first I framed the choice as “future USB” vs “old and janky.” After two weeks exploring, I learned it’s really **simple & lightweight** vs **spanning many chat interfaces**. For this project, **tool calling** is totally fine.
-
-* **I spent two weeks trying to make it MCP.** I dove deep into the emerging MCP ecosystem:
+* **I spent two weeks trying to make it an MCP server.** I dove deep into the emerging MCP ecosystem:
 
   * How to structure MCP servers
   * Deploying to Vercel and Cloudflare Workers
@@ -134,12 +132,13 @@ At first I framed the choice as “future USB” vs “old and janky.” After t
   * Vercel’s MCP server deployment: [https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel](https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel)
   * Cloudflare’s remote MCP server guides: [https://developers.cloudflare.com/agents/guides/remote-mcp-server/](https://developers.cloudflare.com/agents/guides/remote-mcp-server/)
 
+
 * **Tool calling:** I evaluated OpenAI API tool/function calling and the Vercel AI SDK tool calling:
 
   * OpenAI function calling: [https://platform.openai.com/docs/guides/function-calling](https://platform.openai.com/docs/guides/function-calling)
   * Vercel AI SDK tools: [https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling)
 
-**Outcome:** I used **tool calling** for Layers.
+**Outcome:** I used **tool calling** for Layers. In trying to create the MPC server, I got stuck on figuring out how to handle user authentication in the MCP server. I thought at first an MCP server would be necessary for this app, but it turns out tool calling is not obsolete, and is actually the perfect, lightweight solution for this app.
 
 ## “What should I wear today?” — Presenting results to the user
    Once the plumbing worked, I asked: *Should the app present results purely as chat/Markdown, as a full UI, or both?* That became a major focus of the summer. Embodied in the following experiments:
@@ -215,11 +214,11 @@ Worth noting: my app loads all of a user’s logs and layers to the client. In a
 
 ### Intermission: Where the Project Stands
 
-At this point, the project is at a checkpoint. I haven’t yet implemented Experiment 3 or the ideas that follow. Instead, I’m pausing to explore a bigger question: how much should I invest in AI vs UI right now?
+At this point, the project is at a checkpoint. I haven’t yet implemented Experiment 3 or the ideas that follow. Instead, I’m pausing to return back to school, but here is my key insight so far:
 
-So far, I’ve spent around 80% of my time on the UI. It’s tempting to keep polishing and expanding it, but I realize the AI layer still needs more depth—things like refining the system prompt, experimenting with how tool calling shapes user interactions, and strengthening the model’s ability to reason over logs and layers.
+I’ve spent around 80% of my time on the traditional UI. When adding weather into my app, I created a get_weather function that took in date and location, and outputted weather information. Adding this functionality to the AI UI was a simple as adding that function to the list of tool calls for the model. On the other hand I spent week iterating on the weather card and finding its place in the UI.
 
-This is where I am today: focusing on the AI foundations so the project doesn’t stall out on UI polish alone. Once the AI side feels stronger, I’ll return to the UI with fresh energy and continue into Experiments 3 and beyond.
+This contrast highlighted just how rigid traditional UIs can be compared to the flexibility of AI interfaces—a glimpse, perhaps, into where the future of interaction is headed.
 
 ### Experiment 3: AI‑Powered Multiselect
 
