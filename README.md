@@ -65,7 +65,7 @@ I’ve gone to Giants games with friends wearing a hoodie and still felt freezin
 
 ### My Hypothesis (Prompts & Tools)
 
-If you create a prompt like the following, you’ll get much more accurate recommendations.
+If I create a prompt like the following, I will get much more accurate recommendations.
 
 **System (example):**
 
