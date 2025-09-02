@@ -67,8 +67,6 @@ I’ve gone to Giants games with friends wearing a hoodie and still felt freezin
 
 If I create a prompt like the following, I will get much more accurate recommendations.
 
-**System (example):**
-
 ```
 Context:
 User owns the following layers (articles of clothing):
@@ -85,9 +83,8 @@ I'm in Lake Tahoe today. What should I wear?
 
 Or:
 
-**System (example):**
-
 ```
+Context:
 The user will often ask you about weather recommendations: "What should I wear today?"
 If a user uses this app, returning logs and layers will provide lots of context about the user’s previous behavior. Make those tool calls and reason over the results before responding. If the user has no logs to reason over, make your best guess. If the user has no layers to reason over—or not enough to make an effective outfit—ask whether they own the needed layers (and if not, recommend a purchase).
 
@@ -141,8 +138,8 @@ At first I framed the choice as “future USB” vs “old and janky.” After t
 **Outcome:** I used **tool calling** for Layers.
 
 ## “What should I wear today?” — Presenting results to the user
-   Once the plumbing worked, I asked: *Should the app present results purely as chat/Markdown, as a full UI, or both?* That became a major focus of the summer. Initially the agent replied with Markdown. Would a fully fledged UI be better? I explored **AI**, **UI**, **both**, and **mixed**.
-
+   Once the plumbing worked, I asked: *Should the app present results purely as chat/Markdown, as a full UI, or both?* That became a major focus of the summer. Embodied in the following experiments:
+   
 ### Experiment 1: Dual AI UI and Traditional UI
 
 Layers uses a split‑screen, resizable layout where both the traditional UI and the AI interface can perform **identical operations** on the database. Both paths can do the same things, and the AI can **control the UI** through dynamic cards.
@@ -173,9 +170,42 @@ I built a **hybrid search**:
 * Keyword across multiple fields (for logs: date, place, outfits worn, description)
 * Semantic via vector embeddings for fuzzy matching
 
-**Problem I’m still looking for help on:** In RAG, there’s “art” in how you embed data. I didn’t spend a lot of time tuning this. What’s the best way to implement **hybrid search** here? Do we need hybrid search to **sort by values**, or is there a way to **embed hard knowledge** like temperatures so queries like “50” or “fifty” match effectively?
 
-**The brutal reality:** The advantage of pure **client‑side keyword search** (instant results on every keystroke) outweighed server‑side hybrid search (always triggers a spinner, even if brief). My data isn’t that complex. Keyword search across **all** entries (date, location, outfits, description) feels smart *and* fast.
+**Problem I’m still looking for help on:** In RAG, there’s an “art” to how you embed data. I didn’t spend a lot of time tuning this.
+
+For example, here’s my current DB schema for **logs**:
+
+```ts
+address: string | null
+comfort_level: number | null
+created_at: string
+date: string | null
+feedback: string | null
+id: string
+latitude: number | null
+longitude: number | null
+user_id: string | null
+weather_id: string | null
+```
+
+At first, I simply embedded a **JSON-stringified version** of every row in the table.
+
+Later, I tried another approach: concatenating values into a natural-language string, like:
+
+```text
+Log {id}: Weather was {weather}. 
+User wore {layers}. 
+Feedback: "{feedback}".
+```
+
+This got me wondering:
+
+* Is implementation #2 (natural-language string) actually stronger than implementation #1 (raw JSON)?
+* For a possible implementation #3: should I embed **multiple versions** of each log (one string per column for context), then link them all back to the same log ID?
+
+I’d love thoughts from people with more experience tuning embeddings in RAG systems.
+
+**Result:** The advantage of pure **client‑side keyword search** (instant results on every keystroke) outweighed server‑side hybrid search (always triggers a spinner, even if brief). My data isn’t that complex. Keyword search across **all** entries (date, location, outfits, description) feels smart *and* fast.
 
 Worth noting: my app loads all of a user’s logs and layers to the client. In apps like Gmail or Google where the client doesn’t load everything up front, hybrid/server search makes more sense because keyword search must go to the server anyway—so combining AI + keyword search is appealing there.
 
