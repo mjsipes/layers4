@@ -11,6 +11,27 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Layers - Personal Style & Wardrobe Management",
   description: "Organize your wardrobe, track your outfits, and discover your personal style with Layers - the intelligent wardrobe management app.",
+  openGraph: {
+    title: "Layers - Personal Style & Wardrobe Management",
+    description: "Organize your wardrobe, track your outfits, and discover your personal style with Layers - the intelligent wardrobe management app.",
+    url: "/",
+    siteName: "Layers",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Layers app preview",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Layers - Personal Style & Wardrobe Management",
+    description: "Organize your wardrobe, track your outfits, and discover your personal style with Layers - the intelligent wardrobe management app.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 const geistSans = Geist({
