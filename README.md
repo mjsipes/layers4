@@ -264,3 +264,4 @@ I’d love for people to try it and share feedback.
 * **Hosting:** [Vercel](https://vercel.com/)
 
 *This is a demo project exploring the intersection of AI and traditional user interfaces.*
+
